@@ -120,7 +120,6 @@
     "outbounds": "アウトバウンド",
     "apiDocs": "API ドキュメント",
     "donate": "寄付",
-    "sponsors": "スポンサー",
     "hosts": "ホスト",
     "docs": "ドキュメント",
     "openMenu": "メニューを開く",
@@ -1401,8 +1400,6 @@
       "intervals": "間隔",
       "information": "情報",
       "profile": "プロフィール",
-      "language": "言語",
-      "telegramBotLanguage": "Telegram Botの言語",
       "security": {
         "admin": "管理者の資格情報",
         "twoFactor": "二段階認証",
@@ -1704,7 +1701,6 @@
       "discordBotNotEnabled": "Discord ボットが有効になっていません",
       "discordTestFailed": "Discord テストに失敗しました",
       "discordTestSuccess": "テスト通知が正常に送信されました",
-      "discordBotLanguage": "Discord Botの言語",
       "discordNotifyTime": "通知時間",
       "discordNotifyTimeDesc": "Discord ボットが定期レポートを送信する頻度です。プリセットの間隔を選ぶか、「カスタム」を選んで crontab 式を入力します。",
       "discordNotifyBackup": "データベースバックアップ",
@@ -2417,15 +2413,6 @@
         "badTag": "無効なタグ",
         "badVlessRoute": "0〜65535 の単一の数値を入力してください"
       }
-    },
-    "sponsors": {
-      "title": "スポンサー",
-      "intro": "Ovix UI の開発を支援している企業です。スポンサーリンクは新しいタブで開きます。",
-      "become": "スポンサーになる",
-      "tag": "スポンサー",
-      "visit": "訪問",
-      "yourBrand": "ここにあなたのブランドを",
-      "yourBrandText": "毎日 Ovix UI を開く何千人ものサーバー管理者に御社をアピールできます。"
     }
   },
   "tgbot": {

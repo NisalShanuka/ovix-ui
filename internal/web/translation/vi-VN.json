@@ -120,7 +120,6 @@
     "outbounds": "Outbound",
     "apiDocs": "Tài liệu API",
     "donate": "Quyên góp",
-    "sponsors": "Nhà tài trợ",
     "hosts": "Hosts",
     "docs": "Tài liệu",
     "openMenu": "Mở menu",
@@ -1401,8 +1400,6 @@
       "intervals": "Khoảng thời gian",
       "information": "Thông tin",
       "profile": "Hồ sơ",
-      "language": "Ngôn ngữ",
-      "telegramBotLanguage": "Ngôn ngữ của Bot Telegram",
       "security": {
         "admin": "Thông tin đăng nhập quản trị viên",
         "twoFactor": "Xác thực hai yếu tố",
@@ -1704,7 +1701,6 @@
       "discordBotNotEnabled": "Bot Discord chưa được bật",
       "discordTestFailed": "Kiểm tra Discord thất bại",
       "discordTestSuccess": "Đã gửi thông báo thử nghiệm thành công",
-      "discordBotLanguage": "Ngôn ngữ của Bot Discord",
       "discordNotifyTime": "Thời gian thông báo của bot Discord",
       "discordNotifyTimeDesc": "Tần suất bot Discord gửi báo cáo định kỳ. Chọn một khoảng thời gian có sẵn, hoặc chọn Tùy chỉnh để nhập biểu thức crontab.",
       "discordNotifyBackup": "Sao lưu Cơ sở dữ liệu",
@@ -2417,15 +2413,6 @@
         "badTag": "Tag không hợp lệ",
         "badVlessRoute": "Nhập một số duy nhất từ 0 đến 65535"
       }
-    },
-    "sponsors": {
-      "title": "Nhà tài trợ",
-      "intro": "Các công ty hỗ trợ phát triển Ovix UI. Liên kết tài trợ mở trong tab mới.",
-      "become": "Trở thành nhà tài trợ",
-      "tag": "Tài trợ",
-      "visit": "Truy cập",
-      "yourBrand": "Thương hiệu của bạn ở đây",
-      "yourBrandText": "Đưa công ty bạn đến hàng nghìn quản trị viên máy chủ mở Ovix UI mỗi ngày."
     }
   },
   "tgbot": {

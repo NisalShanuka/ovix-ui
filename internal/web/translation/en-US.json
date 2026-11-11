@@ -121,7 +121,6 @@
     "outbounds": "Outbounds",
     "apiDocs": "API Docs",
     "donate": "Donate",
-    "sponsors": "Sponsors",
     "docs": "Documentation",
     "openMenu": "Open menu",
     "pinSidebar": "Pin sidebar",
@@ -1523,8 +1522,6 @@
       "intervals": "Intervals",
       "information": "Information",
       "profile": "Profile",
-      "language": "Language",
-      "telegramBotLanguage": "Telegram Bot Language",
       "security": {
         "admin": "Admin credentials",
         "twoFactor": "Two-factor authentication",
@@ -1822,7 +1819,6 @@
       "discordBotNotEnabled": "Discord bot is not enabled",
       "discordTestFailed": "Discord test failed",
       "discordTestSuccess": "Test notification sent successfully",
-      "discordBotLanguage": "Discord Bot Language",
       "discordNotifyTime": "Notification Time",
       "discordNotifyTimeDesc": "How often the Discord bot sends periodic reports. Pick a preset interval, or choose Custom to enter a raw crontab expression.",
       "discordNotifyBackup": "Database Backup",
@@ -2417,15 +2413,6 @@
       "routingScript": "Routing Script",
       "routingScriptDesc": "Path to a .lua file defining HandleRoute, absolute or relative to the Xray bin folder. The script then picks every route and Xray ignores all routing rules, the panel's api rule included: send the api inbound to the api outbound or traffic stats and live client changes stop. Xray will not start if the file is missing or invalid.",
       "routingScriptActive": "A routing script is set under {section}, so Xray ignores these rules."
-    },
-    "sponsors": {
-      "title": "Sponsors",
-      "intro": "Companies that support Ovix UI development. Sponsored links open in a new tab.",
-      "become": "Become a sponsor",
-      "tag": "Sponsor",
-      "visit": "Visit",
-      "yourBrand": "Your brand here",
-      "yourBrandText": "Put your company in front of thousands of server admins who open Ovix UI every day."
     }
   },
   "tgbot": {

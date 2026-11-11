@@ -6,9 +6,6 @@ import {
   Form,
   Input,
   Layout,
-  Menu,
-  Popover,
-  Space,
   Spin,
   message,
 } from 'antd';
@@ -18,15 +15,13 @@ import {
   MoonFilled,
   MoonOutlined,
   SunOutlined,
-  TranslationOutlined,
   UserOutlined,
 } from '@ant-design/icons';
 
 import { FormProvider, useForm } from 'react-hook-form';
-import { HttpUtil, LanguageManager } from '@/utils';
+import { HttpUtil } from '@/utils';
 import { FormField, rhfZodValidate } from '@/components/form/rhf';
 import { setMessageInstance } from '@/utils/messageBus';
-import SponsorSlot from '@/components/sponsor/SponsorSlot';
 import { pauseAnimationsUntilLeave, useTheme } from '@/hooks/useTheme';
 import { LoginFormSchema, TwoFactorCodeSchema, type LoginFormValues } from '@/schemas/login';
 import './LoginPage.css';
@@ -53,7 +48,6 @@ export default function LoginPage() {
   const methods = useForm<LoginForm>({
     defaultValues: { username: '', password: '', twoFactorCode: '' },
   });
-  const [lang, setLang] = useState<string>(() => LanguageManager.getLanguage());
 
   const headlineWords = useMemo(() => [t('pages.login.hello'), t('pages.login.title')], [t]);
 
@@ -87,11 +81,6 @@ export default function LoginPage() {
     }
   }, []);
 
-  const onLangChange = useCallback((next: string) => {
-    setLang(next);
-    LanguageManager.setLanguage(next);
-  }, []);
-
   const cycleTheme = useCallback(() => {
     pauseAnimationsUntilLeave('login-theme-cycle');
     if (!isDark) {
@@ -112,22 +101,6 @@ export default function LoginPage() {
     return classes.join(' ');
   }, [isDark, isUltra]);
 
-  const langMenuItems = useMemo(
-    () =>
-      (LanguageManager.supportedLanguages as { value: string; name: string; icon: string }[]).map(
-        (l) => ({
-          key: l.value,
-          label: (
-            <Space size={8}>
-              <span aria-hidden="true">{l.icon}</span>
-              <span>{l.name}</span>
-            </Space>
-          ),
-        }),
-      ),
-    [],
-  );
-
   const themeIcon = !isDark ? <SunOutlined /> : !isUltra ? <MoonOutlined /> : <MoonFilled />;
 
   return (
@@ -146,30 +119,6 @@ export default function LoginPage() {
               icon={themeIcon}
               onClick={cycleTheme}
             />
-            <Popover
-              rootClassName={isDark ? 'dark' : 'light'}
-              placement="bottomRight"
-              trigger="click"
-              styles={{ content: { padding: 4 } }}
-              content={
-                <Menu
-                  mode="vertical"
-                  selectable
-                  selectedKeys={[lang]}
-                  items={langMenuItems}
-                  onClick={({ key }) => onLangChange(key)}
-                  style={{ border: 'none', minWidth: 160 }}
-                />
-              }
-            >
-              <Button
-                shape="circle"
-                size="large"
-                className="toolbar-btn"
-                aria-label={t('pages.settings.language')}
-                icon={<TranslationOutlined />}
-              />
-            </Popover>
           </div>
 
           <div className="login-wrapper">
@@ -248,7 +197,6 @@ export default function LoginPage() {
                     </Form.Item>
                   </Form>
                 </FormProvider>
-                <SponsorSlot slot="login" variant="compact" className="login-sponsor" />
               </div>
             )}
           </div>

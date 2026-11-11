@@ -1,8 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Button, Input, Select, Space, Switch, Tabs } from 'antd';
+import { Alert, Button, Input, Space, Switch, Tabs } from 'antd';
 import { BellOutlined, SendOutlined, SettingOutlined } from '@ant-design/icons';
-import { HttpUtil, LanguageManager } from '@/utils';
+import { HttpUtil } from '@/utils';
 import type { AllSetting } from '@/models/setting';
 import { SettingListItem } from '@/components/ui';
 import { DiscordNotifications } from '@/components/ui/notifications/DiscordNotifications';
@@ -42,24 +42,6 @@ export default function DiscordTab({ allSetting, updateSetting }: DiscordTabProp
       setTestLoading(false);
     }
   }
-
-  const langOptions = useMemo(
-    () =>
-      LanguageManager.supportedLanguages.map(
-        (l: { value: string; name: string; icon: string }) => ({
-          value: l.value,
-          label: (
-            <>
-              <span role="img" aria-label={l.name}>
-                {l.icon}
-              </span>
-              &nbsp;&nbsp;<span>{l.name}</span>
-            </>
-          ),
-        }),
-      ),
-    [],
-  );
 
   return (
     <Tabs
@@ -123,15 +105,6 @@ export default function DiscordTab({ allSetting, updateSetting }: DiscordTabProp
                   placeholder="e.g. 123456789012345678"
                   onChange={(e) => updateSetting({ discordAdminIds: e.target.value })}
                   style={{ width: '100%' }}
-                />
-              </SettingListItem>
-
-              <SettingListItem paddings="small" title={t('pages.settings.discordBotLanguage')}>
-                <Select
-                  value={allSetting.discordLang}
-                  onChange={(v) => updateSetting({ discordLang: v })}
-                  style={{ width: '100%' }}
-                  options={langOptions}
                 />
               </SettingListItem>
 

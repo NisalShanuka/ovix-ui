@@ -1,8 +1,8 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Button, Input, Select, Space, Switch, Tabs } from 'antd';
+import { Alert, Button, Input, Space, Switch, Tabs } from 'antd';
 import { BellOutlined, SendOutlined, SettingOutlined } from '@ant-design/icons';
-import { HttpUtil, LanguageManager } from '@/utils';
+import { HttpUtil } from '@/utils';
 import type { AllSetting } from '@/models/setting';
 import { SettingListItem } from '@/components/ui';
 import { TelegramNotifications } from '@/components/ui/notifications/TelegramNotifications';
@@ -40,24 +40,6 @@ export default function TelegramTab({ allSetting, updateSetting }: TelegramTabPr
       setTestLoading(false);
     }
   }
-
-  const langOptions = useMemo(
-    () =>
-      LanguageManager.supportedLanguages.map(
-        (l: { value: string; name: string; icon: string }) => ({
-          value: l.value,
-          label: (
-            <>
-              <span role="img" aria-label={l.name}>
-                {l.icon}
-              </span>
-              &nbsp;&nbsp;<span>{l.name}</span>
-            </>
-          ),
-        }),
-      ),
-    [],
-  );
 
   return (
     <Tabs
@@ -106,15 +88,6 @@ export default function TelegramTab({ allSetting, updateSetting }: TelegramTabPr
                 <Input
                   value={allSetting.tgBotChatId}
                   onChange={(e) => updateSetting({ tgBotChatId: e.target.value })}
-                />
-              </SettingListItem>
-
-              <SettingListItem paddings="small" title={t('pages.settings.telegramBotLanguage')}>
-                <Select
-                  value={allSetting.tgLang}
-                  onChange={(v) => updateSetting({ tgLang: v })}
-                  style={{ width: '100%' }}
-                  options={langOptions}
                 />
               </SettingListItem>
 

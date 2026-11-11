@@ -120,7 +120,6 @@
     "outbounds": "Salidas",
     "apiDocs": "Documentación de la API",
     "donate": "Donar",
-    "sponsors": "Patrocinadores",
     "hosts": "Hosts",
     "docs": "Documentación",
     "openMenu": "Abrir menú",
@@ -1401,8 +1400,6 @@
       "intervals": "Intervalos",
       "information": "Información",
       "profile": "Perfil",
-      "language": "Idioma",
-      "telegramBotLanguage": "Idioma del Bot de Telegram",
       "security": {
         "admin": "Credenciales de administrador",
         "twoFactor": "Autenticación de dos factores",
@@ -1704,7 +1701,6 @@
       "discordBotNotEnabled": "El bot de Discord no está habilitado",
       "discordTestFailed": "Prueba de Discord fallida",
       "discordTestSuccess": "Notificación de prueba enviada con éxito",
-      "discordBotLanguage": "Idioma del Bot de Discord",
       "discordNotifyTime": "Hora de Notificación del Bot de Discord",
       "discordNotifyTimeDesc": "Con qué frecuencia el bot de Discord envía informes periódicos. Elige un intervalo predefinido o selecciona Personalizado para introducir una expresión crontab.",
       "discordNotifyBackup": "Respaldo de Base de Datos",
@@ -2417,15 +2413,6 @@
         "badTag": "Etiqueta no válida",
         "badVlessRoute": "Introduce un único número entre 0 y 65535"
       }
-    },
-    "sponsors": {
-      "title": "Patrocinadores",
-      "intro": "Empresas que apoyan el desarrollo de Ovix UI. Los enlaces patrocinados se abren en una pestaña nueva.",
-      "become": "Hazte patrocinador",
-      "tag": "Patrocinador",
-      "visit": "Visitar",
-      "yourBrand": "Tu marca aquí",
-      "yourBrandText": "Muestra tu empresa a miles de administradores de servidores que abren Ovix UI cada día."
     }
   },
   "tgbot": {

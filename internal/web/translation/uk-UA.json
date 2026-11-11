@@ -120,7 +120,6 @@
     "outbounds": "Вихідні",
     "apiDocs": "Документація API",
     "donate": "Підтримати",
-    "sponsors": "Спонсори",
     "hosts": "Хости",
     "docs": "Документація",
     "openMenu": "Відкрити меню",
@@ -1401,8 +1400,6 @@
       "intervals": "Інтервали",
       "information": "Інформація",
       "profile": "Профіль",
-      "language": "Мова",
-      "telegramBotLanguage": "Мова Telegram-бота",
       "security": {
         "admin": "Облікові дані адміністратора",
         "twoFactor": "Двофакторна аутентифікація",
@@ -1704,7 +1701,6 @@
       "discordBotNotEnabled": "Discord-бот не увімкнено",
       "discordTestFailed": "Тест Discord не вдався",
       "discordTestSuccess": "Тестове сповіщення успішно надіслано",
-      "discordBotLanguage": "Мова Discord-бота",
       "discordNotifyTime": "Час сповіщення",
       "discordNotifyTimeDesc": "Як часто бот Discord надсилає періодичні звіти. Виберіть готовий інтервал або «Власний», щоб ввести вираз crontab.",
       "discordNotifyBackup": "Резервне копіювання бази даних",
@@ -2417,15 +2413,6 @@
         "badTag": "Недійсний тег",
         "badVlessRoute": "Введіть одне число від 0 до 65535"
       }
-    },
-    "sponsors": {
-      "title": "Спонсори",
-      "intro": "Компанії, що підтримують розробку Ovix UI. Спонсорські посилання відкриваються в новій вкладці.",
-      "become": "Стати спонсором",
-      "tag": "Спонсор",
-      "visit": "Перейти",
-      "yourBrand": "Тут може бути ваш бренд",
-      "yourBrandText": "Покажіть свою компанію тисячам адміністраторів серверів, які щодня відкривають Ovix UI."
     }
   },
   "tgbot": {

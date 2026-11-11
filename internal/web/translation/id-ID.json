@@ -120,7 +120,6 @@
     "outbounds": "Outbound",
     "apiDocs": "Dokumentasi API",
     "donate": "Donasi",
-    "sponsors": "Sponsor",
     "hosts": "Host",
     "docs": "Dokumentasi",
     "openMenu": "Buka menu",
@@ -1401,8 +1400,6 @@
       "intervals": "Interval",
       "information": "Informasi",
       "profile": "Profil",
-      "language": "Bahasa",
-      "telegramBotLanguage": "Bahasa Bot Telegram",
       "security": {
         "admin": "Kredensial admin",
         "twoFactor": "Autentikasi dua faktor",
@@ -1704,7 +1701,6 @@
       "discordBotNotEnabled": "Bot Discord belum diaktifkan",
       "discordTestFailed": "Pengujian Discord gagal",
       "discordTestSuccess": "Pemberitahuan uji coba berhasil dikirim",
-      "discordBotLanguage": "Bahasa Bot Discord",
       "discordNotifyTime": "Waktu Notifikasi",
       "discordNotifyTimeDesc": "Seberapa sering bot Discord mengirim laporan berkala. Pilih interval siap pakai, atau pilih Kustom untuk memasukkan ekspresi crontab.",
       "discordNotifyBackup": "Cadangan Database",
@@ -2417,15 +2413,6 @@
         "badTag": "Tag tidak valid",
         "badVlessRoute": "Masukkan satu angka antara 0 dan 65535"
       }
-    },
-    "sponsors": {
-      "title": "Sponsor",
-      "intro": "Perusahaan yang mendukung pengembangan Ovix UI. Tautan sponsor dibuka di tab baru.",
-      "become": "Jadi sponsor",
-      "tag": "Sponsor",
-      "visit": "Kunjungi",
-      "yourBrand": "Merek Anda di sini",
-      "yourBrandText": "Tampilkan perusahaan Anda kepada ribuan admin server yang membuka Ovix UI setiap hari."
     }
   },
   "tgbot": {

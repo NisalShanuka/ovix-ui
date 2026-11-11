@@ -120,7 +120,6 @@
     "outbounds": "出站",
     "apiDocs": "API 文档",
     "donate": "捐赠",
-    "sponsors": "赞助商",
     "hosts": "主机",
     "docs": "文档",
     "openMenu": "打开菜单",
@@ -1401,8 +1400,6 @@
       "intervals": "间隔",
       "information": "信息",
       "profile": "资料",
-      "language": "语言",
-      "telegramBotLanguage": "Telegram 机器人语言",
       "security": {
         "admin": "管理员凭据",
         "twoFactor": "双重验证",
@@ -1704,7 +1701,6 @@
       "discordBotNotEnabled": "Discord 机器人未启用",
       "discordTestFailed": "Discord 测试失败",
       "discordTestSuccess": "测试通知发送成功",
-      "discordBotLanguage": "Discord 机器人语言",
       "discordNotifyTime": "通知时间",
       "discordNotifyTimeDesc": "Discord 机器人发送周期性报告的频率。选择预设间隔，或选择“自定义”以输入 crontab 表达式。",
       "discordNotifyBackup": "数据库备份",
@@ -2417,15 +2413,6 @@
         "badTag": "无效的标签",
         "badVlessRoute": "请输入 0 到 65535 之间的单个数字"
       }
-    },
-    "sponsors": {
-      "title": "赞助商",
-      "intro": "支持 Ovix UI 开发的公司。赞助链接将在新标签页中打开。",
-      "become": "成为赞助商",
-      "tag": "赞助",
-      "visit": "访问",
-      "yourBrand": "您的品牌展示位",
-      "yourBrandText": "让每天打开 Ovix UI 的数千名服务器管理员看到您的公司。"
     }
   },
   "tgbot": {

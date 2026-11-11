@@ -120,7 +120,6 @@
     "outbounds": "الصادرات",
     "apiDocs": "توثيق API",
     "donate": "تبرع",
-    "sponsors": "الرعاة",
     "hosts": "المضيفات",
     "docs": "التوثيق",
     "openMenu": "فتح القائمة",
@@ -1401,8 +1400,6 @@
       "intervals": "الفترات",
       "information": "المعلومات",
       "profile": "الملف الشخصي",
-      "language": "اللغة",
-      "telegramBotLanguage": "لغة بوت Telegram",
       "security": {
         "admin": "بيانات الأدمن",
         "twoFactor": "المصادقة الثنائية",
@@ -1704,7 +1701,6 @@
       "discordBotNotEnabled": "بوت ديسكورد غير مفعّل",
       "discordTestFailed": "فشل اختبار ديسكورد",
       "discordTestSuccess": "تم إرسال الإشعار التجريبي بنجاح",
-      "discordBotLanguage": "لغة بوت Discord",
       "discordNotifyTime": "وقت الإشعار",
       "discordNotifyTimeDesc": "عدد مرات إرسال بوت ديسكورد للتقارير الدورية. اختر فترة جاهزة، أو اختر «مخصص» لإدخال تعبير crontab.",
       "discordNotifyBackup": "نسخة احتياطية لقاعدة البيانات",
@@ -2417,15 +2413,6 @@
         "badTag": "وسم غير صالح",
         "badVlessRoute": "أدخل رقماً واحداً بين 0 و65535"
       }
-    },
-    "sponsors": {
-      "title": "الرعاة",
-      "intro": "شركات تدعم تطوير Ovix UI. تُفتح روابط الرعاة في علامة تبويب جديدة.",
-      "become": "كن راعيًا",
-      "tag": "راعٍ",
-      "visit": "زيارة",
-      "yourBrand": "علامتك التجارية هنا",
-      "yourBrandText": "ضع شركتك أمام آلاف مسؤولي الخوادم الذين يفتحون Ovix UI كل يوم."
     }
   },
   "tgbot": {

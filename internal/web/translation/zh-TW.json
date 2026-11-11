@@ -120,7 +120,6 @@
     "outbounds": "出站",
     "apiDocs": "API 文件",
     "donate": "捐贈",
-    "sponsors": "贊助商",
     "hosts": "主機",
     "docs": "文件",
     "openMenu": "開啟選單",
@@ -1401,8 +1400,6 @@
       "intervals": "間隔",
       "information": "資訊",
       "profile": "資料",
-      "language": "語言",
-      "telegramBotLanguage": "Telegram 機器人語言",
       "security": {
         "admin": "管理員憑證",
         "twoFactor": "雙重驗證",
@@ -1704,7 +1701,6 @@
       "discordBotNotEnabled": "Discord 機器人未啟用",
       "discordTestFailed": "Discord 測試失敗",
       "discordTestSuccess": "測試通知發送成功",
-      "discordBotLanguage": "Discord 機器人語言",
       "discordNotifyTime": "通知時間",
       "discordNotifyTimeDesc": "Discord 機器人傳送週期性報告的頻率。選擇預設間隔，或選擇「自訂」以輸入 crontab 運算式。",
       "discordNotifyBackup": "資料庫備份",
@@ -2417,15 +2413,6 @@
         "badTag": "無效的標籤",
         "badVlessRoute": "請輸入 0 到 65535 之間的單一數字"
       }
-    },
-    "sponsors": {
-      "title": "贊助商",
-      "intro": "支持 Ovix UI 開發的公司。贊助連結將在新分頁中開啟。",
-      "become": "成為贊助商",
-      "tag": "贊助",
-      "visit": "造訪",
-      "yourBrand": "您的品牌展示位",
-      "yourBrandText": "讓每天打開 Ovix UI 的數千名伺服器管理員看到您的公司。"
     }
   },
   "tgbot": {
