@@ -64,7 +64,7 @@ const (
 )
 
 func allModels() []any {
-	return []any{
+	return append([]any{
 		&model.User{},
 		&model.Inbound{},
 		&model.OutboundTraffics{},
@@ -88,7 +88,7 @@ func allModels() []any {
 		&model.OutboundSubscription{},
 		&model.SubBalancer{},
 		&model.TuicTrafficReceipt{},
-	}
+	}, model.OvixModels()...)
 }
 
 func migrateClientTrafficLastSubFetchColumn() error {

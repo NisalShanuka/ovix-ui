@@ -22,6 +22,7 @@ import (
 	"ovix.store/ovix-ui/internal/eventbus"
 	"ovix.store/ovix-ui/internal/logger"
 	"ovix.store/ovix-ui/internal/mtproto"
+	"ovix.store/ovix-ui/internal/ovix/reseller"
 	"ovix.store/ovix-ui/internal/tuic"
 	"ovix.store/ovix-ui/internal/util/common"
 	"ovix.store/ovix-ui/internal/util/cronspec"
@@ -225,6 +226,7 @@ func (s *Server) initRouter() (*gin.Engine, error) {
 			c.Header("Cache-Control", "max-age=31536000")
 		}
 	})
+	engine.Use(reseller.Gate(basePath))
 
 	// init i18n — still used by backend strings (errors, log messages,
 	// SubPage menu entries) even though the Go template engine is gone.
