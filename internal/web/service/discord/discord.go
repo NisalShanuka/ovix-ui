@@ -20,7 +20,7 @@ import (
 
 const (
 	defaultDiscordBaseURL = "https://discord.com/api/v10"
-	discordUserAgent      = "DiscordBot (https://ovix.store/ovix-ui, 3.x)"
+	discordUserAgent      = "DiscordBot (https://vpn.ovix.store, 3.x)"
 
 	ColorGreen  = 0x2ECC71
 	ColorRed    = 0xE74C3C

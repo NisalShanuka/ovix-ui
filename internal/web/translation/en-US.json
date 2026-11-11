@@ -2629,10 +2629,10 @@
   },
   "discord": {
     "test": {
-      "title": "ovix-ui Discord Notification Test",
+      "title": "Ovix UI Discord Notification Test",
       "body": "This is a test notification confirming that Discord notifications are configured correctly."
     },
-    "footer": "ovix-ui Panel",
+    "footer": "Ovix UI Panel",
     "fields": {
       "panelVersion": "Panel Version",
       "xrayCore": "Xray Core",
@@ -2667,13 +2667,13 @@
       "loginFailed": "Login Failed"
     },
     "report": {
-      "title": "📊 ovix-ui Status Report",
+      "title": "📊 Ovix UI Status Report",
       "summary": "Periodic server and proxy status report for **{{ .Host }}**",
-      "footer": "ovix-ui Scheduled Report • Schedule: {{ .RunTime }}"
+      "footer": "Ovix UI Scheduled Report • Schedule: {{ .RunTime }}"
     },
     "commands": {
-      "helpTitle": "🤖 ovix-ui Discord Bot Commands",
-      "helpDescription": "Available commands for monitoring and managing the ovix-ui server:",
+      "helpTitle": "🤖 Ovix UI Discord Bot Commands",
+      "helpDescription": "Available commands for monitoring and managing the Ovix UI server:",
       "helpStatus": "Display system load, RAM, CPU, connections, and online users",
       "helpReport": "Generate a full status report (with DB backup if configured)",
       "helpBackup": "Send the database backup file immediately",
@@ -2681,10 +2681,10 @@
       "helpInbounds": "List all configured inbounds with ports and client stats",
       "helpRestart": "Restart the Xray core",
       "helpHelp": "Display this list of available commands",
-      "statusTitle": "⚡ ovix-ui Server Status",
+      "statusTitle": "⚡ Ovix UI Server Status",
       "statusDescription": "Current operational metrics for **{{ .Host }}**",
       "backupTitle": "🗄️ Database Backup",
-      "backupDescription": "Backup archive for ovix-ui generated at `{{ .Time }}`",
+      "backupDescription": "Backup archive for Ovix UI generated at `{{ .Time }}`",
       "backupUnavailable": "❌ Backup service unavailable",
       "backupFailed": "❌ Failed to read database backup: {{ .Error }}",
       "usageHint": "⚠️ Usage: `!usage <email>` or `/usage <email>`",

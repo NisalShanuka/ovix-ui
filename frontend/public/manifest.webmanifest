@@ -1,6 +1,6 @@
 {
-  "name": "ovix-ui",
-  "short_name": "ovix-ui",
+  "name": "Ovix UI",
+  "short_name": "Ovix",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

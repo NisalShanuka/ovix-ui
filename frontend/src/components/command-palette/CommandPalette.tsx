@@ -812,7 +812,7 @@ export default function CommandPalette() {
                 {t('close')}
               </span>
             </div>
-            <span>ovix-ui Command Palette</span>
+            <span>Ovix UI Command Palette</span>
           </div>
         </div>
       </div>

@@ -133,7 +133,7 @@ func (s *Subscriber) FormatEmbed(e eventbus.Event) (Embed, bool) {
 	}
 
 	footer := &EmbedFooter{
-		Text: truncateUnits("ovix-ui • "+h, 2048),
+		Text: truncateUnits("Ovix UI • "+h, 2048),
 	}
 	tr := translator(s.settingService)
 
