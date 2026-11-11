@@ -16,6 +16,8 @@ MODULE = "ovix.store/ovix-ui"
 # Paths removed from the fork entirely (upstream-only material).
 DELETE_DIRS = [".github", "media", "deploy/marketplace", ".oss-scanner"]
 DELETE_GLOBS = ["README.*.md"]
+# Tests that only check the deleted .github bot workflows.
+DELETE_FILES = {"bot_context_test.go"}
 # docs/ is the upstream Fumadocs site; only the architecture map is kept.
 DOCS_KEEP = {"docs/architecture.md"}
 
@@ -58,6 +60,8 @@ def git_files():
 
 
 def is_deleted(path):
+    if path in DELETE_FILES:
+        return True
     if path.startswith("docs/") and path not in DOCS_KEEP:
         return True
     if any(path == d or path.startswith(d + "/") for d in DELETE_DIRS):

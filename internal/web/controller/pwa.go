@@ -13,15 +13,15 @@ type pwaAsset struct {
 }
 
 var pwaAssets = map[string]pwaAsset{
-	"manifest.webmanifest": {path: "dist/manifest.webmanifest", contentType: "application/manifest+json; charset=utf-8"},
-	"pwa-register.js":      {path: "dist/pwa-register.js", contentType: "application/javascript; charset=utf-8"},
-	"service-worker.js":    {path: "dist/service-worker.js", contentType: "application/javascript; charset=utf-8"},
-	"icons/ovix-ui-16.png":   {path: "dist/icons/ovix-ui-16.png", contentType: "image/png"},
-	"icons/ovix-ui-24.png":   {path: "dist/icons/ovix-ui-24.png", contentType: "image/png"},
-	"icons/ovix-ui-32.png":   {path: "dist/icons/ovix-ui-32.png", contentType: "image/png"},
-	"icons/ovix-ui-64.png":   {path: "dist/icons/ovix-ui-64.png", contentType: "image/png"},
-	"icons/ovix-ui-192.png":  {path: "dist/icons/ovix-ui-192.png", contentType: "image/png"},
-	"icons/ovix-ui-512.png":  {path: "dist/icons/ovix-ui-512.png", contentType: "image/png"},
+	"manifest.webmanifest":  {path: "dist/manifest.webmanifest", contentType: "application/manifest+json; charset=utf-8"},
+	"pwa-register.js":       {path: "dist/pwa-register.js", contentType: "application/javascript; charset=utf-8"},
+	"service-worker.js":     {path: "dist/service-worker.js", contentType: "application/javascript; charset=utf-8"},
+	"icons/ovix-ui-16.png":  {path: "dist/icons/ovix-ui-16.png", contentType: "image/png"},
+	"icons/ovix-ui-24.png":  {path: "dist/icons/ovix-ui-24.png", contentType: "image/png"},
+	"icons/ovix-ui-32.png":  {path: "dist/icons/ovix-ui-32.png", contentType: "image/png"},
+	"icons/ovix-ui-64.png":  {path: "dist/icons/ovix-ui-64.png", contentType: "image/png"},
+	"icons/ovix-ui-192.png": {path: "dist/icons/ovix-ui-192.png", contentType: "image/png"},
+	"icons/ovix-ui-512.png": {path: "dist/icons/ovix-ui-512.png", contentType: "image/png"},
 }
 
 func servePWAAsset(c *gin.Context, assetName string) {
