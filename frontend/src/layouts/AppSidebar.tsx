@@ -15,9 +15,7 @@ import {
   DatabaseOutlined,
   DiscordOutlined,
   ExportOutlined,
-  GithubOutlined,
   GlobalOutlined,
-  HeartOutlined,
   ImportOutlined,
   LogoutOutlined,
   MailOutlined,
@@ -27,12 +25,12 @@ import {
   MoonOutlined,
   PushpinFilled,
   PushpinOutlined,
-  ReadOutlined,
   SafetyOutlined,
   SearchOutlined,
   SettingOutlined,
   SunOutlined,
   SwapOutlined,
+  TagOutlined,
   TagsOutlined,
   TeamOutlined,
   ToolOutlined,
@@ -45,12 +43,9 @@ import { useAllSettings } from '@/api/queries/useAllSettings';
 import { useCommandPalette } from '@/components/command-palette/useCommandPalette';
 import './AppSidebar.css';
 
-const DONATE_URL = 'https://donate.sanaei.dev/';
 // The palette listens for Ctrl as well as Cmd, so the chip must not show a
 // Mac glyph to the Linux and Windows operators who are most of this panel's.
 const SHORTCUT_MODIFIER = /Mac|iPhone|iPad|iPod/.test(navigator.userAgent) ? '⌘' : 'Ctrl';
-const DOCS_URL = 'https://docs.sanaei.dev/';
-const REPO_URL = 'https://github.com/MHSanaei/3x-ui';
 const LOGOUT_KEY = '__logout__';
 const RAIL_WIDTH = 72;
 const SIDER_WIDTH = 220;
@@ -87,51 +82,14 @@ const iconByName: Record<IconName, ComponentType> = {
   routing: SwapOutlined,
 };
 
-function DonateButton({ ariaLabel }: { ariaLabel: string }) {
-  return (
-    <a
-      href={DONATE_URL}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="sidebar-donate"
-      aria-label={ariaLabel}
-      title={ariaLabel}
-    >
-      <HeartOutlined />
-    </a>
-  );
-}
-
-function DocsButton({ ariaLabel }: { ariaLabel: string }) {
-  return (
-    <a
-      href={DOCS_URL}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="sidebar-docs"
-      aria-label={ariaLabel}
-      title={ariaLabel}
-    >
-      <ReadOutlined />
-    </a>
-  );
-}
-
 function VersionBadge({ version, collapsed }: { version: string; collapsed?: boolean }) {
   if (!version) return null;
   const label = formatPanelVersion(version);
   return (
-    <a
-      href={REPO_URL}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="sider-version"
-      aria-label={`GitHub ${label}`}
-      title={label}
-    >
-      <GithubOutlined />
+    <span className="sider-version" title={label}>
+      <TagOutlined />
       {!collapsed && <span className="sider-version-text">{label}</span>}
-    </a>
+    </span>
   );
 }
 
@@ -378,7 +336,7 @@ export default function AppSidebar() {
       >
         <div className="sider-brand">
           <div className="brand-block">
-            <span className="brand-text">{railCollapsed ? '3X' : 'Ovix UI'}</span>
+            <span className="brand-text">{railCollapsed ? 'OV' : 'Ovix UI'}</span>
           </div>
           {!railCollapsed && (
             <div className="brand-actions">
@@ -392,8 +350,6 @@ export default function AppSidebar() {
               >
                 {pinned ? <PushpinFilled /> : <PushpinOutlined />}
               </button>
-              <DocsButton ariaLabel={t('menu.docs') || 'Documentation'} />
-              <DonateButton ariaLabel={t('menu.donate') || 'Donate'} />
               <ThemeCycleButton
                 id="theme-cycle"
                 isDark={isDark}
@@ -469,8 +425,6 @@ export default function AppSidebar() {
             <span className="drawer-brand">Ovix UI</span>
           </div>
           <div className="drawer-header-actions">
-            <DocsButton ariaLabel={t('menu.docs') || 'Documentation'} />
-            <DonateButton ariaLabel={t('menu.donate') || 'Donate'} />
             <ThemeCycleButton
               id="theme-cycle-drawer"
               isDark={isDark}
