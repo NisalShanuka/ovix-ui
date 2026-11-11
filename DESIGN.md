@@ -39,6 +39,14 @@ Radii are 9px, 12px and 18px (cards). Motion uses 120, 200 and 320ms, plus 600ms
 - **ActivityFeed**: timed events (came online, went offline, Xray errors, panel notices) appear above standing "needs action" items (expiring or ended clients). New items slide in.
 - **ClientsPanel**: filter chips (All, Online, Expiring soon, Ended, Disabled) use the server's buckets. Each row has a status pill that mirrors `client_paging.go`, a live speed, a usage meter, the expiry date, and a link that opens the client on the Clients page.
 
+## Shell (every page)
+- **Sidebar**: open by default at 248px, showing the brand mark, labelled nav and the server health card (`ds/NodeCard`). Unpinning it shrinks it to a 72px rail.
+- **PageTop** (`ds/PageTop`): every page gets the dashboard top bar, with the menu title and a one-line description of the page.
+- **Phone**: a bottom tab bar (`ds/MobileNav`: Overview, Clients, Add, Inbounds, More) replaces the floating menu handle. More opens the drawer.
+- **Widgets**: `ds/shell.css` gives AntD widgets one finish: glass cards, uppercase table headers, pill tags, 12px radius controls, an orange tab rail and 20px modals.
+- **Sign-in**: an ink brand panel next to a white form card. On a phone only the card shows.
+- **Colour**: AntD preset hues (`blue`, `geekblue`, `purple`, `cyan`, `magenta`, `pink`) are reseeded to brand shades in `useTheme`, so a colour name can never bring blue back.
+
 ## Rules
 - Orange appears only on primary actions, the active state and live flow. Everything else stays neutral.
 - No gradient text. No glows except the primary button's shadow.
