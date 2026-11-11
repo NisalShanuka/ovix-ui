@@ -6,6 +6,17 @@ blue='\033[0;34m'
 yellow='\033[0;33m'
 plain='\033[0m'
 
+# GitHub "owner/repo" publishing Ovix UI releases. Empty disables install and
+# update so these commands can never pull upstream 3x-ui over Ovix UI.
+OVIX_RELEASE_REPO="${OVIX_RELEASE_REPO:-}"
+
+require_release_repo() {
+    if [[ -z "${OVIX_RELEASE_REPO}" ]]; then
+        echo -e "${red}Ovix UI releases are not published yet: install/update from the internet is disabled.${plain}"
+        return 1
+    fi
+}
+
 #Add some basic function here
 function LOGD() {
     echo -e "${yellow}[DEG] $* ${plain}"
@@ -129,7 +140,8 @@ before_show_menu() {
 }
 
 install() {
-    bash <(curl -Ls https://raw.githubusercontent.com/MHSanaei/3x-ui/main/install.sh)
+    require_release_repo || return 1
+    bash <(curl -Ls https://raw.githubusercontent.com/${OVIX_RELEASE_REPO}/main/install.sh)
     if [[ $? == 0 ]]; then
         if [[ $# == 0 ]]; then
             start
@@ -140,6 +152,7 @@ install() {
 }
 
 update() {
+    require_release_repo || return 1
     confirm "This function will update all ovix-ui components to the latest version, and the data will not be lost. Do you want to continue?" "y"
     if [[ $? != 0 ]]; then
         LOGE "Cancelled"
@@ -148,7 +161,7 @@ update() {
         fi
         return 0
     fi
-    bash <(curl -Ls https://raw.githubusercontent.com/MHSanaei/3x-ui/main/update.sh)
+    bash <(curl -Ls https://raw.githubusercontent.com/${OVIX_RELEASE_REPO}/main/update.sh)
     if [[ $? == 0 ]]; then
         LOGI "Update is complete, Panel has automatically restarted "
         before_show_menu
@@ -156,6 +169,7 @@ update() {
 }
 
 update_dev() {
+    require_release_repo || return 1
     confirm "This will update ovix-ui to the latest DEV commit (the rolling 'dev-latest' build, not a stable release). Your data is preserved. Continue?" "y"
     if [[ $? != 0 ]]; then
         LOGE "Cancelled"
@@ -166,7 +180,7 @@ update_dev() {
     fi
     # OVIX_UPDATE_TAG tells update.sh to install the dev-latest pre-release
     # instead of the latest stable tag.
-    OVIX_UPDATE_TAG="dev-latest" bash <(curl -Ls https://raw.githubusercontent.com/MHSanaei/3x-ui/main/update.sh)
+    OVIX_UPDATE_TAG="dev-latest" bash <(curl -Ls https://raw.githubusercontent.com/${OVIX_RELEASE_REPO}/main/update.sh)
     if [[ $? == 0 ]]; then
         LOGI "Dev update is complete, Panel has automatically restarted "
         before_show_menu
@@ -213,15 +227,16 @@ replace_xui_script() {
 installed_script_url() {
     local ver
     ver=$("${xui_folder}/ovix-ui" -v 2> /dev/null | tr -d '[:space:]')
-    if [[ "$ver" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && curl -fsIL -o /dev/null "https://raw.githubusercontent.com/MHSanaei/3x-ui/v${ver}/ovix-ui.sh"; then
-        echo "https://raw.githubusercontent.com/MHSanaei/3x-ui/v${ver}/ovix-ui.sh"
+    if [[ "$ver" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && curl -fsIL -o /dev/null "https://raw.githubusercontent.com/${OVIX_RELEASE_REPO}/v${ver}/ovix-ui.sh"; then
+        echo "https://raw.githubusercontent.com/${OVIX_RELEASE_REPO}/v${ver}/ovix-ui.sh"
     else
         echo -e "${yellow}No ovix-ui.sh published for the installed version (${ver:-unknown}), using main${plain}" >&2
-        echo "https://raw.githubusercontent.com/MHSanaei/3x-ui/main/ovix-ui.sh"
+        echo "https://raw.githubusercontent.com/${OVIX_RELEASE_REPO}/main/ovix-ui.sh"
     fi
 }
 
 update_menu() {
+    require_release_repo || return 1
     echo -e "${yellow}Updating Menu${plain}"
     confirm "This function will update the menu to the latest changes." "y"
     if [[ $? != 0 ]]; then
@@ -855,6 +870,7 @@ enable_bbr() {
 }
 
 update_shell() {
+    require_release_repo || return 1
     if replace_xui_script "$(installed_script_url)" "true"; then
         LOGI "Upgrade script succeeded, Please rerun the script"
         before_show_menu

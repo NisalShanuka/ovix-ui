@@ -6,6 +6,19 @@ blue='\033[0;34m'
 yellow='\033[0;33m'
 plain='\033[0m'
 
+# GitHub "owner/repo" publishing Ovix UI releases. Empty disables install and
+# update so these commands can never pull upstream 3x-ui over Ovix UI.
+OVIX_RELEASE_REPO="${OVIX_RELEASE_REPO:-}"
+
+require_release_repo() {
+    if [[ -z "${OVIX_RELEASE_REPO}" ]]; then
+        echo -e "${red}Ovix UI releases are not published yet: install/update from the internet is disabled.${plain}"
+        return 1
+    fi
+}
+
+require_release_repo || exit 1
+
 xui_folder="${OVIX_MAIN_FOLDER:=/usr/local/ovix-ui}"
 xui_service="${OVIX_SERVICE:=/etc/systemd/system}"
 
@@ -491,7 +504,7 @@ require_repo_files() {
     shift
     [[ "${ref}" == "main" ]] && return 0
     for name in "$@"; do
-        status=$(${curl_bin} -sIL --retry 3 --connect-timeout 15 -o /dev/null -w '%{http_code}' "https://raw.githubusercontent.com/MHSanaei/3x-ui/${ref}/${name}")
+        status=$(${curl_bin} -sIL --retry 3 --connect-timeout 15 -o /dev/null -w '%{http_code}' "https://raw.githubusercontent.com/${OVIX_RELEASE_REPO}/${ref}/${name}")
         if [[ "${status}" != "200" ]]; then
             _fail "ERROR: ${name} is not available for ${ref} (HTTP ${status}). Update to a release that ships it, or to 'dev-latest'. The current installation is untouched."
         fi
@@ -518,7 +531,7 @@ update_ovix-ui() {
         tag_version="${OVIX_UPDATE_TAG}"
         echo -e "${green}Using update tag: ${tag_version}${plain}"
     else
-        tag_version=$(${curl_bin} -Ls "https://api.github.com/repos/MHSanaei/3x-ui/releases/latest" 2> /dev/null | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
+        tag_version=$(${curl_bin} -Ls "https://api.github.com/repos/${OVIX_RELEASE_REPO}/releases/latest" 2> /dev/null | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
         if [[ ! -n "$tag_version" ]]; then
             _fail "ERROR: Failed to fetch ovix-ui version, it may be due to GitHub API restrictions, please try it later"
         fi
@@ -535,7 +548,7 @@ update_ovix-ui() {
     local required_files=("ovix-ui.sh")
     [[ $release == "alpine" ]] && required_files+=("ovix-ui.rc")
     require_repo_files "${script_ref}" "${required_files[@]}"
-    ${curl_bin} -fLRo ${xui_folder}-linux-$(arch).tar.gz https://github.com/MHSanaei/3x-ui/releases/download/${tag_version}/ovix-ui-linux-$(arch).tar.gz 2> /dev/null
+    ${curl_bin} -fLRo ${xui_folder}-linux-$(arch).tar.gz https://github.com/${OVIX_RELEASE_REPO}/releases/download/${tag_version}/ovix-ui-linux-$(arch).tar.gz 2> /dev/null
     if [[ $? -ne 0 ]]; then
         _fail "ERROR: Failed to download ovix-ui, please be sure that your server can access GitHub"
     fi
@@ -548,7 +561,7 @@ update_ovix-ui() {
     # predating the sidecar) is tolerated with a warning.
     archive="${xui_folder}-linux-$(arch).tar.gz"
     rm -f "${archive}.sha256"
-    sidecar_code=$(${curl_bin} -sL --retry 3 --retry-delay 3 --connect-timeout 15 --max-time 60 -o "${archive}.sha256" -w '%{http_code}' "https://github.com/MHSanaei/3x-ui/releases/download/${tag_version}/ovix-ui-linux-$(arch).tar.gz.sha256" 2> /dev/null)
+    sidecar_code=$(${curl_bin} -sL --retry 3 --retry-delay 3 --connect-timeout 15 --max-time 60 -o "${archive}.sha256" -w '%{http_code}' "https://github.com/${OVIX_RELEASE_REPO}/releases/download/${tag_version}/ovix-ui-linux-$(arch).tar.gz.sha256" 2> /dev/null)
     if [[ "${sidecar_code}" == "200" ]]; then
         expected_sha256=$(awk 'NR == 1 {print $1}' "${archive}.sha256")
         actual_sha256=$(sha256sum "${archive}" | awk '{print $1}')
@@ -653,7 +666,7 @@ update_ovix-ui() {
     echo -e "${green}Downloading and installing ovix-ui.sh script...${plain}"
     local xui_script_temp="/usr/bin/ovix-ui-temp.$$"
     rm -f "${xui_script_temp}"
-    ${curl_bin} -fLRo "${xui_script_temp}" "https://raw.githubusercontent.com/MHSanaei/3x-ui/${script_ref}/ovix-ui.sh" > /dev/null 2>&1
+    ${curl_bin} -fLRo "${xui_script_temp}" "https://raw.githubusercontent.com/${OVIX_RELEASE_REPO}/${script_ref}/ovix-ui.sh" > /dev/null 2>&1
     if [[ $? -ne 0 ]]; then
         rm -f "${xui_script_temp}"
         _fail "ERROR: Failed to download ovix-ui.sh script, please be sure that your server can access GitHub"
@@ -689,7 +702,7 @@ update_ovix-ui() {
         echo -e "${green}Downloading and installing startup unit ovix-ui.rc...${plain}"
         xui_rc_temp="/etc/init.d/ovix-ui.tmp.$$"
         rm -f "${xui_rc_temp}"
-        ${curl_bin} -fLRo "${xui_rc_temp}" "https://raw.githubusercontent.com/MHSanaei/3x-ui/${script_ref}/ovix-ui.rc" > /dev/null 2>&1
+        ${curl_bin} -fLRo "${xui_rc_temp}" "https://raw.githubusercontent.com/${OVIX_RELEASE_REPO}/${script_ref}/ovix-ui.rc" > /dev/null 2>&1
         if [[ $? -ne 0 ]]; then
             rm -f "${xui_rc_temp}"
             _fail "ERROR: Failed to download startup unit ovix-ui.rc, please be sure that your server can access GitHub"
@@ -748,13 +761,13 @@ update_ovix-ui() {
                 echo -e "${yellow}Service files not found in tar.gz, downloading from GitHub...${plain}"
                 case "${release}" in
                     ubuntu | debian | armbian)
-                        service_unit_url="https://raw.githubusercontent.com/MHSanaei/3x-ui/${script_ref}/ovix-ui.service.debian"
+                        service_unit_url="https://raw.githubusercontent.com/${OVIX_RELEASE_REPO}/${script_ref}/ovix-ui.service.debian"
                         ;;
                     arch | manjaro | parch)
-                        service_unit_url="https://raw.githubusercontent.com/MHSanaei/3x-ui/${script_ref}/ovix-ui.service.arch"
+                        service_unit_url="https://raw.githubusercontent.com/${OVIX_RELEASE_REPO}/${script_ref}/ovix-ui.service.arch"
                         ;;
                     *)
-                        service_unit_url="https://raw.githubusercontent.com/MHSanaei/3x-ui/${script_ref}/ovix-ui.service.rhel"
+                        service_unit_url="https://raw.githubusercontent.com/${OVIX_RELEASE_REPO}/${script_ref}/ovix-ui.service.rhel"
                         ;;
                 esac
 
