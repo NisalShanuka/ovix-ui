@@ -10,7 +10,7 @@ import { setupHttp } from '@/api/http-init';
 import { readyI18n } from '@/i18n/react';
 import { ThemeProvider } from '@/hooks/useTheme';
 import { QueryProvider } from '@/api/QueryProvider';
-import { router } from '@/routes';
+import { fetchSession } from '@/api/ovix';
 
 // A stale tab keeps this entry's old chunk URLs after a deploy. Reload once per
 // panel base path and entry URL; the same bundle must not loop on a real outage.
@@ -45,7 +45,15 @@ if (messageContainer) {
   message.config({ getContainer: () => messageContainer });
 }
 
-readyI18n().then(() => {
+async function loadRouter() {
+  const session = await fetchSession();
+  if (session?.role === 'reseller') {
+    return (await import('@/reseller-routes')).createResellerRouter();
+  }
+  return (await import('@/routes')).router;
+}
+
+Promise.all([readyI18n(), loadRouter()]).then(([, router]) => {
   const root = document.getElementById('app');
   if (root) {
     createRoot(root).render(

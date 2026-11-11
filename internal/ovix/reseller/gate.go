@@ -52,7 +52,7 @@ func Gate(basePath string) gin.HandlerFunc {
 // resellerMayReach is the reseller allowlist, rel being the path below the
 // base path. /panel/api and /ws are owner-only apart from the reseller API.
 func resellerMayReach(method, rel string) bool {
-	if strings.HasPrefix(rel, resellerAPIPrefix) {
+	if strings.HasPrefix(rel, resellerAPIPrefix) || (method == http.MethodGet && rel == sessionPath) {
 		return true
 	}
 	switch {

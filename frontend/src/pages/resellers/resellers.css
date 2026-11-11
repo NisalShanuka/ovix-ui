@@ -1,0 +1,87 @@
+/* Ovix reseller pages reuse the standard panel page shell. Kept out of
+   page-shell.css so upstream merges of that file stay clean. */
+.resellers-page,
+.reseller-portal {
+  --bg-page: #e6e8ec;
+  --bg-card: #ffffff;
+  min-height: 100vh;
+  background: var(--bg-page);
+}
+
+.resellers-page.is-dark,
+.reseller-portal.is-dark {
+  --bg-page: #1a1b1f;
+  --bg-card: #23252b;
+}
+
+.resellers-page.is-dark.is-ultra,
+.reseller-portal.is-dark.is-ultra {
+  --bg-page: #000;
+  --bg-card: #101013;
+}
+
+.resellers-page .ant-layout,
+.resellers-page .ant-layout-content,
+.resellers-page .content-shell,
+.reseller-portal .ant-layout,
+.reseller-portal .ant-layout-content {
+  background: transparent;
+}
+
+.resellers-page .content-area,
+.reseller-portal .portal-content {
+  padding: 24px;
+}
+
+.resellers-page .summary-card,
+.reseller-portal .summary-card {
+  padding: 16px;
+}
+
+.reseller-portal .portal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 24px;
+  border-bottom: 1px solid var(--ant-color-border-secondary);
+  background: var(--bg-card);
+}
+
+.reseller-portal .portal-brand {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.reseller-portal .portal-content {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.reseller-portal .link-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.reseller-portal .link-row code {
+  flex: 1;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-size: 12px;
+}
+
+@media (max-width: 768px) {
+  .resellers-page .content-area,
+  .resellers-page .summary-card,
+  .reseller-portal .portal-content,
+  .reseller-portal .summary-card {
+    padding: 8px;
+  }
+
+  .reseller-portal .portal-header {
+    padding: 8px 12px;
+  }
+}

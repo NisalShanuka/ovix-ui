@@ -76,6 +76,7 @@ var (
 	clientService  service.ClientService
 	inboundService service.InboundService
 	xrayService    service.XrayService
+	settingService service.SettingService
 )
 
 func afterClientChange(needRestart bool) {
@@ -322,7 +323,7 @@ func ClientLinks(userID int, email, host string) (map[string][]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	subLinks, err := inboundService.GetSubLinks(host, rec.SubID)
+	subURLs, err := subscriptionURLs(host, rec.SubID)
 	if err != nil {
 		return nil, err
 	}
@@ -330,7 +331,29 @@ func ClientLinks(userID int, email, host string) (map[string][]string, error) {
 	if err != nil {
 		return nil, err
 	}
-	return map[string][]string{"subscription": subLinks, "links": links}, nil
+	return map[string][]string{"subscription": subURLs, "links": links}, nil
+}
+
+// subscriptionURLs builds the client's subscription URLs the way the owner
+// panel does: each enabled format's base URI plus the subId.
+func subscriptionURLs(host, subID string) ([]string, error) {
+	urls := []string{}
+	if subID == "" {
+		return urls, nil
+	}
+	settings, err := settingService.GetDefaultSettings(host)
+	if err != nil {
+		return nil, err
+	}
+	values, _ := settings.(map[string]any)
+	for _, f := range [][2]string{{"subEnable", "subURI"}, {"subJsonEnable", "subJsonURI"}, {"subClashEnable", "subClashURI"}} {
+		enabled, _ := values[f[0]].(bool)
+		base, _ := values[f[1]].(string)
+		if enabled && base != "" {
+			urls = append(urls, base+subID)
+		}
+	}
+	return urls, nil
 }
 
 // ListClients returns the reseller's own clients with their traffic.

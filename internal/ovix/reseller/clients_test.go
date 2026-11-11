@@ -2,13 +2,17 @@ package reseller
 
 import (
 	"errors"
+	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 	"time"
 
 	"ovix.store/ovix-ui/internal/database"
 	"ovix.store/ovix-ui/internal/database/dbtest"
 	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/sub"
+	"ovix.store/ovix-ui/internal/web/service"
 )
 
 type clientFixture struct {
@@ -38,6 +42,10 @@ func setupClients(t *testing.T) clientFixture {
 	t.Helper()
 	dbDir := t.TempDir()
 	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	t.Setenv("OVIX_BIN_FOLDER", dbDir)
+	if err := os.WriteFile(filepath.Join(dbDir, "config.json"), []byte(`{"log":{}}`), 0o600); err != nil {
+		t.Fatalf("write Xray config: %v", err)
+	}
 	dbtest.InitDB(t, filepath.Join(dbDir, "ovix-ui.db"))
 	f := clientFixture{
 		inbound:   mkClientInbound(t, 22001, `{"clients":[],"decryption":"none"}`),
@@ -256,6 +264,26 @@ func TestResellerCannotTouchOthersClients(t *testing.T) {
 	mine, err := ListClients(f.shop)
 	if err != nil || len(mine) != 1 || mine[0].Email != "mine" {
 		t.Fatalf("shop's list = %+v err=%v", mine, err)
+	}
+}
+
+func TestClientLinksGiveTheSubscriptionURL(t *testing.T) {
+	f := setupClients(t)
+	service.RegisterSubLinkProvider(sub.NewLinkProvider())
+	if _, err := CreateClient(f.shop, NewClientInput{Email: "linked", Days: 1, InboundIds: []int{f.inbound}}); err != nil {
+		t.Fatalf("create: %v", err)
+	}
+	rec, _ := recordOf(t, "linked")
+	links, err := ClientLinks(f.shop, "linked", "panel.example.com")
+	if err != nil {
+		t.Fatalf("links: %v", err)
+	}
+	sub := links["subscription"]
+	if len(sub) != 1 || !strings.HasPrefix(sub[0], "http") || !strings.HasSuffix(sub[0], "/"+rec.SubID) {
+		t.Fatalf("subscription = %v, want one http(s) URL ending in /%s", sub, rec.SubID)
+	}
+	if len(links["links"]) != 1 || !strings.HasPrefix(links["links"][0], "vless://") {
+		t.Fatalf("share links = %v", links["links"])
 	}
 }
 

@@ -4639,6 +4639,24 @@ export const SCHEMAS: Record<string, unknown> = {
     ],
     "type": "object"
   },
+  "SessionView": {
+    "description": "SessionView tells the SPA who is logged in.",
+    "properties": {
+      "role": {
+        "example": "reseller",
+        "type": "string"
+      },
+      "username": {
+        "example": "shop1",
+        "type": "string"
+      }
+    },
+    "required": [
+      "role",
+      "username"
+    ],
+    "type": "object"
+  },
   "Setting": {
     "description": "Setting stores key-value configuration settings for the ovix-ui panel.",
     "properties": {

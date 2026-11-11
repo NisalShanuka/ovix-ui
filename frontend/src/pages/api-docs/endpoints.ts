@@ -2243,6 +2243,13 @@ export const sections: readonly Section[] = [
     endpoints: [
       {
         method: 'GET',
+        path: '/panel/api/ovix/session',
+        summary:
+          'Who is logged in: role "owner" or "reseller". Callable by both; the panel reads it at startup to choose the owner panel or the reseller portal.',
+        responseSchema: 'SessionView',
+      },
+      {
+        method: 'GET',
         path: '/panel/api/reseller/me',
         summary: 'Your balance and the inbounds you may put clients on.',
         responseSchema: 'MeView',

@@ -1128,6 +1128,12 @@ export const ServerSettingsSchema = z.object({
 });
 export type ServerSettings = z.infer<typeof ServerSettingsSchema>;
 
+export const SessionViewSchema = z.object({
+  role: z.string(),
+  username: z.string(),
+});
+export type SessionView = z.infer<typeof SessionViewSchema>;
+
 export const SettingSchema = z.object({
   id: z.number().int(),
   key: z.string(),

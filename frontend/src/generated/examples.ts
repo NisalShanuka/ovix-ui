@@ -1147,6 +1147,10 @@ export const EXAMPLES: Record<string, unknown> = {
     "subnetCidr": 0,
     "subnetIp": ""
   },
+  "SessionView": {
+    "role": "reseller",
+    "username": "shop1"
+  },
   "Setting": {
     "id": 0,
     "key": "",

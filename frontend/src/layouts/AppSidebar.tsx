@@ -28,6 +28,7 @@ import {
   SafetyOutlined,
   SearchOutlined,
   SettingOutlined,
+  ShopOutlined,
   SunOutlined,
   SwapOutlined,
   TagOutlined,
@@ -64,6 +65,7 @@ type IconName =
   | 'hosts'
   | 'logout'
   | 'apidocs'
+  | 'resellers'
   | 'outbound'
   | 'routing';
 
@@ -78,6 +80,7 @@ const iconByName: Record<IconName, ComponentType> = {
   hosts: GlobalOutlined,
   logout: LogoutOutlined,
   apidocs: ApiOutlined,
+  resellers: ShopOutlined,
   outbound: ExportOutlined,
   routing: SwapOutlined,
 };
@@ -189,6 +192,7 @@ export default function AppSidebar() {
       { key: '/routing', icon: 'routing', title: t('menu.routing') },
       { key: '/settings', icon: 'setting', title: t('menu.settings') },
       { key: '/xray', icon: 'tool', title: t('menu.xray') },
+      { key: '/resellers', icon: 'resellers', title: t('menu.resellers') },
       { key: '/api-docs', icon: 'apidocs', title: t('menu.apiDocs') },
       { key: LOGOUT_KEY, icon: 'logout', title: t('logout') },
     ],

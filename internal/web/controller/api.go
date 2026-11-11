@@ -214,6 +214,7 @@ func (a *APIController) initRouter(g *gin.RouterGroup) {
 
 	reseller.RegisterOwnerRoutes(api)
 	reseller.RegisterResellerRoutes(api)
+	reseller.RegisterSessionRoute(api)
 
 	// Extra routes
 	api.POST("/backuptotgbot", a.BackuptoTgbot)

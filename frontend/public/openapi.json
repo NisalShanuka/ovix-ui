@@ -4665,6 +4665,24 @@
         ],
         "type": "object"
       },
+      "SessionView": {
+        "description": "SessionView tells the SPA who is logged in.",
+        "properties": {
+          "role": {
+            "example": "reseller",
+            "type": "string"
+          },
+          "username": {
+            "example": "shop1",
+            "type": "string"
+          }
+        },
+        "required": [
+          "role",
+          "username"
+        ],
+        "type": "object"
+      },
       "Setting": {
         "description": "Setting stores key-value configuration settings for the ovix-ui panel.",
         "properties": {
@@ -14117,6 +14135,45 @@
                       "createdAt": 1762819200000
                     }
                   ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/panel/api/ovix/session": {
+      "get": {
+        "tags": [
+          "Reseller API"
+        ],
+        "summary": "Who is logged in: role \"owner\" or \"reseller\". Callable by both; the panel reads it at startup to choose the owner panel or the reseller portal.",
+        "operationId": "get_panel_api_ovix_session",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "obj": {
+                      "$ref": "#/components/schemas/SessionView"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "obj": {
+                    "role": "reseller",
+                    "username": "shop1"
+                  }
                 }
               }
             }

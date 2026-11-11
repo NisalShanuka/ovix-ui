@@ -1060,6 +1060,11 @@ export interface ServerSettings {
   subnetIp: string;
 }
 
+export interface SessionView {
+  role: string;
+  username: string;
+}
+
 export interface Setting {
   id: number;
   key: string;

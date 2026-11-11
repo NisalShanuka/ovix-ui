@@ -180,9 +180,20 @@ func listResellers(onlyID int) ([]ResellerView, error) {
 	if onlyID > 0 {
 		q = q.Where("a.user_id = ?", onlyID)
 	}
-	var views []ResellerView
-	if err := q.Scan(&views).Error; err != nil {
+	var rows []struct {
+		UserId    int
+		Username  string
+		Disabled  bool
+		Credit    int64
+		Note      string
+		CreatedAt int64
+	}
+	if err := q.Scan(&rows).Error; err != nil {
 		return nil, err
+	}
+	views := make([]ResellerView, len(rows))
+	for i, r := range rows {
+		views[i] = ResellerView{UserId: r.UserId, Username: r.Username, Disabled: r.Disabled, Credit: r.Credit, Note: r.Note, CreatedAt: r.CreatedAt}
 	}
 	for i := range views {
 		v := &views[i]
