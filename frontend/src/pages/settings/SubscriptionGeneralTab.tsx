@@ -370,7 +370,7 @@ export default function SubscriptionGeneralTab({
               >
                 <Input
                   value={allSetting.subThemeDir}
-                  placeholder="/etc/3x-ui/sub_templates/my-theme/"
+                  placeholder="/etc/ovix-ui/sub_templates/my-theme/"
                   onChange={(e) => updateSetting({ subThemeDir: e.target.value })}
                 />
               </SettingListItem>

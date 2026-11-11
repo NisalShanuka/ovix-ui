@@ -6,8 +6,8 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	wgutil "github.com/mhsanaei/3x-ui/v3/internal/util/wireguard"
+	"ovix.store/ovix-ui/internal/database/model"
+	wgutil "ovix.store/ovix-ui/internal/util/wireguard"
 )
 
 func hasDirectOutOutbound(svc *SubJsonService) bool {

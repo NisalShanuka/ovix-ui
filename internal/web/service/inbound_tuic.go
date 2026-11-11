@@ -3,10 +3,10 @@ package service
 import (
 	"context"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/tuic"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/logger"
+	"ovix.store/ovix-ui/internal/tuic"
 )
 
 func (s *InboundService) DesiredTuicInstances() ([]tuic.Instance, error) {

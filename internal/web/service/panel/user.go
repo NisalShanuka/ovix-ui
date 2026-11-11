@@ -6,13 +6,13 @@ import (
 
 	"gorm.io/gorm"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/crypto"
-	ldaputil "github.com/mhsanaei/3x-ui/v3/internal/util/ldap"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/totp"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/logger"
+	"ovix.store/ovix-ui/internal/util/crypto"
+	ldaputil "ovix.store/ovix-ui/internal/util/ldap"
+	"ovix.store/ovix-ui/internal/util/totp"
+	"ovix.store/ovix-ui/internal/web/service"
 )
 
 // UserService provides business logic for user management and authentication.

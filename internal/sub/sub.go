@@ -1,4 +1,4 @@
-// Package sub provides subscription server functionality for the 3x-ui panel,
+// Package sub provides subscription server functionality for the ovix-ui panel,
 // including HTTP/HTTPS servers for serving subscription links and JSON configurations.
 package sub
 
@@ -14,12 +14,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/common"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/locale"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/middleware"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/network"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
+	"ovix.store/ovix-ui/internal/logger"
+	"ovix.store/ovix-ui/internal/util/common"
+	"ovix.store/ovix-ui/internal/web/locale"
+	"ovix.store/ovix-ui/internal/web/middleware"
+	"ovix.store/ovix-ui/internal/web/network"
+	"ovix.store/ovix-ui/internal/web/service"
 
 	"github.com/gin-gonic/gin"
 )

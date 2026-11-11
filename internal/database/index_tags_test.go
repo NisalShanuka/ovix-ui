@@ -7,8 +7,8 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 // AutoMigrate must create the hot-path indexes added for client group filters

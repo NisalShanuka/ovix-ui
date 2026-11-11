@@ -1,4 +1,4 @@
-// Package main is the entry point for the 3x-ui web panel application.
+// Package main is the entry point for the ovix-ui web panel application.
 // It initializes the database, web server, and handles command-line operations for managing the panel.
 package main
 
@@ -15,19 +15,19 @@ import (
 	"syscall"
 	_ "unsafe"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/config"
-	"github.com/mhsanaei/3x-ui/v3/internal/crypto/nodetoken"
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/sub"
-	"github.com/mhsanaei/3x-ui/v3/internal/tunnelmonitor"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/crypto"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/sys"
-	"github.com/mhsanaei/3x-ui/v3/internal/web"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/global"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service/panel"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service/tgbot"
+	"ovix.store/ovix-ui/internal/config"
+	"ovix.store/ovix-ui/internal/crypto/nodetoken"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/logger"
+	"ovix.store/ovix-ui/internal/sub"
+	"ovix.store/ovix-ui/internal/tunnelmonitor"
+	"ovix.store/ovix-ui/internal/util/crypto"
+	"ovix.store/ovix-ui/internal/util/sys"
+	"ovix.store/ovix-ui/internal/web"
+	"ovix.store/ovix-ui/internal/web/global"
+	"ovix.store/ovix-ui/internal/web/service"
+	"ovix.store/ovix-ui/internal/web/service/panel"
+	"ovix.store/ovix-ui/internal/web/service/tgbot"
 
 	"github.com/joho/godotenv"
 	"github.com/op/go-logging"
@@ -70,7 +70,7 @@ func initNodeTokenCrypto() error {
 	return nil
 }
 
-// runWebServer initializes and starts the web server for the 3x-ui panel.
+// runWebServer initializes and starts the web server for the ovix-ui panel.
 func runWebServer() {
 	log.Printf("Starting %v %v", config.GetName(), config.GetPanelVersion())
 
@@ -95,7 +95,7 @@ func runWebServer() {
 		logger.Info(line)
 	}
 
-	if os.Getenv("XUI_PPROF") == "true" {
+	if os.Getenv("OVIX_PPROF") == "true" {
 		go func() {
 			logger.Info("pprof profiling server listening on 127.0.0.1:6060")
 			if err := http.ListenAndServe("127.0.0.1:6060", nil); err != nil {
@@ -143,7 +143,7 @@ func runWebServer() {
 	monitorCfg := tunnelmonitor.ConfigFromEnv()
 	if monitorCfg.Enabled {
 		if monitorCfg.ProxyURL == "" {
-			logger.Warning("Tunnel health monitor enabled without XUI_TUNNEL_HEALTH_PROXY: the probe measures host connectivity, not the xray tunnel, so failures will restart xray without fixing host network issues")
+			logger.Warning("Tunnel health monitor enabled without OVIX_TUNNEL_HEALTH_PROXY: the probe measures host connectivity, not the xray tunnel, so failures will restart xray without fixing host network issues")
 		}
 
 		monitorCtx, cancel := context.WithCancel(context.Background())
@@ -548,7 +548,7 @@ func GetApiToken(getApiToken bool, tokenName, tokenScope string) {
 	fmt.Println("apiToken:", created.Token)
 }
 
-// migrateDb performs database migration operations for the 3x-ui panel.
+// migrateDb performs database migration operations for the ovix-ui panel.
 func migrateDb() {
 	inboundService := service.InboundService{}
 
@@ -563,7 +563,7 @@ func migrateDb() {
 }
 
 // loadServiceEnvFile loads the systemd EnvironmentFile so CLI subcommands like
-// "x-ui setting" hit the same database backend as the panel. godotenv.Load does
+// "ovix-ui setting" hit the same database backend as the panel. godotenv.Load does
 // not override variables already in the environment, so it is a no-op for the
 // systemd-managed service.
 func loadServiceEnvFile() {
@@ -578,7 +578,7 @@ func loadServiceEnvFile() {
 	}
 }
 
-// main is the entry point of the 3x-ui application.
+// main is the entry point of the ovix-ui application.
 // It parses command-line arguments to run the web server, migrate database, or update settings.
 func main() {
 	loadServiceEnvFile()
@@ -600,7 +600,7 @@ func main() {
 	var migrateRestore string
 	var migrateOut string
 	migrateDbCmd.StringVar(&migrateDsn, "dsn", "", "Destination PostgreSQL DSN (postgres://user:pass@host:port/db?sslmode=disable)")
-	migrateDbCmd.StringVar(&migrateSrc, "src", "", "Source SQLite file (defaults to the configured x-ui.db)")
+	migrateDbCmd.StringVar(&migrateSrc, "src", "", "Source SQLite file (defaults to the configured ovix-ui.db)")
 	migrateDbCmd.StringVar(&migrateDump, "dump", "", "Write a portable SQL text dump of --src to this file (.db -> .dump)")
 	migrateDbCmd.StringVar(&migrateRestore, "restore", "", "Rebuild a SQLite database from this SQL text dump (.dump -> .db); requires --out")
 	migrateDbCmd.StringVar(&migrateOut, "out", "", "Destination SQLite file for --restore (must not already exist)")
@@ -768,7 +768,7 @@ func commandHelp() string {
 	return `
 Commands:
     run            run web panel
-    migrate        migrate from other/old x-ui
+    migrate        migrate from other/old ovix-ui
     migrate-db     SQLite <-> .dump (--dump/--restore) or copy into PostgreSQL (--dsn)
     encrypt-tokens encrypt node bearer tokens with the configured active key
     setting        set settings

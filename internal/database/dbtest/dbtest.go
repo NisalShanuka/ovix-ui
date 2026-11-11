@@ -8,8 +8,8 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/config"
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
+	"ovix.store/ovix-ui/internal/config"
+	"ovix.store/ovix-ui/internal/database"
 )
 
 var migrated struct {

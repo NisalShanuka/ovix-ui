@@ -4,15 +4,15 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database/dbtest"
 )
 
 // A panel restarts with an empty snapshot until the @2s ticker fires, and a
 // master probing that window reads the empty answer as an offline node.
 func TestCurrentStatusSamplesBeforeFirstTick(t *testing.T) {
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "ovix-ui.db"))
 
 	// A settled IP cache keeps GetStatus from starting a public-IP resolver that
 	// outlives this test and races http.DefaultTransport in later ones.

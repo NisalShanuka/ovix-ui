@@ -14,9 +14,9 @@ import (
 
 	"github.com/gorilla/websocket"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/web/service"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 type mockXrayRestart struct {

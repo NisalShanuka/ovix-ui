@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/amneziawgnet"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/json_util"
-	wgutil "github.com/mhsanaei/3x-ui/v3/internal/util/wireguard"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/amneziawgnet"
+	"ovix.store/ovix-ui/internal/util/json_util"
+	wgutil "ovix.store/ovix-ui/internal/util/wireguard"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 func amneziawgnetEgressPortForTest() int { return amneziawgnet.EgressPort() }

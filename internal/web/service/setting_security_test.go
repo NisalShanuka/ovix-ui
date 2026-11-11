@@ -8,9 +8,9 @@ import (
 
 	"github.com/xlzd/gotp"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database/model"
 )
 
 func TestResetSettingsRegeneratesSubscriptionPaths(t *testing.T) {
@@ -53,7 +53,7 @@ func TestResetSettingsRegeneratesSubscriptionPaths(t *testing.T) {
 
 func setupSettingTestDB(t *testing.T) {
 	t.Helper()
-	dbtest.InitDB(t, filepath.Join(t.TempDir(), "x-ui.db"))
+	dbtest.InitDB(t, filepath.Join(t.TempDir(), "ovix-ui.db"))
 }
 
 func TestGetAllSettingViewRedactsSecrets(t *testing.T) {

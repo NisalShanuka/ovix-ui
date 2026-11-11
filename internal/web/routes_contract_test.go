@@ -12,8 +12,8 @@ import (
 
 	"github.com/robfig/cron/v3"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/global"
+	"ovix.store/ovix-ui/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/web/global"
 )
 
 /*
@@ -44,7 +44,7 @@ func inContractScope(method, path string) bool {
 
 func registeredContractRoutes(t *testing.T) map[string]bool {
 	t.Helper()
-	dbtest.InitDB(t, filepath.Join(t.TempDir(), "x-ui.db"))
+	dbtest.InitDB(t, filepath.Join(t.TempDir(), "ovix-ui.db"))
 
 	previous := global.GetWebServer()
 	s := NewServer()

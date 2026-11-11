@@ -3,9 +3,9 @@ package service
 import (
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 // The node-page client breakdown must classify by EMAIL, not by

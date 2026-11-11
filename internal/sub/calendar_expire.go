@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 func (s *SubService) subscriptionUserinfo(traffic xray.ClientTraffic) string {

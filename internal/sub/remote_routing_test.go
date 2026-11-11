@@ -16,8 +16,8 @@ import (
 	"github.com/gin-gonic/gin"
 	yaml "github.com/goccy/go-yaml"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/dbtest"
 )
 
 func mergeRemoteClashRulesYAML(base map[string]any, raw string) error {
@@ -607,7 +607,7 @@ func TestRemoteRoutingHTTPClientRejectsLoopback(t *testing.T) {
 }
 
 func TestRemoteRoutingPersistedLoadRetriesAfterDatabaseBecomesReady(t *testing.T) {
-	dbPath := filepath.Join(t.TempDir(), "x-ui.db")
+	dbPath := filepath.Join(t.TempDir(), "ovix-ui.db")
 	dbtest.InitDB(t, dbPath)
 
 	deeplink, err := normalizeHappRouting([]byte(`{"Name":"persisted-after-ready"}`))

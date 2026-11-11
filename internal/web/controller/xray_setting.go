@@ -8,12 +8,12 @@ import (
 	"strings"
 	"time"
 
-	piaprotocol "github.com/mhsanaei/3x-ui/v3/internal/pia"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/common"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service/integration"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service/outbound"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	piaprotocol "ovix.store/ovix-ui/internal/pia"
+	"ovix.store/ovix-ui/internal/util/common"
+	"ovix.store/ovix-ui/internal/web/service"
+	"ovix.store/ovix-ui/internal/web/service/integration"
+	"ovix.store/ovix-ui/internal/web/service/outbound"
+	"ovix.store/ovix-ui/internal/xray"
 
 	"github.com/gin-gonic/gin"
 )

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/util/crypto"
+	"ovix.store/ovix-ui/internal/util/crypto"
 )
 
 func mustNodeCAPEM(t *testing.T, name string) string {

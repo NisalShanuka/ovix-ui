@@ -7,9 +7,9 @@ package panel
 import (
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/common"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/websocket"
+	"ovix.store/ovix-ui/internal/logger"
+	"ovix.store/ovix-ui/internal/util/common"
+	"ovix.store/ovix-ui/internal/web/websocket"
 
 	"github.com/google/uuid"
 	ws "github.com/gorilla/websocket"

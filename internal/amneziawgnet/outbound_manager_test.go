@@ -6,8 +6,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/amneziawg"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/wireguard"
+	"ovix.store/ovix-ui/internal/amneziawg"
+	"ovix.store/ovix-ui/internal/util/wireguard"
 )
 
 // egressPortBound reports whether the egress server's Port accepts TCP.

@@ -153,7 +153,7 @@
       "xrayUpdates": "Pembaruan Xray",
       "xraySwitchClickDesk": "Pilih dengan hati-hati, karena versi yang lebih lama mungkin tidak kompatibel dengan konfigurasi saat ini.",
       "updatePanel": "Perbarui Panel",
-      "panelUpdateDesc": "Ini akan memperbarui 3X-UI ke rilis terbaru dan me-restart layanan panel.",
+      "panelUpdateDesc": "Ini akan memperbarui Ovix UI ke rilis terbaru dan me-restart layanan panel.",
       "currentPanelVersion": "Versi panel saat ini",
       "latestPanelVersion": "Versi panel terbaru",
       "panelUpToDate": "Panel sudah terbaru",
@@ -217,10 +217,10 @@
       "xraySwitchVersionDialogDesc": "Ini akan mengubah versi Xray ke #version#.",
       "xraySwitchVersionPopover": "Xray berhasil diperbarui",
       "panelUpdateDialog": "Apakah Anda benar-benar ingin memperbarui panel?",
-      "panelUpdateDialogDesc": "Ini akan memperbarui 3X-UI ke #version# dan me-restart layanan panel.",
+      "panelUpdateDialogDesc": "Ini akan memperbarui Ovix UI ke #version# dan me-restart layanan panel.",
       "panelUpdateStartedPopover": "Pembaruan panel dimulai",
       "panelUpdateFailedTitle": "Pembaruan panel gagal",
-      "panelUpdateFailedDesc": "Pembaruan tidak selesai dengan sukses. Periksa log server, atau jalankan 'x-ui update' dari baris perintah.",
+      "panelUpdateFailedDesc": "Pembaruan tidak selesai dengan sukses. Periksa log server, atau jalankan 'ovix-ui update' dari baris perintah.",
       "panelUpdateUnknownTitle": "Tidak dapat memastikan pembaruan selesai",
       "panelUpdateUnknownDesc": "Panel tidak melaporkan hasil tepat waktu. Muat ulang untuk memeriksa versi saat ini, atau periksa log server.",
       "geofileUpdateDialog": "Apakah Anda yakin ingin memperbarui geofile?",
@@ -821,7 +821,7 @@
       "deleteHwidConfirm": "Hapus perangkat ini? Perangkat perlu mendaftar ulang pada pengambilan langganan berikutnya.",
       "hwidDeleted": "Perangkat dihapus.",
       "clearHwidsConfirm": "Hapus semua perangkat terdaftar? Setiap perangkat perlu mendaftar ulang pada pengambilan langganan berikutnya.",
-      "limitIpFail2banMissing": "Fail2ban tidak terpasang, sehingga batas IP tidak dapat diterapkan. Pasang Fail2ban dari menu bash x-ui untuk mengaktifkan opsi ini.",
+      "limitIpFail2banMissing": "Fail2ban tidak terpasang, sehingga batas IP tidak dapat diterapkan. Pasang Fail2ban dari menu bash ovix-ui untuk mengaktifkan opsi ini.",
       "limitIpFail2banWindows": "Fail2ban tidak tersedia di Windows, sehingga batas IP tidak dapat diterapkan.",
       "limitIpDisabled": "Fitur batas IP dinonaktifkan di server ini.",
       "password": "Kata sandi",
@@ -1283,7 +1283,7 @@
       "subAnnounce": "Pengumuman",
       "subAnnounceDesc": "Teks pengumuman yang ditampilkan di klien VPN. Mendukung token identitas klien: {{EMAIL}}, {{ID}}, {{SHORT_ID}}, {{SUB_ID}}, {{TELEGRAM_ID}}.",
       "subThemeDir": "Direktori Tema Langganan",
-      "subThemeDirDesc": "Path absolut ke folder yang berisi template kustom (index.html/sub.html) untuk halaman langganan (mis. /etc/3x-ui/sub_templates/my-theme/). Biarkan kosong untuk menggunakan halaman default.",
+      "subThemeDirDesc": "Path absolut ke folder yang berisi template kustom (index.html/sub.html) untuk halaman langganan (mis. /etc/ovix-ui/sub_templates/my-theme/). Biarkan kosong untuk menggunakan halaman default.",
       "subThemeDirDocs": "Panduan templat ↗",
       "subEnableRouting": "Aktifkan perutean",
       "happLinkEnable": "Tautan langganan terenkripsi",
@@ -2420,12 +2420,12 @@
     },
     "sponsors": {
       "title": "Sponsor",
-      "intro": "Perusahaan yang mendukung pengembangan 3X-UI. Tautan sponsor dibuka di tab baru.",
+      "intro": "Perusahaan yang mendukung pengembangan Ovix UI. Tautan sponsor dibuka di tab baru.",
       "become": "Jadi sponsor",
       "tag": "Sponsor",
       "visit": "Kunjungi",
       "yourBrand": "Merek Anda di sini",
-      "yourBrandText": "Tampilkan perusahaan Anda kepada ribuan admin server yang membuka 3X-UI setiap hari."
+      "yourBrandText": "Tampilkan perusahaan Anda kepada ribuan admin server yang membuka Ovix UI setiap hari."
     }
   },
   "tgbot": {
@@ -2481,7 +2481,7 @@
       "report": "🕰 Laporan Terjadwal: {{ .RunTime }}\r\n",
       "datetime": "⏰ Tanggal & Waktu: {{ .DateTime }}\r\n",
       "hostname": "💻 Host: {{ .Hostname }}\r\n",
-      "version": "🚀 Versi 3X-UI: {{ .Version }}\r\n",
+      "version": "🚀 Versi Ovix UI: {{ .Version }}\r\n",
       "xrayVersion": "📡 Versi Xray: {{ .XrayVersion }}\r\n",
       "ipv6": "🌐 IPv6: {{ .IPv6 }}\r\n",
       "ipv4": "🌐 IPv4: {{ .IPv4 }}\r\n",
@@ -2629,10 +2629,10 @@
   },
   "discord": {
     "test": {
-      "title": "Uji Notifikasi Discord 3x-ui",
+      "title": "Uji Notifikasi Discord ovix-ui",
       "body": "Ini adalah notifikasi uji yang memastikan notifikasi Discord telah dikonfigurasi dengan benar."
     },
-    "footer": "Panel 3x-ui",
+    "footer": "Panel ovix-ui",
     "fields": {
       "panelVersion": "Versi Panel",
       "xrayCore": "Inti Xray",
@@ -2667,13 +2667,13 @@
       "loginFailed": "Login Gagal"
     },
     "report": {
-      "title": "📊 Laporan Status 3x-ui",
+      "title": "📊 Laporan Status ovix-ui",
       "summary": "Laporan berkala status server dan proxy untuk **{{ .Host }}**",
-      "footer": "Laporan Terjadwal 3x-ui • Jadwal: {{ .RunTime }}"
+      "footer": "Laporan Terjadwal ovix-ui • Jadwal: {{ .RunTime }}"
     },
     "commands": {
-      "helpTitle": "🤖 Perintah Bot Discord 3x-ui",
-      "helpDescription": "Perintah yang tersedia untuk memantau dan mengelola server 3x-ui:",
+      "helpTitle": "🤖 Perintah Bot Discord ovix-ui",
+      "helpDescription": "Perintah yang tersedia untuk memantau dan mengelola server ovix-ui:",
       "helpStatus": "Tampilkan beban sistem, RAM, CPU, koneksi, dan pengguna online",
       "helpReport": "Buat laporan status lengkap (dengan cadangan DB jika dikonfigurasi)",
       "helpBackup": "Kirim file cadangan database sekarang juga",
@@ -2681,10 +2681,10 @@
       "helpInbounds": "Daftar semua inbound yang dikonfigurasi beserta port dan statistik klien",
       "helpRestart": "Mulai ulang inti Xray",
       "helpHelp": "Tampilkan daftar perintah ini",
-      "statusTitle": "⚡ Status Server 3x-ui",
+      "statusTitle": "⚡ Status Server ovix-ui",
       "statusDescription": "Metrik operasional terkini untuk **{{ .Host }}**",
       "backupTitle": "🗄️ Cadangan Database",
-      "backupDescription": "Arsip cadangan 3x-ui dibuat pada `{{ .Time }}`",
+      "backupDescription": "Arsip cadangan ovix-ui dibuat pada `{{ .Time }}`",
       "backupUnavailable": "❌ Layanan cadangan tidak tersedia",
       "backupFailed": "❌ Gagal membaca cadangan database: {{ .Error }}",
       "usageHint": "⚠️ Penggunaan: `!usage <email>` atau `/usage <email>`",

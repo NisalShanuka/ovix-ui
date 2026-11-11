@@ -1,7 +1,7 @@
 package job
 
 import (
-	"github.com/mhsanaei/3x-ui/v3/internal/eventbus"
+	"ovix.store/ovix-ui/internal/eventbus"
 
 	"github.com/shirou/gopsutil/v4/mem"
 )

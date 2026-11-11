@@ -18,10 +18,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/amneziawgnet"
-	"github.com/mhsanaei/3x-ui/v3/internal/config"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/json_util"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/amneziawgnet"
+	"ovix.store/ovix-ui/internal/config"
+	"ovix.store/ovix-ui/internal/util/json_util"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 // HTTP-mode probing works by spinning up ONE temporary xray instance per

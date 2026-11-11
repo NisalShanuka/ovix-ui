@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/eventbus"
+	"ovix.store/ovix-ui/internal/eventbus"
 )
 
 func TestFormatEmbed_OutboundDownAndUp(t *testing.T) {

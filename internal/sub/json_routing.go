@@ -9,8 +9,8 @@ import (
 	"strings"
 	"sync/atomic"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/common"
+	"ovix.store/ovix-ui/internal/logger"
+	"ovix.store/ovix-ui/internal/util/common"
 )
 
 // jsonRoutingSpec is the canonical form of the generic Happ/INCY routing

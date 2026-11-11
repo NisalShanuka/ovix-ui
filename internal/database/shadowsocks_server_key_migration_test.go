@@ -6,15 +6,15 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+	"ovix.store/ovix-ui/internal/database/model"
 )
 
 // A stored Shadowsocks-2022 server key of the wrong size keeps xray-core from
 // starting at all, so startup must replace it and leave every valid key alone.
 func TestRepairShadowsocks2022ServerKeys(t *testing.T) {
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	if err := InitDB(filepath.Join(dbDir, "x-ui.db")); err != nil {
+	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	if err := InitDB(filepath.Join(dbDir, "ovix-ui.db")); err != nil {
 		t.Fatalf("InitDB: %v", err)
 	}
 	t.Cleanup(func() { _ = CloseDB() })
@@ -72,8 +72,8 @@ func TestRepairShadowsocks2022ServerKeys(t *testing.T) {
 // same 32-byte keys, so switching keeps every stored key valid.
 func TestMigrateShadowsocks2022ChachaInbounds(t *testing.T) {
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	if err := InitDB(filepath.Join(dbDir, "x-ui.db")); err != nil {
+	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	if err := InitDB(filepath.Join(dbDir, "ovix-ui.db")); err != nil {
 		t.Fatalf("InitDB: %v", err)
 	}
 	t.Cleanup(func() { _ = CloseDB() })

@@ -11,11 +11,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/crypto"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/runtime"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/util/crypto"
+	"ovix.store/ovix-ui/internal/web/runtime"
 )
 
 // A sub-node stores whatever the master pushes. A master row whose certificate
@@ -23,8 +23,8 @@ import (
 func TestNodeSyncPushSkipsOperatorTLSGuard(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "ovix-ui.db"))
 	prev := runtime.GetManager()
 	runtime.SetManager(runtime.NewManager(runtime.LocalDeps{APIPort: func() int { return 0 }, SetNeedRestart: func() {}}))
 	t.Cleanup(func() { runtime.SetManager(prev) })

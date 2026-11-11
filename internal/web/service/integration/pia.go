@@ -9,10 +9,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/crypto/nodetoken"
-	piaprotocol "github.com/mhsanaei/3x-ui/v3/internal/pia"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/wireguard"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
+	"ovix.store/ovix-ui/internal/crypto/nodetoken"
+	piaprotocol "ovix.store/ovix-ui/internal/pia"
+	"ovix.store/ovix-ui/internal/util/wireguard"
+	"ovix.store/ovix-ui/internal/web/service"
 )
 
 var piaTokenAAD = []byte("settings/pia_token")

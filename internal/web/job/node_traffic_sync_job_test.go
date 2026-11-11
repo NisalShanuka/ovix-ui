@@ -4,7 +4,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+	"ovix.store/ovix-ui/internal/database/model"
 )
 
 func TestAtomicBool_DefaultIsFalse(t *testing.T) {

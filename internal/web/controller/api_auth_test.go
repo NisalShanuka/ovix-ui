@@ -13,11 +13,11 @@ import (
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/crypto"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/session"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/util/crypto"
+	"ovix.store/ovix-ui/internal/web/session"
 )
 
 // newAPIAuthTestEngine builds a gin engine that mirrors the production auth
@@ -30,11 +30,11 @@ func newAPIAuthTestEngine(t *testing.T) (*gin.Engine, *APIController) {
 	t.Helper()
 	gin.SetMode(gin.TestMode)
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "ovix-ui.db"))
 	engine := gin.New()
 	store := cookie.NewStore([]byte("api-auth-test-secret"))
-	engine.Use(sessions.Sessions("3x-ui", store))
+	engine.Use(sessions.Sessions("ovix-ui", store))
 
 	a := &APIController{}
 

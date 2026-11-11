@@ -15,9 +15,9 @@ import (
 
 	"github.com/xtls/xray-core/infra/conf"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database/model"
 )
 
 func withWarpMasqueAPIBase(t *testing.T, base string) {
@@ -30,7 +30,7 @@ func withWarpMasqueAPIBase(t *testing.T, base string) {
 // Enrolling an ECDSA key replaces a device's WireGuard key, so MASQUE gets a device of
 // its own; the returned warp block must pair the enrolled key and load in xray-core.
 func TestRegWarpMasqueEnrollsASeparateP256Device(t *testing.T) {
-	dbtest.InitDB(t, filepath.Join(t.TempDir(), "x-ui.db"))
+	dbtest.InitDB(t, filepath.Join(t.TempDir(), "ovix-ui.db"))
 	seedWarp(t, "")
 
 	endpointKey, err := ecdsa.GenerateKey(elliptic.P256(), rand.Reader)

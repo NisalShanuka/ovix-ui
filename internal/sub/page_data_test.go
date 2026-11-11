@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 // A single getSubs entry can hold several links (one per host of an inbound)

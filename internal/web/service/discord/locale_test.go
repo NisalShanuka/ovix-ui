@@ -8,8 +8,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/eventbus"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/locale"
+	"ovix.store/ovix-ui/internal/eventbus"
+	"ovix.store/ovix-ui/internal/web/locale"
 )
 
 type fixedTgLang struct{}

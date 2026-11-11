@@ -1,8 +1,8 @@
 package job
 
 import (
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
+	"ovix.store/ovix-ui/internal/logger"
+	"ovix.store/ovix-ui/internal/web/service"
 )
 
 // ReapSyncOrphansJob hard-deletes the clients the node-snapshot sweep only

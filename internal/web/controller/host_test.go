@@ -13,11 +13,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/op/go-logging"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	xuilogger "github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/entity"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database/model"
+	xuilogger "ovix.store/ovix-ui/internal/logger"
+	"ovix.store/ovix-ui/internal/web/entity"
 )
 
 func newHostTestDB(t *testing.T) {
@@ -25,8 +25,8 @@ func newHostTestDB(t *testing.T) {
 	xuilogger.InitLogger(logging.ERROR)
 	gin.SetMode(gin.TestMode)
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "ovix-ui.db"))
 }
 
 type hostEnvelope struct {
@@ -149,7 +149,7 @@ func TestHostController_AuthInherited(t *testing.T) {
 	newHostTestDB(t)
 	engine := gin.New()
 	store := cookie.NewStore([]byte("host-auth-test-secret"))
-	engine.Use(sessions.Sessions("3x-ui", store))
+	engine.Use(sessions.Sessions("ovix-ui", store))
 
 	a := &APIController{}
 	api := engine.Group("/panel/api")

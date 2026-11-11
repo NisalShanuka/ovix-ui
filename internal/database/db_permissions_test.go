@@ -12,9 +12,9 @@ func TestInitDBRestrictsSQLiteFilePermissions(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		t.Skip("POSIX permission bits are not meaningful on Windows")
 	}
-	t.Setenv("XUI_DB_JOURNAL_MODE", "")
-	dbDir := filepath.Join(t.TempDir(), "x-ui")
-	dbPath := filepath.Join(dbDir, "x-ui.db")
+	t.Setenv("OVIX_DB_JOURNAL_MODE", "")
+	dbDir := filepath.Join(t.TempDir(), "ovix-ui")
+	dbPath := filepath.Join(dbDir, "ovix-ui.db")
 
 	if err := InitDB(dbPath); err != nil {
 		t.Fatalf("InitDB: %v", err)
@@ -44,8 +44,8 @@ func TestInitDBTightensExistingSQLiteFilePermissions(t *testing.T) {
 	if runtime.GOOS == "windows" {
 		t.Skip("POSIX permission bits are not meaningful on Windows")
 	}
-	t.Setenv("XUI_DB_JOURNAL_MODE", "")
-	dbPath := filepath.Join(t.TempDir(), "x-ui.db")
+	t.Setenv("OVIX_DB_JOURNAL_MODE", "")
+	dbPath := filepath.Join(t.TempDir(), "ovix-ui.db")
 	if err := InitDB(dbPath); err != nil {
 		t.Fatalf("seed InitDB: %v", err)
 	}

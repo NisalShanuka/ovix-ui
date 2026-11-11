@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"slices"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/json_util"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/util/json_util"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 // bindConflict names two generated inbounds whose listens cannot coexist.

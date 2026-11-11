@@ -17,9 +17,9 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/crypto"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/netsafe"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/util/crypto"
+	"ovix.store/ovix-ui/internal/util/netsafe"
 )
 
 type generationProbeTransport struct {

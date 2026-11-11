@@ -6,7 +6,7 @@ import (
 	"net/url"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 // A direct, DNS, loopback or blackhole outbound is not a tunnel, so the probe

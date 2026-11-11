@@ -8,10 +8,10 @@ import (
 
 	"gorm.io/gorm"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 // TestMigrationRequirements_BackfillsClientTrafficsWithMultiDomainInbound guards the
@@ -22,8 +22,8 @@ import (
 // the backfill and the MultiDomain→ExternalProxy migration must then commit.
 func TestMigrationRequirements_BackfillsClientTrafficsWithMultiDomainInbound(t *testing.T) {
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "ovix-ui.db"))
 
 	db := database.GetDB()
 
@@ -93,8 +93,8 @@ func TestMigrationRequirements_BackfillsClientTrafficsWithMultiDomainInbound(t *
 
 func TestMigrationRequirementsReturnsAddClientStatFailure(t *testing.T) {
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "ovix-ui.db"))
 	db := database.GetDB()
 	first := &model.Inbound{UserId: 1, Tag: "first", Port: 31001, Protocol: model.VLESS, Settings: `{"clients":[{"email":"first@example.test","id":"id-1"}]}`, StreamSettings: `{}`}
 	if err := db.Create(first).Error; err != nil {
@@ -130,8 +130,8 @@ func TestMigrationRequirementsReturnsAddClientStatFailure(t *testing.T) {
 // only builds a non-SELECT statement without running it.
 func TestMigrationRequirements_CleansLegacyZeroAddrTag(t *testing.T) {
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "ovix-ui.db"))
 
 	db := database.GetDB()
 	legacy := &model.Inbound{

@@ -7,10 +7,10 @@ import (
 
 	"gorm.io/gorm"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/config"
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+	"ovix.store/ovix-ui/internal/config"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database/model"
 )
 
 var errInjectedTokenCreate = errors.New("injected token create failure")
@@ -36,7 +36,7 @@ func TestApiTokenCreatedAtSeconds(t *testing.T) {
 }
 
 func TestRecreateByNamePreservesTokenWhenReplacementFails(t *testing.T) {
-	t.Setenv("XUI_DB_FOLDER", t.TempDir())
+	t.Setenv("OVIX_DB_FOLDER", t.TempDir())
 	dbtest.InitDB(t, config.GetDBPath())
 
 	svc := ApiTokenService{}
@@ -70,7 +70,7 @@ func TestRecreateByNamePreservesTokenWhenReplacementFails(t *testing.T) {
 // Create caps the name at 64 characters; RecreateByName writes the same column
 // and now takes operator input from -tokenName, so it must cap it too.
 func TestRecreateByNameRejectsOverlongName(t *testing.T) {
-	t.Setenv("XUI_DB_FOLDER", t.TempDir())
+	t.Setenv("OVIX_DB_FOLDER", t.TempDir())
 	dbtest.InitDB(t, config.GetDBPath())
 
 	const wantErr = "token name must be 64 characters or fewer"
@@ -91,7 +91,7 @@ func TestRecreateByNameRejectsOverlongName(t *testing.T) {
 // Rotating a monitor token through the CLI silently reissued it as admin,
 // because the replacement row took the column default instead of the old scope.
 func TestRecreateByNameKeepsReplacedTokenScope(t *testing.T) {
-	t.Setenv("XUI_DB_FOLDER", t.TempDir())
+	t.Setenv("OVIX_DB_FOLDER", t.TempDir())
 	dbtest.InitDB(t, config.GetDBPath())
 
 	svc := ApiTokenService{}
@@ -131,7 +131,7 @@ func TestRecreateByNameAppliesGivenScope(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			t.Setenv("XUI_DB_FOLDER", t.TempDir())
+			t.Setenv("OVIX_DB_FOLDER", t.TempDir())
 			dbtest.InitDB(t, config.GetDBPath())
 
 			svc := ApiTokenService{}
@@ -168,7 +168,7 @@ func TestRecreateByNameAppliesGivenScope(t *testing.T) {
 // A scope this build does not know, as after a downgrade, must not be guessed
 // as admin; the rotation fails and the stored row stays untouched.
 func TestRecreateByNameRefusesUnknownStoredScope(t *testing.T) {
-	t.Setenv("XUI_DB_FOLDER", t.TempDir())
+	t.Setenv("OVIX_DB_FOLDER", t.TempDir())
 	dbtest.InitDB(t, config.GetDBPath())
 
 	db := database.GetDB()
@@ -196,7 +196,7 @@ func TestRecreateByNameRefusesUnknownStoredScope(t *testing.T) {
 func TestRecreateByNameKeepsReplacedTokenExpiry(t *testing.T) {
 	for _, scope := range []string{"", model.ApiScopeNodeSync} {
 		t.Run("scope="+scope, func(t *testing.T) {
-			t.Setenv("XUI_DB_FOLDER", t.TempDir())
+			t.Setenv("OVIX_DB_FOLDER", t.TempDir())
 			dbtest.InitDB(t, config.GetDBPath())
 
 			svc := ApiTokenService{}
@@ -225,7 +225,7 @@ func TestRecreateByNameKeepsReplacedTokenExpiry(t *testing.T) {
 func TestRecreateByNameRefusesExpiredToken(t *testing.T) {
 	for _, scope := range []string{"", model.ApiScopeAdmin} {
 		t.Run("scope="+scope, func(t *testing.T) {
-			t.Setenv("XUI_DB_FOLDER", t.TempDir())
+			t.Setenv("OVIX_DB_FOLDER", t.TempDir())
 			dbtest.InitDB(t, config.GetDBPath())
 
 			db := database.GetDB()
@@ -251,7 +251,7 @@ func TestRecreateByNameRefusesExpiredToken(t *testing.T) {
 }
 
 func TestRecreateByNameKeepsOneToken(t *testing.T) {
-	t.Setenv("XUI_DB_FOLDER", t.TempDir())
+	t.Setenv("OVIX_DB_FOLDER", t.TempDir())
 	dbtest.InitDB(t, config.GetDBPath())
 
 	svc := ApiTokenService{}

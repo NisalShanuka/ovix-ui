@@ -6,11 +6,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/mtproto"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/runtime"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/mtproto"
+	"ovix.store/ovix-ui/internal/web/runtime"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 // startQuotaSidecar runs a local MTProto inbound for mtga and mtgb under the fake

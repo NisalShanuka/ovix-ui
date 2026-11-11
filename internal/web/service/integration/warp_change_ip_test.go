@@ -10,9 +10,9 @@ import (
 	"sync/atomic"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database/model"
 )
 
 // seedWarp stores warp credentials (with a Warp Plus license key) in the DB.
@@ -70,7 +70,7 @@ func withWarpAPIBase(t *testing.T, base string) {
 }
 
 func TestChangeWarpIPPreservesLicenseKey(t *testing.T) {
-	dbtest.InitDB(t, filepath.Join(t.TempDir(), "x-ui.db"))
+	dbtest.InitDB(t, filepath.Join(t.TempDir(), "ovix-ui.db"))
 
 	const license = "WARPPLLUS-KEY-0123456789abcdefgh" // 32 chars, >= 26 gate
 	seedWarp(t, license)
@@ -122,7 +122,7 @@ func TestChangeWarpIPPreservesLicenseKey(t *testing.T) {
 }
 
 func TestChangeWarpIPKeepsLicenseWhenReapplyFails(t *testing.T) {
-	dbtest.InitDB(t, filepath.Join(t.TempDir(), "x-ui.db"))
+	dbtest.InitDB(t, filepath.Join(t.TempDir(), "ovix-ui.db"))
 
 	const license = "WARPPLLUS-KEY-0123456789abcdefgh"
 	seedWarp(t, license)

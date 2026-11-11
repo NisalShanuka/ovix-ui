@@ -17,21 +17,21 @@ import (
 
 	"golang.org/x/crypto/chacha20poly1305"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/logger"
 )
 
 func initHappTestDB(t *testing.T) {
 	t.Helper()
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	t.Setenv("XUI_BIN_FOLDER", dbDir)
+	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	t.Setenv("OVIX_BIN_FOLDER", dbDir)
 	if err := os.WriteFile(filepath.Join(dbDir, "config.json"), []byte(`{"log":{}}`), 0o600); err != nil {
 		t.Fatalf("write Xray config: %v", err)
 	}
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	dbtest.InitDB(t, filepath.Join(dbDir, "ovix-ui.db"))
 }
 
 func seedHappClient(t *testing.T, subID string) *model.ClientRecord {

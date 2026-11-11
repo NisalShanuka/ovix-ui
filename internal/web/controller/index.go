@@ -5,13 +5,13 @@ import (
 	"text/template"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/entity"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/middleware"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service/panel"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service/tgbot"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/session"
+	"ovix.store/ovix-ui/internal/logger"
+	"ovix.store/ovix-ui/internal/web/entity"
+	"ovix.store/ovix-ui/internal/web/middleware"
+	"ovix.store/ovix-ui/internal/web/service"
+	"ovix.store/ovix-ui/internal/web/service/panel"
+	"ovix.store/ovix-ui/internal/web/service/tgbot"
+	"ovix.store/ovix-ui/internal/web/session"
 
 	"github.com/gin-gonic/gin"
 )

@@ -18,17 +18,17 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/goccy/go-json"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/amneziawg"
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/tuic"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/common"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/maskcompat"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/random"
-	wgutil "github.com/mhsanaei/3x-ui/v3/internal/util/wireguard"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/amneziawg"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/logger"
+	"ovix.store/ovix-ui/internal/tuic"
+	"ovix.store/ovix-ui/internal/util/common"
+	"ovix.store/ovix-ui/internal/util/maskcompat"
+	"ovix.store/ovix-ui/internal/util/random"
+	wgutil "ovix.store/ovix-ui/internal/util/wireguard"
+	"ovix.store/ovix-ui/internal/web/service"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 var salamanderWarningSeen sync.Map

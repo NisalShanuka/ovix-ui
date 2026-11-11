@@ -12,7 +12,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database/dbtest"
 )
 
 // Loyalsoldier and runetfreedom write "<hash>  geoip.dat"; chocolate4u writes
@@ -140,11 +140,11 @@ func geofileTestEnv(t *testing.T, entries map[string]geofileEntry) string {
 	t.Helper()
 
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "ovix-ui.db"))
 
 	binFolder := t.TempDir()
-	t.Setenv("XUI_BIN_FOLDER", binFolder)
+	t.Setenv("OVIX_BIN_FOLDER", binFolder)
 
 	originalAllowlist := geofileAllowlist
 	geofileAllowlist = entries

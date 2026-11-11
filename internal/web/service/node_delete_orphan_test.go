@@ -3,7 +3,7 @@ package service
 import (
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+	"ovix.store/ovix-ui/internal/database/model"
 )
 
 // TestNodeDelete_BlocksWhenInboundsAttached guards DB-002: a node that still

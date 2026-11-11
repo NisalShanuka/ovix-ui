@@ -13,13 +13,13 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/common"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/link"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/netsafe"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/logger"
+	"ovix.store/ovix-ui/internal/util/common"
+	"ovix.store/ovix-ui/internal/util/link"
+	"ovix.store/ovix-ui/internal/util/netsafe"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 // filterOutboundsRejectedByCore drops outbounds the vendored xray-core config
@@ -372,7 +372,7 @@ func (s *OutboundSubscriptionService) fetchAndStore(sub *model.OutboundSubscript
 		userAgent = defaultOutboundSubscriptionUserAgent
 	}
 	req.Header.Set("User-Agent", userAgent)
-	// A 3x-ui donor with an HWID limit answers 404 when the header is empty (#6574).
+	// A ovix-ui donor with an HWID limit answers 404 when the header is empty (#6574).
 	if hwid := ExternalSubscriptionHwid(); hwid != "" {
 		req.Header.Set("X-HWID", hwid)
 	}

@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/logger"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 var errOverrideTargetUnknown = errors.New("override target is not an outbound in the running config")

@@ -6,20 +6,20 @@ import (
 
 	"github.com/op/go-logging"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	xuilogger "github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/runtime"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database/model"
+	xuilogger "ovix.store/ovix-ui/internal/logger"
+	"ovix.store/ovix-ui/internal/web/runtime"
+	"ovix.store/ovix-ui/internal/web/service"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 // The sync tick is the only place that sees which nodes it no longer fetches, so it
 // must drop their online sets itself: a disabled node here, a deleted one below.
 func TestNodeTrafficSyncDropsOnlineClientsOfUnsyncedNodes(t *testing.T) {
 	xuilogger.InitLogger(logging.ERROR)
-	dbtest.InitDB(t, filepath.Join(t.TempDir(), "x-ui.db"))
+	dbtest.InitDB(t, filepath.Join(t.TempDir(), "ovix-ui.db"))
 	runtime.SetManager(runtime.NewManager(runtime.LocalDeps{APIPort: func() int { return 0 }, SetNeedRestart: func() {}}))
 	t.Cleanup(func() { runtime.SetManager(nil) })
 	process := xray.NewTestProcess(nil, "")

@@ -9,7 +9,7 @@ import (
 
 	awgconn "github.com/amnezia-vpn/amneziawg-go/v3/conn"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/amneziawg"
+	"ovix.store/ovix-ui/internal/amneziawg"
 )
 
 func TestParseListenAddr(t *testing.T) {

@@ -7,13 +7,13 @@ import (
 
 	"gorm.io/gorm"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 func TestAddTrafficReturnsDeferredCommitFailure(t *testing.T) {
-	if os.Getenv("XUI_DB_TYPE") != "postgres" || strings.TrimSpace(os.Getenv("XUI_DB_DSN")) == "" {
-		t.Skip("set XUI_DB_TYPE=postgres and XUI_DB_DSN to run commit-failure injection")
+	if os.Getenv("OVIX_DB_TYPE") != "postgres" || strings.TrimSpace(os.Getenv("OVIX_DB_DSN")) == "" {
+		t.Skip("set OVIX_DB_TYPE=postgres and OVIX_DB_DSN to run commit-failure injection")
 	}
 	if err := database.InitDB(""); err != nil {
 		t.Fatalf("InitDB: %v", err)

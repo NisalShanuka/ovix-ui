@@ -9,12 +9,12 @@ import (
 
 	"github.com/op/go-logging"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/amneziawg"
-	"github.com/mhsanaei/3x-ui/v3/internal/amneziawgnet"
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	wgutil "github.com/mhsanaei/3x-ui/v3/internal/util/wireguard"
+	"ovix.store/ovix-ui/internal/amneziawg"
+	"ovix.store/ovix-ui/internal/amneziawgnet"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/logger"
+	wgutil "ovix.store/ovix-ui/internal/util/wireguard"
 )
 
 // A real X25519 pair, so PublicKeyFromPrivate agrees with the stored value.

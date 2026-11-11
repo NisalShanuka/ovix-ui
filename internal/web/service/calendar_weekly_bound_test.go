@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 func TestWeeklyRenewalSearchFailsClosed(t *testing.T) {

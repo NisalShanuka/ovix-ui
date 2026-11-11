@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/amneziawg"
-	"github.com/mhsanaei/3x-ui/v3/internal/amneziawgnet"
-	json_util "github.com/mhsanaei/3x-ui/v3/internal/util/json_util"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/amneziawg"
+	"ovix.store/ovix-ui/internal/amneziawgnet"
+	json_util "ovix.store/ovix-ui/internal/util/json_util"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 // transformAmneziaWGOutbounds swaps each template "amneziawg" outbound for

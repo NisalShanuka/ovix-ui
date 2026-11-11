@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+	"ovix.store/ovix-ui/internal/database/model"
 )
 
 func TestSubscriptionExpiryFromClient(t *testing.T) {

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+	"ovix.store/ovix-ui/internal/database/model"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -33,8 +33,8 @@ func assertClientHwidSchema(t *testing.T, db *gorm.DB) {
 
 func TestClientHwidSchemaSQLite(t *testing.T) {
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	if err := InitDB(filepath.Join(dbDir, "x-ui.db")); err != nil {
+	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	if err := InitDB(filepath.Join(dbDir, "ovix-ui.db")); err != nil {
 		t.Fatalf("InitDB: %v", err)
 	}
 	t.Cleanup(func() { _ = CloseDB() })
@@ -42,9 +42,9 @@ func TestClientHwidSchemaSQLite(t *testing.T) {
 }
 
 func TestClientHwidSchemaPostgres(t *testing.T) {
-	dsn := strings.TrimSpace(os.Getenv("XUI_TEST_PG_DSN"))
+	dsn := strings.TrimSpace(os.Getenv("OVIX_TEST_PG_DSN"))
 	if dsn == "" {
-		t.Skip("set XUI_TEST_PG_DSN to a reachable Postgres to run this test")
+		t.Skip("set OVIX_TEST_PG_DSN to a reachable Postgres to run this test")
 	}
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{Logger: logger.Discard})
 	if err != nil {

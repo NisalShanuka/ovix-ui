@@ -9,7 +9,7 @@ import (
 
 	"golang.org/x/sys/windows"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
+	"ovix.store/ovix-ui/internal/logger"
 )
 
 var (

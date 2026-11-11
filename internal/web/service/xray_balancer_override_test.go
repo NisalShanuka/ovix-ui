@@ -4,7 +4,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 // The core takes any string as an override and closes every connection routed

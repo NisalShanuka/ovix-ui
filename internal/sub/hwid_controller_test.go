@@ -11,9 +11,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database/model"
 )
 
 func initHwidSubRouter(t *testing.T, limit int) (*gin.Engine, string) {
@@ -27,8 +27,8 @@ func initHwidSubRouter(t *testing.T, limit int) (*gin.Engine, string) {
 		t.Fatalf("write subpage: %v", err)
 	}
 
-	t.Setenv("XUI_DB_FOLDER", tmp)
-	dbtest.InitDB(t, filepath.Join(tmp, "x-ui.db"))
+	t.Setenv("OVIX_DB_FOLDER", tmp)
+	dbtest.InitDB(t, filepath.Join(tmp, "ovix-ui.db"))
 
 	const subID = "sub-hwid-route"
 	const email = "route@example.com"

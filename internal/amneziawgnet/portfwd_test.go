@@ -14,8 +14,8 @@ import (
 	"github.com/amnezia-vpn/amneziawg-go/v3/tun/netstack"
 	"gvisor.dev/gvisor/pkg/tcpip/stack"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/amneziawg"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/wireguard"
+	"ovix.store/ovix-ui/internal/amneziawg"
+	"ovix.store/ovix-ui/internal/util/wireguard"
 )
 
 func peerWithPortsAndIPs(email, forwardedPorts string, ips ...string) amneziawg.Peer {

@@ -6,9 +6,9 @@ import (
 	"slices"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database/model"
 
 	"github.com/mymmrac/telego"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
@@ -16,7 +16,7 @@ import (
 
 func seedPickerInbounds(t *testing.T, protocols ...model.Protocol) {
 	t.Helper()
-	dbtest.InitDB(t, filepath.Join(t.TempDir(), "x-ui.db"))
+	dbtest.InitDB(t, filepath.Join(t.TempDir(), "ovix-ui.db"))
 	for i, protocol := range protocols {
 		port := 20000 + i
 		ib := &model.Inbound{Remark: string(protocol), Enable: true, Port: port, Protocol: protocol, Tag: fmt.Sprintf("inbound-%d", port), Settings: `{}`}

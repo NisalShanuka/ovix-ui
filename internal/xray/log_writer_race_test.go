@@ -62,7 +62,7 @@ func crashReportsIn(t *testing.T, dir string) []string {
 // over as a chunk of its own; the report must still hold the whole traceback.
 func TestLogWriterCrashReportHoldsWholePanic(t *testing.T) {
 	dir := t.TempDir()
-	t.Setenv("XUI_LOG_FOLDER", dir)
+	t.Setenv("OVIX_LOG_FOLDER", dir)
 	chunks := []string{
 		"panic: ",
 		"runtime error: index out of range [3] with length 1\n",
@@ -87,7 +87,7 @@ func TestLogWriterCrashReportHoldsWholePanic(t *testing.T) {
 
 func TestLogWriterOrdinaryLineMentioningPanicIsNotACrash(t *testing.T) {
 	dir := t.TempDir()
-	t.Setenv("XUI_LOG_FOLDER", dir)
+	t.Setenv("OVIX_LOG_FOLDER", dir)
 	lw := NewLogWriter()
 	_, _ = lw.Write([]byte("2026/07/12 15:16:00.000000 [Info] [42] proxy/vless: sniffed domain panic.example.com\n"))
 	lw.Flush()
@@ -99,7 +99,7 @@ func TestLogWriterOrdinaryLineMentioningPanicIsNotACrash(t *testing.T) {
 
 func TestWriteCrashReportKeepsReportsFromTheSameSecond(t *testing.T) {
 	dir := t.TempDir()
-	t.Setenv("XUI_LOG_FOLDER", dir)
+	t.Setenv("OVIX_LOG_FOLDER", dir)
 	for _, m := range []string{"panic: first", "panic: second"} {
 		if err := writeCrashReport([]byte(m)); err != nil {
 			t.Fatal(err)

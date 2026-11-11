@@ -1,4 +1,4 @@
-// Package web provides the main web server implementation for the 3x-ui panel,
+// Package web provides the main web server implementation for the ovix-ui panel,
 // including HTTP/HTTPS serving, routing, templates, and background job scheduling.
 package web
 
@@ -17,28 +17,28 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/amneziawgnet"
-	"github.com/mhsanaei/3x-ui/v3/internal/config"
-	"github.com/mhsanaei/3x-ui/v3/internal/eventbus"
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/mtproto"
-	"github.com/mhsanaei/3x-ui/v3/internal/tuic"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/common"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/cronspec"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/sys"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/controller"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/job"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/locale"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/middleware"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/network"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/runtime"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service/discord"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service/email"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service/panel"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service/tgbot"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/websocket"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/amneziawgnet"
+	"ovix.store/ovix-ui/internal/config"
+	"ovix.store/ovix-ui/internal/eventbus"
+	"ovix.store/ovix-ui/internal/logger"
+	"ovix.store/ovix-ui/internal/mtproto"
+	"ovix.store/ovix-ui/internal/tuic"
+	"ovix.store/ovix-ui/internal/util/common"
+	"ovix.store/ovix-ui/internal/util/cronspec"
+	"ovix.store/ovix-ui/internal/util/sys"
+	"ovix.store/ovix-ui/internal/web/controller"
+	"ovix.store/ovix-ui/internal/web/job"
+	"ovix.store/ovix-ui/internal/web/locale"
+	"ovix.store/ovix-ui/internal/web/middleware"
+	"ovix.store/ovix-ui/internal/web/network"
+	"ovix.store/ovix-ui/internal/web/runtime"
+	"ovix.store/ovix-ui/internal/web/service"
+	"ovix.store/ovix-ui/internal/web/service/discord"
+	"ovix.store/ovix-ui/internal/web/service/email"
+	"ovix.store/ovix-ui/internal/web/service/panel"
+	"ovix.store/ovix-ui/internal/web/service/tgbot"
+	"ovix.store/ovix-ui/internal/web/websocket"
+	"ovix.store/ovix-ui/internal/xray"
 
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/sessions"
@@ -112,7 +112,7 @@ func EmbeddedDist() embed.FS {
 	return distFS
 }
 
-// Server represents the main web server for the 3x-ui panel with controllers, services, and scheduled jobs.
+// Server represents the main web server for the ovix-ui panel with controllers, services, and scheduled jobs.
 type Server struct {
 	httpServer *http.Server
 	listener   net.Listener
@@ -215,7 +215,7 @@ func (s *Server) initRouter() (*gin.Engine, error) {
 		sessionOptions.MaxAge = sessionMaxAge * 60 // minutes -> seconds
 	}
 	store.Options(sessionOptions)
-	engine.Use(sessions.Sessions("3x-ui", store))
+	engine.Use(sessions.Sessions("ovix-ui", store))
 	engine.Use(func(c *gin.Context) {
 		c.Set("base_path", basePath)
 	})
@@ -588,10 +588,10 @@ func (s *Server) start(restartXray bool, startTgBot bool) (err error) {
 	}
 	if envPort, configured, envErr := config.GetPortOverride(); configured {
 		if envErr != nil {
-			logger.Warning("Ignoring invalid XUI_PORT; using configured web port:", port, envErr)
+			logger.Warning("Ignoring invalid OVIX_PORT; using configured web port:", port, envErr)
 		} else {
 			port = envPort
-			logger.Info("Using XUI_PORT override for web panel port:", port)
+			logger.Info("Using OVIX_PORT override for web panel port:", port)
 		}
 	}
 	listenAddr := net.JoinHostPort(listen, strconv.Itoa(port))
@@ -709,7 +709,7 @@ func (s *Server) start(restartXray bool, startTgBot bool) (err error) {
 		if err := s.tgbotService.TestConnection(); err != nil {
 			return fmt.Errorf("telegram API test failed: %w", err)
 		}
-		s.tgbotService.SendMsgToTgbotAdmins("✅ Test message from 3x-ui")
+		s.tgbotService.SendMsgToTgbotAdmins("✅ Test message from ovix-ui")
 		return nil
 	})
 

@@ -7,16 +7,16 @@ import (
 	"flag"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/config"
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service/panel"
+	"ovix.store/ovix-ui/internal/config"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/web/service/panel"
 )
 
 func newTokenCLIEnv(t *testing.T) {
 	t.Helper()
-	t.Setenv("XUI_DB_FOLDER", t.TempDir())
+	t.Setenv("OVIX_DB_FOLDER", t.TempDir())
 	dbtest.InitDB(t, config.GetDBPath())
 }
 

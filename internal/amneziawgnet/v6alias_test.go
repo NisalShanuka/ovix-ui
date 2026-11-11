@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/amneziawg"
+	"ovix.store/ovix-ui/internal/amneziawg"
 )
 
 func peerWithIPs(email string, ips ...string) amneziawg.Peer {

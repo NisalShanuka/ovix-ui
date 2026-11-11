@@ -8,8 +8,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/util/common"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
+	"ovix.store/ovix-ui/internal/util/common"
+	"ovix.store/ovix-ui/internal/web/service"
 )
 
 type NordService struct {

@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
+	"ovix.store/ovix-ui/internal/logger"
 )
 
 // MessageType identifies the kind of WebSocket message.

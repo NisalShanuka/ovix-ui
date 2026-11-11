@@ -15,9 +15,9 @@ import (
 	"sync"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/config"
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
+	"ovix.store/ovix-ui/internal/config"
+	"ovix.store/ovix-ui/internal/logger"
+	"ovix.store/ovix-ui/internal/web/service"
 )
 
 // Sponsor is one paid placement published in the repo's sponsors.json.
@@ -31,7 +31,7 @@ type Sponsor struct {
 	Logo   string            `json:"logo,omitempty" example:"/sponsors/logo/acme.png"`
 	Title  map[string]string `json:"title"`
 	Text   map[string]string `json:"text"`
-	Link   string            `json:"link" example:"https://acme.example/?utm_source=3x-ui"`
+	Link   string            `json:"link" example:"https://acme.example/?utm_source=ovix-ui"`
 }
 
 // SponsorList is the active sponsor set plus the contact link for new sponsors.
@@ -156,7 +156,7 @@ func fetchSponsorLogo(name string) ([]byte, string, error) {
 	}
 }
 
-// readSponsorSource reads a sibling checkout of MHSanaei/sponsors under XUI_DEBUG so
+// readSponsorSource reads a sibling checkout of MHSanaei/sponsors under OVIX_DEBUG so
 // sponsor edits can be previewed locally before they are pushed.
 func readSponsorSource(url, localPath string, limit int) ([]byte, error) {
 	if !config.IsDebug() {

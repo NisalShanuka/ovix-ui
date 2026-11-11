@@ -8,9 +8,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/web/service"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 type mockServerProvider struct {
@@ -32,7 +32,7 @@ func (m *mockServerProvider) BackupFilename(requestHost string) string {
 	if m.filename != "" {
 		return m.filename
 	}
-	return "x-ui_test.db"
+	return "ovix-ui_test.db"
 }
 
 type mockInboundProvider struct {
@@ -129,7 +129,7 @@ func TestBuildReport_WithBackup(t *testing.T) {
 	mockServer := &mockServerProvider{
 		status:   mockStatus,
 		dbData:   []byte("test-db-content"),
-		filename: "x-ui_backup.db",
+		filename: "ovix-ui_backup.db",
 	}
 
 	svc := NewDiscordService(settingService)
@@ -141,8 +141,8 @@ func TestBuildReport_WithBackup(t *testing.T) {
 	if len(files) == 0 {
 		t.Fatal("expected at least 1 backup file, got 0")
 	}
-	if files[0].Filename != "x-ui_backup.db" {
-		t.Errorf("expected filename 'x-ui_backup.db', got %q", files[0].Filename)
+	if files[0].Filename != "ovix-ui_backup.db" {
+		t.Errorf("expected filename 'ovix-ui_backup.db', got %q", files[0].Filename)
 	}
 	if string(files[0].Data) != "test-db-content" {
 		t.Errorf("expected db content 'test-db-content', got %q", string(files[0].Data))

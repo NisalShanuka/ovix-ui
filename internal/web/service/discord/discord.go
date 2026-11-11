@@ -14,13 +14,13 @@ import (
 	"time"
 	"unicode/utf16"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/web/locale"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
+	"ovix.store/ovix-ui/internal/web/locale"
+	"ovix.store/ovix-ui/internal/web/service"
 )
 
 const (
 	defaultDiscordBaseURL = "https://discord.com/api/v10"
-	discordUserAgent      = "DiscordBot (https://github.com/mhsanaei/3x-ui, 3.x)"
+	discordUserAgent      = "DiscordBot (https://ovix.store/ovix-ui, 3.x)"
 
 	ColorGreen  = 0x2ECC71
 	ColorRed    = 0xE74C3C
@@ -278,7 +278,7 @@ func (s *DiscordService) SendTest(ctx context.Context) error {
 	now := time.Now().UTC().Format(time.RFC3339)
 	hostname, _ := os.Hostname()
 	if hostname == "" {
-		hostname = "3x-ui"
+		hostname = "ovix-ui"
 	}
 	embed := Embed{
 		Title:       tr("discord.test.title"),

@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
+	"ovix.store/ovix-ui/internal/database"
 
 	"gorm.io/gorm"
 )

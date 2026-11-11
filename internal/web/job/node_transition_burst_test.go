@@ -12,12 +12,12 @@ import (
 
 	"github.com/op/go-logging"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/eventbus"
-	xuilogger "github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/runtime"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/eventbus"
+	xuilogger "ovix.store/ovix-ui/internal/logger"
+	"ovix.store/ovix-ui/internal/web/runtime"
 )
 
 // goingDownNodes seeds n online nodes whose address refuses connections, so the
@@ -25,7 +25,7 @@ import (
 func goingDownNodes(t *testing.T, n int) {
 	t.Helper()
 	xuilogger.InitLogger(logging.ERROR)
-	dbtest.InitDB(t, filepath.Join(t.TempDir(), "x-ui.db"))
+	dbtest.InitDB(t, filepath.Join(t.TempDir(), "ovix-ui.db"))
 	runtime.SetManager(runtime.NewManager(runtime.LocalDeps{APIPort: func() int { return 0 }, SetNeedRestart: func() {}}))
 	t.Cleanup(func() { runtime.SetManager(nil) })
 	srv := httptest.NewServer(nil)

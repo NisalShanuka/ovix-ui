@@ -153,7 +153,7 @@
       "xrayUpdates": "Xray Güncellemeleri",
       "xraySwitchClickDesk": "Dikkatli seçin, eski sürümler mevcut yapılandırmalarla uyumlu olmayabilir.",
       "updatePanel": "Paneli Güncelle",
-      "panelUpdateDesc": "Bu işlem 3X-UI'yi en son sürüme güncelleyecek ve panel servisini yeniden başlatacaktır.",
+      "panelUpdateDesc": "Bu işlem Ovix UI'yi en son sürüme güncelleyecek ve panel servisini yeniden başlatacaktır.",
       "currentPanelVersion": "Mevcut panel sürümü",
       "latestPanelVersion": "Panelin en son sürümü",
       "panelUpToDate": "Panel güncel",
@@ -217,10 +217,10 @@
       "xraySwitchVersionDialogDesc": "Bu işlem Xray sürümünü #version# olarak değiştirecektir.",
       "xraySwitchVersionPopover": "Xray başarıyla güncellendi",
       "panelUpdateDialog": "Gerçekten paneli güncellemek istiyor musunuz?",
-      "panelUpdateDialogDesc": "Bu işlem 3X-UI'yi #version# sürümüne güncelleyecek ve panel servisini yeniden başlatacaktır.",
+      "panelUpdateDialogDesc": "Bu işlem Ovix UI'yi #version# sürümüne güncelleyecek ve panel servisini yeniden başlatacaktır.",
       "panelUpdateStartedPopover": "Panel güncellemesi başlatıldı",
       "panelUpdateFailedTitle": "Panel güncellemesi başarısız oldu",
-      "panelUpdateFailedDesc": "Güncelleme başarıyla tamamlanamadı. Sunucu günlüklerini kontrol edin veya komut satırından 'x-ui update' çalıştırın.",
+      "panelUpdateFailedDesc": "Güncelleme başarıyla tamamlanamadı. Sunucu günlüklerini kontrol edin veya komut satırından 'ovix-ui update' çalıştırın.",
       "panelUpdateUnknownTitle": "Güncellemenin tamamlandığı doğrulanamadı",
       "panelUpdateUnknownDesc": "Panel zamanında bir sonuç bildirmedi. Geçerli sürümü kontrol etmek için sayfayı yenileyin veya sunucu günlüklerini kontrol edin.",
       "geofileUpdateDialog": "Geofile'ı gerçekten güncellemek istiyor musunuz?",
@@ -821,7 +821,7 @@
       "deleteHwidConfirm": "Bu cihaz kaldırılsın mı? Bir sonraki abonelik alımında yeniden kaydolması gerekecek.",
       "hwidDeleted": "Cihaz kaldırıldı.",
       "clearHwidsConfirm": "Kayıtlı tüm cihazlar kaldırılsın mı? Her cihazın bir sonraki abonelik alımında yeniden kaydolması gerekecek.",
-      "limitIpFail2banMissing": "Fail2ban yüklü değil, bu nedenle IP sınırı uygulanamaz. Bu seçeneği etkinleştirmek için x-ui bash menüsünden Fail2ban'ı yükleyin.",
+      "limitIpFail2banMissing": "Fail2ban yüklü değil, bu nedenle IP sınırı uygulanamaz. Bu seçeneği etkinleştirmek için ovix-ui bash menüsünden Fail2ban'ı yükleyin.",
       "limitIpFail2banWindows": "Fail2ban Windows'ta kullanılamadığından IP sınırı uygulanamaz.",
       "limitIpDisabled": "IP sınırı özelliği bu sunucuda devre dışı.",
       "password": "Şifre",
@@ -1283,7 +1283,7 @@
       "subAnnounce": "Duyuru",
       "subAnnounceDesc": "VPN istemcisinde görüntülenen duyuru metni. İstemci kimlik tokenlarını destekler: {{EMAIL}}, {{ID}}, {{SHORT_ID}}, {{SUB_ID}}, {{TELEGRAM_ID}}.",
       "subThemeDir": "Abonelik Tema Dizini",
-      "subThemeDirDesc": "Abonelik sayfası için özel bir şablon (index.html/sub.html) içeren klasörün mutlak yolu (örn. /etc/3x-ui/sub_templates/my-theme/). Varsayılan sayfayı kullanmak için boş bırakın.",
+      "subThemeDirDesc": "Abonelik sayfası için özel bir şablon (index.html/sub.html) içeren klasörün mutlak yolu (örn. /etc/ovix-ui/sub_templates/my-theme/). Varsayılan sayfayı kullanmak için boş bırakın.",
       "subThemeDirDocs": "Şablon kılavuzu ↗",
       "subEnableRouting": "Yönlendirmeyi etkinleştir",
       "happLinkEnable": "Şifreli abonelik bağlantıları",
@@ -2420,12 +2420,12 @@
     },
     "sponsors": {
       "title": "Sponsorlar",
-      "intro": "3X-UI geliştirmesini destekleyen şirketler. Sponsor bağlantıları yeni sekmede açılır.",
+      "intro": "Ovix UI geliştirmesini destekleyen şirketler. Sponsor bağlantıları yeni sekmede açılır.",
       "become": "Sponsor ol",
       "tag": "Sponsor",
       "visit": "Ziyaret et",
       "yourBrand": "Markanız burada",
-      "yourBrandText": "Şirketinizi her gün 3X-UI açan binlerce sunucu yöneticisinin önüne çıkarın."
+      "yourBrandText": "Şirketinizi her gün Ovix UI açan binlerce sunucu yöneticisinin önüne çıkarın."
     }
   },
   "tgbot": {
@@ -2481,7 +2481,7 @@
       "report": "🕰 Planlanmış Raporlar: {{ .RunTime }}\r\n",
       "datetime": "⏰ Tarih ve Saat: {{ .DateTime }}\r\n",
       "hostname": "💻 Sunucu: {{ .Hostname }}",
-      "version": "🚀 3X-UI Sürümü: {{ .Version }}\r\n",
+      "version": "🚀 Ovix UI Sürümü: {{ .Version }}\r\n",
       "xrayVersion": "📡 Xray Sürümü: {{ .XrayVersion }}\r\n",
       "ipv6": "🌐 IPv6: {{ .IPv6 }}",
       "ipv4": "🌐 IPv4: {{ .IPv4 }}",
@@ -2629,10 +2629,10 @@
   },
   "discord": {
     "test": {
-      "title": "3x-ui Discord Bildirim Testi",
+      "title": "ovix-ui Discord Bildirim Testi",
       "body": "Bu, Discord bildirimlerinin doğru yapılandırıldığını doğrulayan bir test bildirimidir."
     },
-    "footer": "3x-ui Paneli",
+    "footer": "ovix-ui Paneli",
     "fields": {
       "panelVersion": "Panel Sürümü",
       "xrayCore": "Xray Çekirdeği",
@@ -2667,13 +2667,13 @@
       "loginFailed": "Giriş Başarısız"
     },
     "report": {
-      "title": "📊 3x-ui Durum Raporu",
+      "title": "📊 ovix-ui Durum Raporu",
       "summary": "**{{ .Host }}** için periyodik sunucu ve proxy durum raporu",
-      "footer": "3x-ui Zamanlanmış Rapor • Zamanlama: {{ .RunTime }}"
+      "footer": "ovix-ui Zamanlanmış Rapor • Zamanlama: {{ .RunTime }}"
     },
     "commands": {
-      "helpTitle": "🤖 3x-ui Discord Bot Komutları",
-      "helpDescription": "3x-ui sunucusunu izlemek ve yönetmek için kullanılabilir komutlar:",
+      "helpTitle": "🤖 ovix-ui Discord Bot Komutları",
+      "helpDescription": "ovix-ui sunucusunu izlemek ve yönetmek için kullanılabilir komutlar:",
       "helpStatus": "Sistem yükünü, RAM'i, CPU'yu, bağlantıları ve çevrimiçi kullanıcıları gösterir",
       "helpReport": "Tam durum raporu oluşturur (yapılandırıldıysa veritabanı yedeğiyle)",
       "helpBackup": "Veritabanı yedek dosyasını hemen gönderir",
@@ -2681,10 +2681,10 @@
       "helpInbounds": "Yapılandırılmış tüm gelen bağlantıları portları ve istemci istatistikleriyle listeler",
       "helpRestart": "Xray çekirdeğini yeniden başlatır",
       "helpHelp": "Bu komut listesini gösterir",
-      "statusTitle": "⚡ 3x-ui Sunucu Durumu",
+      "statusTitle": "⚡ ovix-ui Sunucu Durumu",
       "statusDescription": "**{{ .Host }}** için güncel çalışma metrikleri",
       "backupTitle": "🗄️ Veritabanı Yedeği",
-      "backupDescription": "`{{ .Time }}` tarihinde oluşturulan 3x-ui yedek arşivi",
+      "backupDescription": "`{{ .Time }}` tarihinde oluşturulan ovix-ui yedek arşivi",
       "backupUnavailable": "❌ Yedekleme hizmeti kullanılamıyor",
       "backupFailed": "❌ Veritabanı yedeği okunamadı: {{ .Error }}",
       "usageHint": "⚠️ Kullanım: `!usage <email>` veya `/usage <email>`",

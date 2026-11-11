@@ -9,7 +9,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 // Real-core tests: the bugs they pin live in how RoutingService rebuilds
@@ -97,7 +97,7 @@ func startBalancerTestXrayOnPort(t *testing.T, spec balancerTestConfig, apiPort 
 	if err := os.Symlink(bin, filepath.Join(binDir, xray.GetBinaryName())); err != nil {
 		t.Fatal(err)
 	}
-	t.Setenv("XUI_BIN_FOLDER", binDir)
+	t.Setenv("OVIX_BIN_FOLDER", binDir)
 
 	process := xray.NewTestProcess(spec.build(t, apiPort), filepath.Join(binDir, "config.json"))
 	if err := process.Start(); err != nil {

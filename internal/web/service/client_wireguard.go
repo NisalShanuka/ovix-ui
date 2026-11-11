@@ -7,9 +7,9 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/common"
-	wgutil "github.com/mhsanaei/3x-ui/v3/internal/util/wireguard"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/util/common"
+	wgutil "ovix.store/ovix-ui/internal/util/wireguard"
 )
 
 const defaultWireguardBase = "10.0.0.0/24"

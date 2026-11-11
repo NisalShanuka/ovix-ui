@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database/model"
 )
 
 // TestGetSubs_DuplicateSettingsClients_Deduped reproduces #5134: multi-node
@@ -18,8 +18,8 @@ import (
 // (inbound, client).
 func TestGetSubs_DuplicateSettingsClients_Deduped(t *testing.T) {
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "ovix-ui.db"))
 
 	const subId = "sub-dup"
 	const email = "dup@example.com"
@@ -73,8 +73,8 @@ func TestGetSubs_DuplicateSettingsClients_Deduped(t *testing.T) {
 // would emit both. The first row by id must win, matching the old settings-JSON order.
 func TestMatchingClients_DedupsCaseInsensitiveEmail(t *testing.T) {
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "ovix-ui.db"))
 
 	const subId = "s1"
 	const uuid = "11111111-2222-4333-8444-555555555555"

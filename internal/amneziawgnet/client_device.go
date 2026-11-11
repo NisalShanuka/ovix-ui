@@ -6,8 +6,8 @@ import (
 
 	"github.com/amnezia-vpn/amneziawg-go/v3/device"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/amneziawg"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/wireguard"
+	"ovix.store/ovix-ui/internal/amneziawg"
+	"ovix.store/ovix-ui/internal/util/wireguard"
 )
 
 // buildClientUAPIConfig renders a client-mode UAPI set string: the device

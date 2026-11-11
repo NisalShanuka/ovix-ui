@@ -4,11 +4,11 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+	"ovix.store/ovix-ui/internal/database/model"
 )
 
 func TestFreshInstallFastPathMarksResetIpLimitSeeder(t *testing.T) {
-	if err := InitDB(filepath.Join(t.TempDir(), "x-ui.db")); err != nil {
+	if err := InitDB(filepath.Join(t.TempDir(), "ovix-ui.db")); err != nil {
 		t.Fatalf("InitDB: %v", err)
 	}
 	t.Cleanup(func() { _ = CloseDB() })

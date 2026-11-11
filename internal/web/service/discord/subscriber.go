@@ -8,9 +8,9 @@ import (
 	"time"
 	"unicode/utf16"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/eventbus"
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
+	"ovix.store/ovix-ui/internal/eventbus"
+	"ovix.store/ovix-ui/internal/logger"
+	"ovix.store/ovix-ui/internal/web/service"
 )
 
 // Subscriber handles event bus messages and forwards them to Discord.
@@ -133,7 +133,7 @@ func (s *Subscriber) FormatEmbed(e eventbus.Event) (Embed, bool) {
 	}
 
 	footer := &EmbedFooter{
-		Text: truncateUnits("3x-ui • "+h, 2048),
+		Text: truncateUnits("ovix-ui • "+h, 2048),
 	}
 	tr := translator(s.settingService)
 

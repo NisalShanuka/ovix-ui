@@ -5,11 +5,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/global"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/web/global"
+	"ovix.store/ovix-ui/internal/xray"
 
 	"github.com/mymmrac/telego"
 )
@@ -34,7 +34,7 @@ func newLinksCallbackTgbot(t *testing.T, email string) (*Tgbot, func(string) int
 	swapTestBot(t, mock.URL)
 	t.Cleanup(mock.Close)
 
-	dbtest.InitDB(t, filepath.Join(t.TempDir(), "x-ui.db"))
+	dbtest.InitDB(t, filepath.Join(t.TempDir(), "ovix-ui.db"))
 
 	inbound := &model.Inbound{
 		UserId:   1,

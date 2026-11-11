@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	wgutil "github.com/mhsanaei/3x-ui/v3/internal/util/wireguard"
+	wgutil "ovix.store/ovix-ui/internal/util/wireguard"
 )
 
 // validOutboundJSON is a fully valid amneziawg outbound settings payload.

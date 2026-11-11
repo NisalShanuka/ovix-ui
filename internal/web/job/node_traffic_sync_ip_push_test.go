@@ -15,19 +15,19 @@ import (
 
 	"github.com/op/go-logging"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	xuilogger "github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/runtime"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database/model"
+	xuilogger "ovix.store/ovix-ui/internal/logger"
+	"ovix.store/ovix-ui/internal/web/runtime"
+	"ovix.store/ovix-ui/internal/web/service"
 )
 
 // A node's IP-limit job only reads rows for its own clients, so pushing the
 // whole table made every node store and echo back the entire fleet's IPs.
 func TestNodeTrafficSyncPushesOnlyHostedClientIps(t *testing.T) {
 	xuilogger.InitLogger(logging.ERROR)
-	dbtest.InitDB(t, filepath.Join(t.TempDir(), "x-ui.db"))
+	dbtest.InitDB(t, filepath.Join(t.TempDir(), "ovix-ui.db"))
 	service.StartTrafficWriter()
 	t.Cleanup(service.StopTrafficWriter)
 	runtime.SetManager(runtime.NewManager(runtime.LocalDeps{APIPort: func() int { return 0 }, SetNeedRestart: func() {}}))

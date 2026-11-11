@@ -11,7 +11,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
+	"ovix.store/ovix-ui/internal/logger"
 
 	clientquic "github.com/quic-go/quic-go"
 )

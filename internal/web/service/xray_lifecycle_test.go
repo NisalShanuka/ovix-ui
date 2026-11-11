@@ -4,7 +4,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 func TestXrayLifecycleSnapshotDoesNotOverwriteNewerResult(t *testing.T) {

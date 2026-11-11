@@ -5,10 +5,10 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	ldaputil "github.com/mhsanaei/3x-ui/v3/internal/util/ldap"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/logger"
+	ldaputil "ovix.store/ovix-ui/internal/util/ldap"
+	"ovix.store/ovix-ui/internal/web/service"
 )
 
 var DefaultTruthyValues = []string{"true", "1", "yes", "on"}

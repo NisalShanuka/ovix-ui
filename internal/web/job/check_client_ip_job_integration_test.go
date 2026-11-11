@@ -11,13 +11,13 @@ import (
 
 	"github.com/op/go-logging"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	xuilogger "github.com/mhsanaei/3x-ui/v3/internal/logger"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database/model"
+	xuilogger "ovix.store/ovix-ui/internal/logger"
 )
 
-// 3x-ui logger must be initialised once before any code path that can
+// ovix-ui logger must be initialised once before any code path that can
 // log a warning. otherwise log.Warningf panics on a nil logger.
 var loggerInitOnce sync.Once
 
@@ -36,8 +36,8 @@ func setupIntegrationDB(t *testing.T) {
 	dbDir := t.TempDir()
 	logDir := t.TempDir()
 
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	t.Setenv("XUI_LOG_FOLDER", logDir)
+	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	t.Setenv("OVIX_LOG_FOLDER", logDir)
 
 	// updateInboundClientIps calls log.SetOutput on the package global,
 	// which would leak to other tests in the same binary.
@@ -48,7 +48,7 @@ func setupIntegrationDB(t *testing.T) {
 		log.SetFlags(origLogFlags)
 	})
 
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	dbtest.InitDB(t, filepath.Join(dbDir, "ovix-ui.db"))
 }
 
 // enforceIpLimitForTest runs the same two steps processObserved does: select
@@ -161,7 +161,7 @@ func ipSet(entries []IPWithTimestamp) map[string]int64 {
 // ban log, and no inbound_client_ips rows — never a crash or partial work.
 func TestRun_NoOpWhenOnlineApiUnavailable(t *testing.T) {
 	setupIntegrationDB(t)
-	t.Setenv("XUI_ENABLE_FAIL2BAN", "true")
+	t.Setenv("OVIX_ENABLE_FAIL2BAN", "true")
 	marker := fakeFail2BanClient(t)
 
 	const email = "no-api-user"
@@ -350,7 +350,7 @@ func TestProcessObserved_StaleEmailIsSkippedAndOrphanDropped(t *testing.T) {
 // just for the path helper (which would pull a lot more deps into the
 // test binary). The env-derived log folder is deterministic.
 func readIpLimitLogPath() string {
-	folder := os.Getenv("XUI_LOG_FOLDER")
+	folder := os.Getenv("OVIX_LOG_FOLDER")
 	if folder == "" {
 		folder = filepath.Join(".", "log")
 	}

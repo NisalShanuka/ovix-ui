@@ -6,12 +6,12 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+	"ovix.store/ovix-ui/internal/database/model"
 )
 
 func initMigrateDB(t *testing.T) {
 	t.Helper()
-	if err := InitDB(filepath.Join(t.TempDir(), "x-ui.db")); err != nil {
+	if err := InitDB(filepath.Join(t.TempDir(), "ovix-ui.db")); err != nil {
 		t.Fatalf("InitDB: %v", err)
 	}
 	t.Cleanup(func() { _ = CloseDB() })
@@ -113,7 +113,7 @@ func TestBackfillEmptyHostGroupIds_RepairsLegacyRows(t *testing.T) {
 // verify_peer_cert_by_name began as a boolean; AutoMigrate's cast to text turned it
 // into the cert name "0"/"1", which xray clients then fail to verify against.
 func TestMigrate_LegacyBooleanVerifyPeerCertByNameIsBlanked(t *testing.T) {
-	dbPath := filepath.Join(t.TempDir(), "x-ui.db")
+	dbPath := filepath.Join(t.TempDir(), "ovix-ui.db")
 	if err := InitDB(dbPath); err != nil {
 		t.Fatalf("InitDB: %v", err)
 	}
@@ -168,8 +168,8 @@ func TestMigrate_LegacyBooleanVerifyPeerCertByNameIsBlanked(t *testing.T) {
 // Postgres casts the boolean column with USING col::text whenever the hosts table
 // also lacks a newer column, the shape every boolean-era table had.
 func TestMigrate_LegacyBooleanVerifyPeerCertByNameIsBlanked_Postgres(t *testing.T) {
-	if strings.TrimSpace(os.Getenv("XUI_DB_DSN")) == "" || os.Getenv("XUI_DB_TYPE") != "postgres" {
-		t.Skip("set XUI_DB_TYPE=postgres and XUI_DB_DSN to run the postgres migration test")
+	if strings.TrimSpace(os.Getenv("OVIX_DB_DSN")) == "" || os.Getenv("OVIX_DB_TYPE") != "postgres" {
+		t.Skip("set OVIX_DB_TYPE=postgres and OVIX_DB_DSN to run the postgres migration test")
 	}
 	if err := InitDB(""); err != nil {
 		t.Fatalf("InitDB: %v", err)
@@ -266,8 +266,8 @@ func TestMigrate_KeepsExternalProxyIntact(t *testing.T) {
 
 // #5 — same against a real Postgres DSN (sequence resync); skips without a DSN.
 func TestMigrate_Postgres(t *testing.T) {
-	if strings.TrimSpace(os.Getenv("XUI_DB_DSN")) == "" || os.Getenv("XUI_DB_TYPE") != "postgres" {
-		t.Skip("set XUI_DB_TYPE=postgres and XUI_DB_DSN to run the postgres migration test")
+	if strings.TrimSpace(os.Getenv("OVIX_DB_DSN")) == "" || os.Getenv("OVIX_DB_TYPE") != "postgres" {
+		t.Skip("set OVIX_DB_TYPE=postgres and OVIX_DB_DSN to run the postgres migration test")
 	}
 	if err := InitDB(""); err != nil {
 		t.Fatalf("InitDB: %v", err)

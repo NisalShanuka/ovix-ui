@@ -1,4 +1,4 @@
-module github.com/mhsanaei/3x-ui/v3
+module ovix.store/ovix-ui
 
 go 1.27.2
 

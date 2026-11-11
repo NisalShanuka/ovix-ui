@@ -7,15 +7,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database/dbtest"
 )
 
 // A box with no IPv6 route spends 3s per lookup service, and a status sample
 // that waits for that is a panel reporting nothing for the first ~15s.
 func TestStatusSampleDoesNotWaitOnPublicIPLookup(t *testing.T) {
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "ovix-ui.db"))
 
 	release := make(chan struct{})
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

@@ -5,13 +5,13 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/dbtest"
 )
 
 func TestStageSQLiteUploadRebuildsFromDump(t *testing.T) {
 	dir := t.TempDir()
-	dbPath := filepath.Join(dir, "x-ui.db")
+	dbPath := filepath.Join(dir, "ovix-ui.db")
 	dbtest.InitDB(t, dbPath)
 	dump, err := database.DumpSQLiteToBytes(dbPath)
 	if err != nil {
@@ -28,7 +28,7 @@ func TestStageSQLiteUploadRebuildsFromDump(t *testing.T) {
 	}
 	defer upload.Close()
 
-	staged := filepath.Join(dir, "x-ui.db.temp")
+	staged := filepath.Join(dir, "ovix-ui.db.temp")
 	if err := stageSQLiteUpload(upload, importKindSQLiteDump, staged); err != nil {
 		t.Fatalf("stageSQLiteUpload: %v", err)
 	}

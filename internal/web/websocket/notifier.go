@@ -2,8 +2,8 @@
 package websocket
 
 import (
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/global"
+	"ovix.store/ovix-ui/internal/logger"
+	"ovix.store/ovix-ui/internal/web/global"
 )
 
 // GetHub returns the global WebSocket hub instance.

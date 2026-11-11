@@ -5,10 +5,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 // TestAddClientTraffic_MatchesByEmail covers two scenarios that share one fix:
@@ -26,8 +26,8 @@ import (
 // Both must have their local traffic counted.
 func TestAddClientTraffic_MatchesByEmail(t *testing.T) {
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "ovix-ui.db"))
 
 	db := database.GetDB()
 
@@ -94,8 +94,8 @@ func TestAddClientTraffic_MatchesByEmail(t *testing.T) {
 // owning inbound via the client_inbounds link instead.
 func TestAdjustTraffics_DelayedStartConvertsDespiteStaleInboundId(t *testing.T) {
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "ovix-ui.db"))
 
 	db := database.GetDB()
 
@@ -160,8 +160,8 @@ func TestAdjustTraffics_DelayedStartConvertsDespiteStaleInboundId(t *testing.T) 
 // Before the fix every polled row got its own no-op expiry UPDATE.
 func TestAddClientTraffic_ExpiryWriteOnlyForConvertedClients(t *testing.T) {
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "ovix-ui.db"))
 
 	db := database.GetDB()
 
@@ -226,8 +226,8 @@ func TestAddClientTraffic_ExpiryWriteOnlyForConvertedClients(t *testing.T) {
 
 func TestAddTrafficClientUpdateFailureRollsBackWholeBatch(t *testing.T) {
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "ovix-ui.db"))
 	db := database.GetDB()
 
 	for _, email := range []string{"healthy@x", "rejected@x"} {
@@ -278,8 +278,8 @@ func TestAddTrafficClientUpdateFailureRollsBackWholeBatch(t *testing.T) {
 
 func TestAddClientTrafficResolvesRenamedTuicClientByStableIdentity(t *testing.T) {
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "ovix-ui.db"))
 	db := database.GetDB()
 
 	const (

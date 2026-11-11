@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+	"ovix.store/ovix-ui/internal/database/model"
 )
 
 // Issue #5232: a vision flow set on a VLESS+XHTTP+REALITY (vlessenc) client

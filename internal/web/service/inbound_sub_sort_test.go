@@ -3,8 +3,8 @@ package service
 import (
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/model"
 )
 
 func makeInboundWithSubSortIndex(tag string, port int, subSortIndex int) *model.Inbound {

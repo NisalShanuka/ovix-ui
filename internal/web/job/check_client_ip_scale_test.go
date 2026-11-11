@@ -13,38 +13,38 @@ import (
 	"github.com/op/go-logging"
 	"gorm.io/gorm"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/config"
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	xuilogger "github.com/mhsanaei/3x-ui/v3/internal/logger"
+	"ovix.store/ovix-ui/internal/config"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database/model"
+	xuilogger "ovix.store/ovix-ui/internal/logger"
 )
 
 // setupScaleJobDB mirrors the service package's scale gating: Postgres via
-// XUI_DB_TYPE/XUI_DB_DSN, SQLite via XUI_SCALE_TEST=1, skip otherwise.
+// OVIX_DB_TYPE/OVIX_DB_DSN, SQLite via OVIX_SCALE_TEST=1, skip otherwise.
 func setupScaleJobDB(t *testing.T) {
 	t.Helper()
 	loggerInitOnce.Do(func() { xuilogger.InitLogger(logging.ERROR) })
-	t.Setenv("XUI_LOG_FOLDER", t.TempDir())
+	t.Setenv("OVIX_LOG_FOLDER", t.TempDir())
 
-	if os.Getenv("XUI_DB_TYPE") == "postgres" && strings.TrimSpace(os.Getenv("XUI_DB_DSN")) != "" {
+	if os.Getenv("OVIX_DB_TYPE") == "postgres" && strings.TrimSpace(os.Getenv("OVIX_DB_DSN")) != "" {
 		if err := database.InitDB(""); err != nil {
 			t.Fatalf("InitDB(postgres): %v", err)
 		}
 		t.Cleanup(func() { _ = database.CloseDB() })
 		return
 	}
-	switch strings.ToLower(strings.TrimSpace(os.Getenv("XUI_SCALE_TEST"))) {
+	switch strings.ToLower(strings.TrimSpace(os.Getenv("OVIX_SCALE_TEST"))) {
 	case "1", "true", "yes":
 		dbtest.InitDB(t, filepath.Join(t.TempDir(), "scale.db"))
 		return
 	}
-	t.Skip("set XUI_SCALE_TEST=1 (sqlite) or XUI_DB_TYPE=postgres + XUI_DB_DSN (postgres) to run the scale benchmark")
+	t.Skip("set OVIX_SCALE_TEST=1 (sqlite) or OVIX_DB_TYPE=postgres + OVIX_DB_DSN (postgres) to run the scale benchmark")
 }
 
 func scaleJobSizes(t *testing.T, def ...int) []int {
 	t.Helper()
-	raw := strings.TrimSpace(os.Getenv("XUI_SCALE_SIZES"))
+	raw := strings.TrimSpace(os.Getenv("OVIX_SCALE_SIZES"))
 	if raw == "" {
 		return def
 	}
@@ -56,7 +56,7 @@ func scaleJobSizes(t *testing.T, def ...int) []int {
 		}
 		n, err := strconv.Atoi(part)
 		if err != nil || n <= 0 {
-			t.Fatalf("XUI_SCALE_SIZES: invalid size %q", part)
+			t.Fatalf("OVIX_SCALE_SIZES: invalid size %q", part)
 		}
 		out = append(out, n)
 	}

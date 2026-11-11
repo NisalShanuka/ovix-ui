@@ -1,5 +1,5 @@
 // Package nodee2e drives a real master panel and a real node panel, each its own
-// process, through the node-sync paths. Gated by XUI_NODE_E2E_BINARY.
+// process, through the node-sync paths. Gated by OVIX_NODE_E2E_BINARY.
 package nodee2e
 
 import (
@@ -19,16 +19,16 @@ import (
 	"testing"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
+	"ovix.store/ovix-ui/internal/database"
 )
 
 const settleTimeout = 30 * time.Second
 
 func panelBinary(t *testing.T) string {
 	t.Helper()
-	bin := os.Getenv("XUI_NODE_E2E_BINARY")
+	bin := os.Getenv("OVIX_NODE_E2E_BINARY")
 	if bin == "" {
-		t.Skip("XUI_NODE_E2E_BINARY not set; run `make node-e2e`")
+		t.Skip("OVIX_NODE_E2E_BINARY not set; run `make node-e2e`")
 	}
 	abs, err := filepath.Abs(bin)
 	if err != nil {
@@ -60,10 +60,10 @@ func freePort(t *testing.T) int {
 
 func (p *panel) env() []string {
 	return append(os.Environ(),
-		"XUI_DB_FOLDER="+filepath.Join(p.dir, "db"),
-		"XUI_LOG_FOLDER="+filepath.Join(p.dir, "log"),
-		"XUI_BIN_FOLDER="+filepath.Join(p.dir, "bin"),
-		"XUI_ENABLE_FAIL2BAN=false",
+		"OVIX_DB_FOLDER="+filepath.Join(p.dir, "db"),
+		"OVIX_LOG_FOLDER="+filepath.Join(p.dir, "log"),
+		"OVIX_BIN_FOLDER="+filepath.Join(p.dir, "bin"),
+		"OVIX_ENABLE_FAIL2BAN=false",
 		"MSYS_NO_PATHCONV=1",
 	)
 }
@@ -115,7 +115,7 @@ func preparePanel(t *testing.T, bin, name string) *panel {
 	p.cli("setting", "-username", "e2e", "-password", "e2e-pass", "-port", strconv.Itoa(p.port), "-webBasePath", "/")
 	sharedDBMu.Lock()
 	defer sharedDBMu.Unlock()
-	if err := database.InitDB(filepath.Join(p.dir, "db", "x-ui.db")); err != nil {
+	if err := database.InitDB(filepath.Join(p.dir, "db", "ovix-ui.db")); err != nil {
 		t.Fatalf("%s: open db: %v", name, err)
 	}
 	db := database.GetDB()
@@ -184,7 +184,7 @@ func (p *panel) deleteInboundRow(id int) {
 	}
 	sharedDBMu.Lock()
 	defer sharedDBMu.Unlock()
-	if err := database.InitDB(filepath.Join(p.dir, "db", "x-ui.db")); err != nil {
+	if err := database.InitDB(filepath.Join(p.dir, "db", "ovix-ui.db")); err != nil {
 		p.t.Fatalf("%s: open db: %v", p.name, err)
 	}
 	defer func() { _ = database.CloseDB() }()

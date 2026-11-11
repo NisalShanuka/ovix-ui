@@ -8,7 +8,7 @@ index, layering rules), read `docs/architecture.md` on demand — do not guess
 file locations when it can answer in one hop.
 
 ## Stack
-- Backend: Go 1.27 (`module github.com/mhsanaei/3x-ui/v3`), Gin, GORM.
+- Backend: Go 1.27 (`module ovix.store/ovix-ui`), Gin, GORM.
   Runs Xray-core as a managed child process (`internal/xray/process.go`) and
   imports `github.com/xtls/xray-core` for config types + gRPC stats/handler/router
   API. MTProto inbounds run a second managed child — the `mtg-multi` binary
@@ -24,16 +24,16 @@ file locations when it can answer in one hop.
   falls back to a process restart on older binaries. A client's panel-side
   traffic reset also calls `POST /secrets/{name}/reset-quota` so a renewed client
   is not re-blocked by the sidecar's quota counter.
-- Storage: SQLite by default (`/etc/x-ui/x-ui.db` on Linux; the executable dir on
-  Windows), PostgreSQL optional (`XUI_DB_TYPE` / `XUI_DB_DSN`). The CGo SQLite
+- Storage: SQLite by default (`/etc/ovix-ui/ovix-ui.db` on Linux; the executable dir on
+  Windows), PostgreSQL optional (`OVIX_DB_TYPE` / `OVIX_DB_DSN`). The CGo SQLite
   driver (`mattn/go-sqlite3`) needs a C compiler — `CGO_ENABLED=0` builds fail.
 - Frontend: React 19 + Ant Design 6 + Vite 8 + TypeScript in `frontend/`,
   built into `internal/web/dist/` (gitignored) and embedded via `embed.FS`.
 
 ## Repo map
-- `main.go` — entry point + `x-ui` CLI (run, migrate, migrate-db, encrypt-tokens, setting, cert).
-- `internal/config/` — env parsing (XUI_DEBUG, XUI_LOG_LEVEL, XUI_LOG_FOLDER,
-  XUI_BIN_FOLDER, XUI_SKIP_HSTS, XUI_PORT, XUI_DB_*).
+- `main.go` — entry point + `ovix-ui` CLI (run, migrate, migrate-db, encrypt-tokens, setting, cert).
+- `internal/config/` — env parsing (OVIX_DEBUG, OVIX_LOG_LEVEL, OVIX_LOG_FOLDER,
+  OVIX_BIN_FOLDER, OVIX_SKIP_HSTS, OVIX_PORT, OVIX_DB_*).
 - `internal/database/` + `internal/database/model/` — GORM schema (~24 models;
   Inbound, Client, Setting, User are the core), inbound Protocol enum,
   AutoMigrate + hand-written migrations in `db.go`.
@@ -154,15 +154,15 @@ file locations when it can answer in one hop.
 - Stdlib `testing` only (no testify). Table-driven, `t.Run` subtests,
   `t.Helper()` on helpers. Assert the exact value / typed error / emitted
   string, never just `err != nil`. Prefer real deps over mocks: throwaway DB via
-  `dbtest.InitDB(t, filepath.Join(t.TempDir(), "x-ui.db"))`
+  `dbtest.InitDB(t, filepath.Join(t.TempDir(), "ovix-ui.db"))`
   (`internal/database/dbtest`: copies a once-migrated template and registers
   `CloseDB` cleanup; a fresh `database.InitDB` costs ~7x more, ~850ms under
   `-race`); `httptest` for HTTP. Keep `database.InitDB` for reopening a file or
   migrating a hand-built legacy DB. `internal/sub`'s `initSubDB(t)` is the template.
 - Code must pass `golangci-lint run` (gofumpt + goimports formatting): `make lint`.
 - Postgres, xray-gRPC-e2e, master+node and scale tests `t.Skip` unless
-  `XUI_TEST_PG_DSN`, `XUI_DB_TYPE`+`XUI_DB_DSN`, `XRAY_E2E_BINARY`,
-  `XUI_NODE_E2E_BINARY` or `XUI_SCALE_TEST` is set — a green `go test ./...`
+  `OVIX_TEST_PG_DSN`, `OVIX_DB_TYPE`+`OVIX_DB_DSN`, `XRAY_E2E_BINARY`,
+  `OVIX_NODE_E2E_BINARY` or `OVIX_SCALE_TEST` is set — a green `go test ./...`
   does not mean those paths ran.
 
 ## Frontend conventions (summary; full version in frontend/CLAUDE.md)
@@ -175,7 +175,7 @@ file locations when it can answer in one hop.
   a headless-Chromium Storybook project, so run
   `npx playwright install --with-deps chromium` once or `make verify` fails.
 - Editing `frontend/src` does NOT change what users see until the Vite build is
-  regenerated into `internal/web/dist/`. In `XUI_DEBUG=true`, HTML is served from
+  regenerated into `internal/web/dist/`. In `OVIX_DEBUG=true`, HTML is served from
   the frozen embedded FS but JS/CSS off disk — after `npm run build` you MUST
   restart `go run .` or you get a blank page with 404s.
 - After touching share-link logic (`src/lib/xray/`), run `npm run test` (golden

@@ -5,16 +5,16 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/tuic"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/tuic"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 func TestTuicShutdownJournalSurvivesDatabaseFailureAndReplaysOnce(t *testing.T) {
 	dir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dir)
-	dbtest.InitDB(t, filepath.Join(dir, "x-ui.db"))
+	t.Setenv("OVIX_DB_FOLDER", dir)
+	dbtest.InitDB(t, filepath.Join(dir, "ovix-ui.db"))
 	db := database.GetDB()
 	row := xray.ClientTraffic{Email: "journal@x", Enable: true}
 	if err := db.Create(&row).Error; err != nil {

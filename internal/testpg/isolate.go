@@ -15,8 +15,8 @@ import (
 )
 
 const (
-	dbTypeEnv = "XUI_DB_TYPE"
-	dbDSNEnv  = "XUI_DB_DSN"
+	dbTypeEnv = "OVIX_DB_TYPE"
+	dbDSNEnv  = "OVIX_DB_DSN"
 )
 
 // IsolatePackage gives one test package its own PostgreSQL schema: package test

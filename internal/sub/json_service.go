@@ -12,13 +12,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/json_util"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/maskcompat"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/random"
-	wgutil "github.com/mhsanaei/3x-ui/v3/internal/util/wireguard"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/logger"
+	"ovix.store/ovix-ui/internal/util/json_util"
+	"ovix.store/ovix-ui/internal/util/maskcompat"
+	"ovix.store/ovix-ui/internal/util/random"
+	wgutil "ovix.store/ovix-ui/internal/util/wireguard"
 )
 
 //go:embed default.json

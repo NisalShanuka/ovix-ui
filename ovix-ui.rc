@@ -1,0 +1,18 @@
+#!/sbin/openrc-run
+
+command="/usr/local/ovix-ui/ovix-ui"
+command_background=true
+pidfile="/run/ovix-ui.pid"
+description="ovix-ui Service"
+procname="ovix-ui"
+depend() {
+    need net
+}
+start_pre(){
+    cd /usr/local/ovix-ui
+}
+reload() {
+  ebegin "Reloading ${RC_SVCNAME}"
+  kill -USR1 $(cat $pidfile)
+  eend $?
+}

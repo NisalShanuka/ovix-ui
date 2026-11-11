@@ -6,9 +6,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/locale"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/web/locale"
+	"ovix.store/ovix-ui/internal/xray"
 
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"golang.org/x/text/language"
@@ -35,7 +35,7 @@ func clientInfoLocalizer(t *testing.T) {
 // Regression test: a start-after-first-use client is stored as a negative duration,
 // and a disabled one rendered it as a 1969 date.
 func TestClientInfoShowsStartAfterFirstUseWhenDisabled(t *testing.T) {
-	dbtest.InitDB(t, filepath.Join(t.TempDir(), "x-ui.db"))
+	dbtest.InitDB(t, filepath.Join(t.TempDir(), "ovix-ui.db"))
 	clientInfoLocalizer(t)
 
 	traffic := &xray.ClientTraffic{

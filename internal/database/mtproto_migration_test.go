@@ -5,14 +5,14 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+	"ovix.store/ovix-ui/internal/database/model"
 )
 
 func initMtprotoMigrationDB(t *testing.T) {
 	t.Helper()
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	if err := InitDB(filepath.Join(dbDir, "x-ui.db")); err != nil {
+	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	if err := InitDB(filepath.Join(dbDir, "ovix-ui.db")); err != nil {
 		t.Fatalf("InitDB failed: %v", err)
 	}
 	t.Cleanup(func() { _ = CloseDB() })

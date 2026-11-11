@@ -6,8 +6,8 @@ blue='\033[0;34m'
 yellow='\033[0;33m'
 plain='\033[0m'
 
-xui_folder="${XUI_MAIN_FOLDER:=/usr/local/x-ui}"
-xui_service="${XUI_SERVICE:=/etc/systemd/system}"
+xui_folder="${OVIX_MAIN_FOLDER:=/usr/local/ovix-ui}"
+xui_service="${OVIX_SERVICE:=/etc/systemd/system}"
 
 # Don't edit this config
 b_source="${BASH_SOURCE[0]}"
@@ -33,13 +33,13 @@ _fail() {
 
 # Records this run's outcome for the panel's web updater to poll, since it
 # launches this script detached and has no other way to learn whether it
-# finished. Written to a fixed path outside XUI_MAIN_FOLDER so it survives
+# finished. Written to a fixed path outside OVIX_MAIN_FOLDER so it survives
 # the update regardless of what happens to that folder. The EXIT trap below
 # covers every exit path in this file, including the bare `exit 1`/`exit 2`
 # calls that don't go through _fail.
-xui_update_run_id="${XUI_UPDATE_RUN_ID:-0}"
+xui_update_run_id="${OVIX_UPDATE_RUN_ID:-0}"
 [[ "${xui_update_run_id}" =~ ^[0-9]+$ ]] || xui_update_run_id="0"
-xui_update_status_file="${XUI_UPDATE_STATUS_FILE:-/etc/x-ui/update-status.json}"
+xui_update_status_file="${OVIX_UPDATE_STATUS_FILE:-/etc/ovix-ui/update-status.json}"
 
 _write_update_status() {
     local state="$1"
@@ -111,13 +111,13 @@ gen_random_string() {
 xui_env_file_path() {
     case "${release}" in
         ubuntu | debian | armbian)
-            echo "/etc/default/x-ui"
+            echo "/etc/default/ovix-ui"
             ;;
         arch | manjaro | parch | alpine)
-            echo "/etc/conf.d/x-ui"
+            echo "/etc/conf.d/ovix-ui"
             ;;
         *)
-            echo "/etc/sysconfig/x-ui"
+            echo "/etc/sysconfig/ovix-ui"
             ;;
     esac
 }
@@ -167,14 +167,14 @@ install_base() {
 config_after_update() {
     local panel_needs_restart=0
 
-    echo -e "${yellow}x-ui settings:${plain}"
-    ${xui_folder}/x-ui setting -show true
-    ${xui_folder}/x-ui migrate
+    echo -e "${yellow}ovix-ui settings:${plain}"
+    ${xui_folder}/ovix-ui setting -show true
+    ${xui_folder}/ovix-ui migrate
 
     # Properly detect empty cert by checking if cert: line exists and has content after it
-    local existing_cert=$(${xui_folder}/x-ui setting -getCert true 2> /dev/null | grep 'cert:' | awk -F': ' '{print $2}' | tr -d '[:space:]')
-    local existing_port=$(${xui_folder}/x-ui setting -show true | grep -Eo 'port: .+' | awk '{print $2}')
-    local existing_webBasePath=$(${xui_folder}/x-ui setting -show true | grep -Eo 'webBasePath: .+' | awk '{print $2}' | sed 's#^/##')
+    local existing_cert=$(${xui_folder}/ovix-ui setting -getCert true 2> /dev/null | grep 'cert:' | awk -F': ' '{print $2}' | tr -d '[:space:]')
+    local existing_port=$(${xui_folder}/ovix-ui setting -show true | grep -Eo 'port: .+' | awk '{print $2}')
+    local existing_webBasePath=$(${xui_folder}/ovix-ui setting -show true | grep -Eo 'webBasePath: .+' | awk '{print $2}' | sed 's#^/##')
 
     # Get server IP
     local URL_lists=(
@@ -206,14 +206,14 @@ config_after_update() {
     if [[ ${#existing_webBasePath} -lt 4 ]]; then
         echo -e "${yellow}WebBasePath is missing or too short. Generating a new one...${plain}"
         local config_webBasePath=$(gen_random_string 18)
-        ${xui_folder}/x-ui setting -webBasePath "${config_webBasePath}"
+        ${xui_folder}/ovix-ui setting -webBasePath "${config_webBasePath}"
         existing_webBasePath="${config_webBasePath}"
         panel_needs_restart=1
         echo -e "${green}New WebBasePath: ${config_webBasePath}${plain}"
     fi
 
     # An update only updates the panel: TLS stays exactly as configured. Set it up
-    # explicitly from the x-ui menu (SSL Certificate Management).
+    # explicitly from the ovix-ui menu (SSL Certificate Management).
     local access_scheme="http" access_host="${server_ip}"
     if [[ -n "$existing_cert" ]]; then
         access_scheme="https"
@@ -227,45 +227,45 @@ config_after_update() {
     echo -e "${green}═══════════════════════════════════════════${plain}"
     if [[ -z "$existing_cert" ]]; then
         echo -e "${yellow}No SSL certificate is configured; the panel is served over HTTP.${plain}"
-        echo -e "${yellow}Run 'x-ui' and choose SSL Certificate Management to set one up.${plain}"
+        echo -e "${yellow}Run 'ovix-ui' and choose SSL Certificate Management to set one up.${plain}"
     fi
 
     if [[ "$panel_needs_restart" -eq 1 ]]; then
         echo -e "${yellow}Restarting panel to apply the new web base path...${plain}"
-        systemctl restart x-ui 2> /dev/null || rc-service x-ui restart 2> /dev/null
+        systemctl restart ovix-ui 2> /dev/null || rc-service ovix-ui restart 2> /dev/null
     fi
 }
 
 # setup_fail2ban auto-installs and configures fail2ban for the IP Limit feature
-# by invoking the freshly downloaded x-ui CLI. IP Limit is load-bearing on
+# by invoking the freshly downloaded ovix-ui CLI. IP Limit is load-bearing on
 # fail2ban (without it the panel disables the limitIp field and zeroes existing
 # limits), so updating an older install should make it work without a manual
 # trip through the IP Limit menu. Non-fatal: a fail2ban failure must never abort
-# the update. XUI_ENABLE_FAIL2BAN is honored (load_xui_env exports it from the
+# the update. OVIX_ENABLE_FAIL2BAN is honored (load_xui_env exports it from the
 # persisted env file, so a deliberate opt-out survives updates).
 setup_fail2ban() {
-    if [[ -n "${XUI_ENABLE_FAIL2BAN+x}" && "${XUI_ENABLE_FAIL2BAN}" != "true" ]]; then
-        echo -e "${yellow}XUI_ENABLE_FAIL2BAN=${XUI_ENABLE_FAIL2BAN}, skipping Fail2ban auto-setup.${plain}"
+    if [[ -n "${OVIX_ENABLE_FAIL2BAN+x}" && "${OVIX_ENABLE_FAIL2BAN}" != "true" ]]; then
+        echo -e "${yellow}OVIX_ENABLE_FAIL2BAN=${OVIX_ENABLE_FAIL2BAN}, skipping Fail2ban auto-setup.${plain}"
         return 0
     fi
 
-    if [[ ! -x /usr/bin/x-ui ]]; then
-        echo -e "${yellow}x-ui CLI not found; skipping Fail2ban auto-setup.${plain}"
+    if [[ ! -x /usr/bin/ovix-ui ]]; then
+        echo -e "${yellow}ovix-ui CLI not found; skipping Fail2ban auto-setup.${plain}"
         return 0
     fi
 
     # Scripts older than v3.4.0 have no setup-fail2ban and exit 0 from the
     # usage banner, which would read as success here.
-    if ! grep -q '"setup-fail2ban")' /usr/bin/x-ui; then
-        echo -e "${yellow}This x-ui.sh predates 'x-ui setup-fail2ban'; skipping Fail2ban auto-setup.${plain}"
+    if ! grep -q '"setup-fail2ban")' /usr/bin/ovix-ui; then
+        echo -e "${yellow}This ovix-ui.sh predates 'ovix-ui setup-fail2ban'; skipping Fail2ban auto-setup.${plain}"
         return 0
     fi
 
     echo -e "${green}Setting up Fail2ban for the IP Limit feature...${plain}"
-    if /usr/bin/x-ui setup-fail2ban; then
+    if /usr/bin/ovix-ui setup-fail2ban; then
         echo -e "${green}Fail2ban setup complete.${plain}"
     else
-        echo -e "${yellow}Fail2ban setup did not finish; IP Limit stays disabled until you run 'x-ui' and open the IP Limit menu. Continuing.${plain}"
+        echo -e "${yellow}Fail2ban setup did not finish; IP Limit stays disabled until you run 'ovix-ui' and open the IP Limit menu. Continuing.${plain}"
     fi
     return 0
 }
@@ -275,17 +275,17 @@ setup_fail2ban() {
 # transient systemd-run unit; when systemd-run is unavailable it starts this
 # script as a plain child instead, and that child inherits the sandbox and then
 # cannot write anything this update needs. Say so once, up front, instead of
-# dying partway through with "Failed to download x-ui".
+# dying partway through with "Failed to download ovix-ui".
 require_writable_update_paths() {
     local dir probe
     for dir in "${xui_folder%/*}" "/usr/bin"; do
         [[ -n "$dir" && -d "$dir" ]] || continue
-        probe="${dir}/.x-ui-write-test.$$"
+        probe="${dir}/.ovix-ui-write-test.$$"
         # A real write test rather than [[ -w ]]: this runs as root, where a
         # permission bit means little and the test only reflects the file mode
         # and the mount flags, not an immutable attribute or a full filesystem.
         if ! : > "$probe" 2> /dev/null; then
-            _fail "ERROR: ${dir} is not writable for this process (read-only mount, attribute or full filesystem). The panel's fallback updater cannot run inside the hardened systemd sandbox; update from the panel UI (which uses systemd-run) or run 'x-ui update' in a shell."
+            _fail "ERROR: ${dir} is not writable for this process (read-only mount, attribute or full filesystem). The panel's fallback updater cannot run inside the hardened systemd sandbox; update from the panel UI (which uses systemd-run) or run 'ovix-ui update' in a shell."
         fi
         rm -f "$probe"
     done
@@ -327,7 +327,7 @@ _xui_warn_unsupported_hardening() {
         fi
     done
     [[ -n "$missing" ]] || return 0
-    echo -e "${yellow}Note: systemd ${version} ignores part of the hardening in x-ui.service; the panel still starts.${plain}"
+    echo -e "${yellow}Note: systemd ${version} ignores part of the hardening in ovix-ui.service; the panel still starts.${plain}"
     echo "      Not applied, needs a newer systemd: ${missing}."
     if [[ "$version" -lt 231 ]]; then
         echo "      The panel's folders stay writable through ReadWriteDirectories=, the alias this script installs."
@@ -339,10 +339,10 @@ _xui_warn_unsupported_hardening() {
 # ProtectSystem=full makes /usr, /boot, /efi and /etc read-only. ProtectSystem=
 # strict would make the whole hierarchy read-only (only the kernel API
 # filesystems stay as they are), and that would break the panel's own use of
-# /tmp. The panel's stores are configurable (XUI_DB_FOLDER, XUI_LOG_FOLDER,
-# XUI_BIN_FOLDER), and XUI_MAIN_FOLDER is the folder install.sh/update.sh place
+# /tmp. The panel's stores are configurable (OVIX_DB_FOLDER, OVIX_LOG_FOLDER,
+# OVIX_BIN_FOLDER), and OVIX_MAIN_FOLDER is the folder install.sh/update.sh place
 # the files in -- the unit's WorkingDirectory on a stock install, and what a
-# relative XUI_BIN_FOLDER is resolved against. So a hard-coded list in the unit
+# relative OVIX_BIN_FOLDER is resolved against. So a hard-coded list in the unit
 # either misses a relocated store -- the panel then cannot write its own SQLite
 # database and sits in a Restart=on-failure loop -- or forces the operator to
 # edit a file that every install/update overwrites from the release tarball.
@@ -351,7 +351,7 @@ _xui_warn_unsupported_hardening() {
 # plain-install defaults. A relocated store means re-running install or update:
 # the drop-in is only written here.
 _xui_service_write_paths_dropin() {
-    # $1 is the env file to resolve the XUI_* folders from; callers pass nothing
+    # $1 is the env file to resolve the OVIX_* folders from; callers pass nothing
     # and get the OS-specific path the unit itself uses.
     local env_file="${1:-}"
     local dropin_dir dropin temp_file
@@ -368,15 +368,15 @@ _xui_service_write_paths_dropin() {
         set +a
     fi
 
-    # XUI_* wins over the script's own default: the unit hands that same env
+    # OVIX_* wins over the script's own default: the unit hands that same env
     # file to the panel through EnvironmentFile=, so these are the folders it
     # will actually use.
-    main_folder="${XUI_MAIN_FOLDER:-${xui_folder}}"
-    db_folder="${XUI_DB_FOLDER:-/etc/x-ui}"
-    log_folder="${XUI_LOG_FOLDER:-/var/log/x-ui}"
-    # An empty XUI_BIN_FOLDER resolves to "bin" relative to the panel's working
+    main_folder="${OVIX_MAIN_FOLDER:-${xui_folder}}"
+    db_folder="${OVIX_DB_FOLDER:-/etc/ovix-ui}"
+    log_folder="${OVIX_LOG_FOLDER:-/var/log/ovix-ui}"
+    # An empty OVIX_BIN_FOLDER resolves to "bin" relative to the panel's working
     # directory, which the unit sets to the main folder.
-    bin_folder="${XUI_BIN_FOLDER:-bin}"
+    bin_folder="${OVIX_BIN_FOLDER:-bin}"
     if [[ "$bin_folder" != /* ]]; then
         bin_folder="${main_folder%/}/${bin_folder#./}"
     fi
@@ -409,17 +409,17 @@ _xui_service_write_paths_dropin() {
     line="${line# }"
     [[ -n "$line" ]] || return 1
 
-    dropin_dir="${xui_service}/x-ui.service.d"
+    dropin_dir="${xui_service}/ovix-ui.service.d"
     dropin="${dropin_dir}/10-xui-sandbox.conf"
     temp_file="${dropin}.tmp.$$"
 
     mkdir -p "$dropin_dir" || return 1
     cat > "$temp_file" << EOF
 # Regenerated by install.sh/update.sh on every install and update: edits here
-# are lost, and the list only reflects the XUI_* variables read from
+# are lost, and the list only reflects the OVIX_* variables read from
 # ${env_file} at that moment. Re-run install/update after moving a store.
 # It lists the folders the panel writes to. Put local additions in their own
-# drop-in, for example 20-x-ui-local.conf, which nothing here touches.
+# drop-in, for example 20-ovix-ui-local.conf, which nothing here touches.
 [Service]
 ReadWritePaths=${line}
 ReadWriteDirectories=${line}
@@ -427,7 +427,7 @@ EOF
     if [[ "$(_xui_systemd_major_version)" -ge 239 ]]; then
         cat >> "$temp_file" << 'EOF'
 # @system-service needs systemd >= 239; on older versions the unknown group
-# would leave the panel with a filter it cannot start under (x-ui.service.*).
+# would leave the panel with a filter it cannot start under (ovix-ui.service.*).
 SystemCallFilter=@system-service
 SystemCallErrorNumber=EPERM
 EOF
@@ -444,16 +444,16 @@ EOF
     return 0
 }
 
-# Lands a systemd unit file at ${xui_service}/x-ui.service via a temp file +
+# Lands a systemd unit file at ${xui_service}/ovix-ui.service via a temp file +
 # atomic mv, so a failed cp/curl or an interrupted mv never leaves a
 # truncated unit file at the live path -- systemd would then fail to parse
 # it on the next daemon-reload/start. Same pattern already used for
-# /usr/bin/x-ui elsewhere in this script. source_is_url picks cp (from a
+# /usr/bin/ovix-ui elsewhere in this script. source_is_url picks cp (from a
 # file already extracted from the release tarball) vs curl (GitHub fallback).
 _install_xui_service_unit() {
     local source="$1"
     local source_is_url="$2"
-    local dest="${xui_service}/x-ui.service"
+    local dest="${xui_service}/ovix-ui.service"
     local temp_file="${dest}.tmp.$$"
 
     rm -f "$temp_file"
@@ -476,14 +476,14 @@ _install_xui_service_unit() {
         return 1
     fi
     if ! _xui_service_write_paths_dropin; then
-        echo -e "${yellow}Warning: could not refresh ${xui_service}/x-ui.service.d/10-xui-sandbox.conf.${plain}"
-        echo -e "${yellow}If XUI_DB_FOLDER or XUI_LOG_FOLDER points outside /etc/x-ui and /var/log/x-ui, the panel may not be able to write to it under ProtectSystem=full.${plain}"
+        echo -e "${yellow}Warning: could not refresh ${xui_service}/ovix-ui.service.d/10-xui-sandbox.conf.${plain}"
+        echo -e "${yellow}If OVIX_DB_FOLDER or OVIX_LOG_FOLDER points outside /etc/ovix-ui and /var/log/ovix-ui, the panel may not be able to write to it under ProtectSystem=full.${plain}"
     fi
     _xui_warn_unsupported_hardening
     return 0
 }
 
-# Older tags predate some of these files (x-ui.rc arrived in v2.8.4). Serving
+# Older tags predate some of these files (ovix-ui.rc arrived in v2.8.4). Serving
 # main's copy against an old binary is the mismatch this pinning exists to
 # prevent, so probe before the old install is removed and refuse the tag.
 require_repo_files() {
@@ -498,33 +498,33 @@ require_repo_files() {
     done
 }
 
-update_x-ui() {
-    cd ${xui_folder%/x-ui}/
+update_ovix-ui() {
+    cd ${xui_folder%/ovix-ui}/
 
     load_xui_env
 
-    if [ -f "${xui_folder}/x-ui" ]; then
-        current_xui_version=$(${xui_folder}/x-ui -v)
-        echo -e "${green}Current x-ui version: ${current_xui_version}${plain}"
+    if [ -f "${xui_folder}/ovix-ui" ]; then
+        current_xui_version=$(${xui_folder}/ovix-ui -v)
+        echo -e "${green}Current ovix-ui version: ${current_xui_version}${plain}"
     else
-        _fail "ERROR: Current x-ui version: unknown"
+        _fail "ERROR: Current ovix-ui version: unknown"
     fi
 
-    echo -e "${green}Downloading new x-ui version...${plain}"
+    echo -e "${green}Downloading new ovix-ui version...${plain}"
 
-    # XUI_UPDATE_TAG lets the panel target a specific release tag (e.g. the
+    # OVIX_UPDATE_TAG lets the panel target a specific release tag (e.g. the
     # rolling dev-latest pre-release). Empty keeps the default latest-stable flow.
-    if [[ -n "${XUI_UPDATE_TAG}" ]]; then
-        tag_version="${XUI_UPDATE_TAG}"
+    if [[ -n "${OVIX_UPDATE_TAG}" ]]; then
+        tag_version="${OVIX_UPDATE_TAG}"
         echo -e "${green}Using update tag: ${tag_version}${plain}"
     else
         tag_version=$(${curl_bin} -Ls "https://api.github.com/repos/MHSanaei/3x-ui/releases/latest" 2> /dev/null | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/')
         if [[ ! -n "$tag_version" ]]; then
-            _fail "ERROR: Failed to fetch x-ui version, it may be due to GitHub API restrictions, please try it later"
+            _fail "ERROR: Failed to fetch ovix-ui version, it may be due to GitHub API restrictions, please try it later"
         fi
     fi
-    echo -e "Got x-ui latest version: ${tag_version}, beginning the installation..."
-    # x-ui.sh, x-ui.rc and the unit files must come from the same release as
+    echo -e "Got ovix-ui latest version: ${tag_version}, beginning the installation..."
+    # ovix-ui.sh, ovix-ui.rc and the unit files must come from the same release as
     # the binary; only the rolling dev build tracks main.
     script_ref="${tag_version}"
     if [[ "${tag_version}" == "dev-latest" ]]; then
@@ -532,23 +532,23 @@ update_x-ui() {
     fi
     # The unit files are only fetched when the release tarball lacks them, so
     # they are checked at that point instead of here.
-    local required_files=("x-ui.sh")
-    [[ $release == "alpine" ]] && required_files+=("x-ui.rc")
+    local required_files=("ovix-ui.sh")
+    [[ $release == "alpine" ]] && required_files+=("ovix-ui.rc")
     require_repo_files "${script_ref}" "${required_files[@]}"
-    ${curl_bin} -fLRo ${xui_folder}-linux-$(arch).tar.gz https://github.com/MHSanaei/3x-ui/releases/download/${tag_version}/x-ui-linux-$(arch).tar.gz 2> /dev/null
+    ${curl_bin} -fLRo ${xui_folder}-linux-$(arch).tar.gz https://github.com/MHSanaei/3x-ui/releases/download/${tag_version}/ovix-ui-linux-$(arch).tar.gz 2> /dev/null
     if [[ $? -ne 0 ]]; then
-        _fail "ERROR: Failed to download x-ui, please be sure that your server can access GitHub"
+        _fail "ERROR: Failed to download ovix-ui, please be sure that your server can access GitHub"
     fi
     if [[ ! -s ${xui_folder}-linux-$(arch).tar.gz ]]; then
         rm ${xui_folder}-linux-$(arch).tar.gz -f > /dev/null 2>&1
-        _fail "ERROR: Downloaded x-ui release archive is empty, please be sure that your server can access GitHub"
+        _fail "ERROR: Downloaded ovix-ui release archive is empty, please be sure that your server can access GitHub"
     fi
     # Releases publish <asset>.sha256 next to each archive. A mismatch or a
     # failed sidecar download aborts the update; only a 404 (releases
     # predating the sidecar) is tolerated with a warning.
     archive="${xui_folder}-linux-$(arch).tar.gz"
     rm -f "${archive}.sha256"
-    sidecar_code=$(${curl_bin} -sL --retry 3 --retry-delay 3 --connect-timeout 15 --max-time 60 -o "${archive}.sha256" -w '%{http_code}' "https://github.com/MHSanaei/3x-ui/releases/download/${tag_version}/x-ui-linux-$(arch).tar.gz.sha256" 2> /dev/null)
+    sidecar_code=$(${curl_bin} -sL --retry 3 --retry-delay 3 --connect-timeout 15 --max-time 60 -o "${archive}.sha256" -w '%{http_code}' "https://github.com/MHSanaei/3x-ui/releases/download/${tag_version}/ovix-ui-linux-$(arch).tar.gz.sha256" 2> /dev/null)
     if [[ "${sidecar_code}" == "200" ]]; then
         expected_sha256=$(awk 'NR == 1 {print $1}' "${archive}.sha256")
         actual_sha256=$(sha256sum "${archive}" | awk '{print $1}')
@@ -563,47 +563,47 @@ update_x-ui() {
         echo -e "${yellow}No checksum published for this release, skipping verification${plain}"
     else
         rm -f "${archive}.sha256" "${archive}"
-        _fail "ERROR: Failed to download the checksum for x-ui-linux-$(arch).tar.gz (HTTP ${sidecar_code})"
+        _fail "ERROR: Failed to download the checksum for ovix-ui-linux-$(arch).tar.gz (HTTP ${sidecar_code})"
     fi
 
     if [[ -e ${xui_folder}/ ]]; then
-        echo -e "${green}Stopping x-ui...${plain}"
+        echo -e "${green}Stopping ovix-ui...${plain}"
         if [[ $release == "alpine" ]]; then
-            if [ -f "/etc/init.d/x-ui" ]; then
-                rc-service x-ui stop > /dev/null 2>&1
-                rc-update del x-ui > /dev/null 2>&1
+            if [ -f "/etc/init.d/ovix-ui" ]; then
+                rc-service ovix-ui stop > /dev/null 2>&1
+                rc-update del ovix-ui > /dev/null 2>&1
                 echo -e "${green}Removing old service unit version...${plain}"
-                rm -f /etc/init.d/x-ui > /dev/null 2>&1
+                rm -f /etc/init.d/ovix-ui > /dev/null 2>&1
             else
-                rm x-ui-linux-$(arch).tar.gz -f > /dev/null 2>&1
-                _fail "ERROR: x-ui service unit not installed."
+                rm ovix-ui-linux-$(arch).tar.gz -f > /dev/null 2>&1
+                _fail "ERROR: ovix-ui service unit not installed."
             fi
         else
-            if [ -f "${xui_service}/x-ui.service" ]; then
-                systemctl stop x-ui > /dev/null 2>&1
-                systemctl disable x-ui > /dev/null 2>&1
+            if [ -f "${xui_service}/ovix-ui.service" ]; then
+                systemctl stop ovix-ui > /dev/null 2>&1
+                systemctl disable ovix-ui > /dev/null 2>&1
                 echo -e "${green}Removing old systemd unit version...${plain}"
-                rm ${xui_service}/x-ui.service -f > /dev/null 2>&1
+                rm ${xui_service}/ovix-ui.service -f > /dev/null 2>&1
                 systemctl daemon-reload > /dev/null 2>&1
             else
-                rm x-ui-linux-$(arch).tar.gz -f > /dev/null 2>&1
-                _fail "ERROR: x-ui systemd unit not installed."
+                rm ovix-ui-linux-$(arch).tar.gz -f > /dev/null 2>&1
+                _fail "ERROR: ovix-ui systemd unit not installed."
             fi
         fi
-        # Kill any leftover mtg (MTProto) sidecars. x-ui runs them outside its own
+        # Kill any leftover mtg (MTProto) sidecars. ovix-ui runs them outside its own
         # lifecycle, so on Linux a stale one can survive the stop and keep holding
         # an inbound port with an outdated secret, silently breaking new clients.
         # The new panel respawns a clean mtg per inbound on next start.
         pkill -f 'mtg-linux-[^ ]* run ' > /dev/null 2>&1 || true
         pkill -f 'tuic-server.*-c .*bin/tuic/tuic_[0-9]+\.json' > /dev/null 2>&1 || true
-        echo -e "${green}Removing old x-ui version...${plain}"
+        echo -e "${green}Removing old ovix-ui version...${plain}"
         rm ${xui_folder} -f > /dev/null 2>&1
-        rm ${xui_folder}/x-ui.service -f > /dev/null 2>&1
-        rm ${xui_folder}/x-ui.service.debian -f > /dev/null 2>&1
-        rm ${xui_folder}/x-ui.service.arch -f > /dev/null 2>&1
-        rm ${xui_folder}/x-ui.service.rhel -f > /dev/null 2>&1
-        rm ${xui_folder}/x-ui -f > /dev/null 2>&1
-        rm ${xui_folder}/x-ui.sh -f > /dev/null 2>&1
+        rm ${xui_folder}/ovix-ui.service -f > /dev/null 2>&1
+        rm ${xui_folder}/ovix-ui.service.debian -f > /dev/null 2>&1
+        rm ${xui_folder}/ovix-ui.service.arch -f > /dev/null 2>&1
+        rm ${xui_folder}/ovix-ui.service.rhel -f > /dev/null 2>&1
+        rm ${xui_folder}/ovix-ui -f > /dev/null 2>&1
+        rm ${xui_folder}/ovix-ui.sh -f > /dev/null 2>&1
         echo -e "${green}Removing old mtg version...${plain}"
         rm ${xui_folder}/bin/mtg-linux-$(arch) -f > /dev/null 2>&1
         echo -e "${green}Removing old xray version...${plain}"
@@ -614,22 +614,22 @@ update_x-ui() {
         rm ${xui_folder}/bin/tuic-server -f > /dev/null 2>&1
         rm ${xui_folder}/bin/tuic -rf > /dev/null 2>&1
     else
-        rm x-ui-linux-$(arch).tar.gz -f > /dev/null 2>&1
-        _fail "ERROR: x-ui not installed."
+        rm ovix-ui-linux-$(arch).tar.gz -f > /dev/null 2>&1
+        _fail "ERROR: ovix-ui not installed."
     fi
 
-    echo -e "${green}Installing new x-ui version...${plain}"
-    tar zxvf x-ui-linux-$(arch).tar.gz > /dev/null 2>&1
+    echo -e "${green}Installing new ovix-ui version...${plain}"
+    tar zxvf ovix-ui-linux-$(arch).tar.gz > /dev/null 2>&1
     if [[ $? -ne 0 ]]; then
-        rm x-ui-linux-$(arch).tar.gz -f > /dev/null 2>&1
-        _fail "ERROR: Failed to extract the x-ui release archive -- the previous installation has already been removed, so the panel will not start until this is fixed; try running the update again"
+        rm ovix-ui-linux-$(arch).tar.gz -f > /dev/null 2>&1
+        _fail "ERROR: Failed to extract the ovix-ui release archive -- the previous installation has already been removed, so the panel will not start until this is fixed; try running the update again"
     fi
-    rm x-ui-linux-$(arch).tar.gz -f > /dev/null 2>&1
-    cd x-ui > /dev/null 2>&1
-    if [[ $? -ne 0 || ! -s x-ui ]]; then
-        _fail "ERROR: Extracted x-ui archive is missing the x-ui binary -- the previous installation has already been removed, so the panel will not start until this is fixed; try running the update again"
+    rm ovix-ui-linux-$(arch).tar.gz -f > /dev/null 2>&1
+    cd ovix-ui > /dev/null 2>&1
+    if [[ $? -ne 0 || ! -s ovix-ui ]]; then
+        _fail "ERROR: Extracted ovix-ui archive is missing the ovix-ui binary -- the previous installation has already been removed, so the panel will not start until this is fixed; try running the update again"
     fi
-    chmod +x x-ui > /dev/null 2>&1
+    chmod +x ovix-ui > /dev/null 2>&1
 
     # Check the system's architecture and rename the file accordingly.
     # The panel binary maps GOARCH=arm to "arm32" (internal/xray/process.go),
@@ -643,34 +643,34 @@ update_x-ui() {
         fi
     fi
 
-    chmod +x x-ui bin/xray-linux-$(arch) > /dev/null 2>&1
+    chmod +x ovix-ui bin/xray-linux-$(arch) > /dev/null 2>&1
     if [[ -f bin/mtg-linux-arm ]]; then
         chmod +x bin/mtg-linux-arm > /dev/null 2>&1
     elif [[ -f bin/mtg-linux-$(arch) ]]; then
         chmod +x bin/mtg-linux-$(arch) > /dev/null 2>&1
     fi
 
-    echo -e "${green}Downloading and installing x-ui.sh script...${plain}"
-    local xui_script_temp="/usr/bin/x-ui-temp.$$"
+    echo -e "${green}Downloading and installing ovix-ui.sh script...${plain}"
+    local xui_script_temp="/usr/bin/ovix-ui-temp.$$"
     rm -f "${xui_script_temp}"
-    ${curl_bin} -fLRo "${xui_script_temp}" "https://raw.githubusercontent.com/MHSanaei/3x-ui/${script_ref}/x-ui.sh" > /dev/null 2>&1
+    ${curl_bin} -fLRo "${xui_script_temp}" "https://raw.githubusercontent.com/MHSanaei/3x-ui/${script_ref}/ovix-ui.sh" > /dev/null 2>&1
     if [[ $? -ne 0 ]]; then
         rm -f "${xui_script_temp}"
-        _fail "ERROR: Failed to download x-ui.sh script, please be sure that your server can access GitHub"
+        _fail "ERROR: Failed to download ovix-ui.sh script, please be sure that your server can access GitHub"
     fi
     if [[ ! -s "${xui_script_temp}" ]]; then
         rm -f "${xui_script_temp}"
-        _fail "ERROR: Downloaded x-ui.sh script is empty, please be sure that your server can access GitHub"
+        _fail "ERROR: Downloaded ovix-ui.sh script is empty, please be sure that your server can access GitHub"
     fi
-    mv -f "${xui_script_temp}" /usr/bin/x-ui
+    mv -f "${xui_script_temp}" /usr/bin/ovix-ui
     if [[ $? -ne 0 ]]; then
         rm -f "${xui_script_temp}"
-        _fail "ERROR: Failed to install x-ui.sh script"
+        _fail "ERROR: Failed to install ovix-ui.sh script"
     fi
 
-    chmod +x ${xui_folder}/x-ui.sh > /dev/null 2>&1
-    chmod +x /usr/bin/x-ui > /dev/null 2>&1
-    mkdir -p /var/log/x-ui > /dev/null 2>&1
+    chmod +x ${xui_folder}/ovix-ui.sh > /dev/null 2>&1
+    chmod +x /usr/bin/ovix-ui > /dev/null 2>&1
+    mkdir -p /var/log/ovix-ui > /dev/null 2>&1
 
     echo -e "${green}Changing owner...${plain}"
     chown -R root:root ${xui_folder} > /dev/null 2>&1
@@ -683,60 +683,60 @@ update_x-ui() {
     # Finish the schema/data migrations before the service starts, so the service and
     # config_after_update's CLI calls never run them on the same database at once (#6728).
     echo -e "${green}Migrating database...${plain}"
-    "${xui_folder}/x-ui" migrate
+    "${xui_folder}/ovix-ui" migrate
 
     if [[ $release == "alpine" ]]; then
-        echo -e "${green}Downloading and installing startup unit x-ui.rc...${plain}"
-        xui_rc_temp="/etc/init.d/x-ui.tmp.$$"
+        echo -e "${green}Downloading and installing startup unit ovix-ui.rc...${plain}"
+        xui_rc_temp="/etc/init.d/ovix-ui.tmp.$$"
         rm -f "${xui_rc_temp}"
-        ${curl_bin} -fLRo "${xui_rc_temp}" "https://raw.githubusercontent.com/MHSanaei/3x-ui/${script_ref}/x-ui.rc" > /dev/null 2>&1
+        ${curl_bin} -fLRo "${xui_rc_temp}" "https://raw.githubusercontent.com/MHSanaei/3x-ui/${script_ref}/ovix-ui.rc" > /dev/null 2>&1
         if [[ $? -ne 0 ]]; then
             rm -f "${xui_rc_temp}"
-            _fail "ERROR: Failed to download startup unit x-ui.rc, please be sure that your server can access GitHub"
+            _fail "ERROR: Failed to download startup unit ovix-ui.rc, please be sure that your server can access GitHub"
         fi
         if [[ ! -s "${xui_rc_temp}" ]]; then
             rm -f "${xui_rc_temp}"
-            _fail "ERROR: Downloaded startup unit x-ui.rc is empty, please be sure that your server can access GitHub"
+            _fail "ERROR: Downloaded startup unit ovix-ui.rc is empty, please be sure that your server can access GitHub"
         fi
-        mv -f "${xui_rc_temp}" /etc/init.d/x-ui
+        mv -f "${xui_rc_temp}" /etc/init.d/ovix-ui
         if [[ $? -ne 0 ]]; then
             rm -f "${xui_rc_temp}"
-            _fail "ERROR: Failed to install startup unit x-ui.rc"
+            _fail "ERROR: Failed to install startup unit ovix-ui.rc"
         fi
-        chmod +x /etc/init.d/x-ui > /dev/null 2>&1
-        chown root:root /etc/init.d/x-ui > /dev/null 2>&1
-        rc-update add x-ui > /dev/null 2>&1
-        rc-service x-ui start > /dev/null 2>&1
+        chmod +x /etc/init.d/ovix-ui > /dev/null 2>&1
+        chown root:root /etc/init.d/ovix-ui > /dev/null 2>&1
+        rc-update add ovix-ui > /dev/null 2>&1
+        rc-service ovix-ui start > /dev/null 2>&1
     else
-        if [ -f "x-ui.service" ]; then
+        if [ -f "ovix-ui.service" ]; then
             echo -e "${green}Installing systemd unit...${plain}"
-            if ! _install_xui_service_unit "x-ui.service" "false"; then
-                echo -e "${red}Failed to copy x-ui.service${plain}"
+            if ! _install_xui_service_unit "ovix-ui.service" "false"; then
+                echo -e "${red}Failed to copy ovix-ui.service${plain}"
                 exit 1
             fi
         else
             service_installed=false
             case "${release}" in
                 ubuntu | debian | armbian)
-                    if [ -f "x-ui.service.debian" ]; then
+                    if [ -f "ovix-ui.service.debian" ]; then
                         echo -e "${green}Installing debian-like systemd unit...${plain}"
-                        if _install_xui_service_unit "x-ui.service.debian" "false"; then
+                        if _install_xui_service_unit "ovix-ui.service.debian" "false"; then
                             service_installed=true
                         fi
                     fi
                     ;;
                 arch | manjaro | parch)
-                    if [ -f "x-ui.service.arch" ]; then
+                    if [ -f "ovix-ui.service.arch" ]; then
                         echo -e "${green}Installing arch-like systemd unit...${plain}"
-                        if _install_xui_service_unit "x-ui.service.arch" "false"; then
+                        if _install_xui_service_unit "ovix-ui.service.arch" "false"; then
                             service_installed=true
                         fi
                     fi
                     ;;
                 *)
-                    if [ -f "x-ui.service.rhel" ]; then
+                    if [ -f "ovix-ui.service.rhel" ]; then
                         echo -e "${green}Installing rhel-like systemd unit...${plain}"
-                        if _install_xui_service_unit "x-ui.service.rhel" "false"; then
+                        if _install_xui_service_unit "ovix-ui.service.rhel" "false"; then
                             service_installed=true
                         fi
                     fi
@@ -748,59 +748,59 @@ update_x-ui() {
                 echo -e "${yellow}Service files not found in tar.gz, downloading from GitHub...${plain}"
                 case "${release}" in
                     ubuntu | debian | armbian)
-                        service_unit_url="https://raw.githubusercontent.com/MHSanaei/3x-ui/${script_ref}/x-ui.service.debian"
+                        service_unit_url="https://raw.githubusercontent.com/MHSanaei/3x-ui/${script_ref}/ovix-ui.service.debian"
                         ;;
                     arch | manjaro | parch)
-                        service_unit_url="https://raw.githubusercontent.com/MHSanaei/3x-ui/${script_ref}/x-ui.service.arch"
+                        service_unit_url="https://raw.githubusercontent.com/MHSanaei/3x-ui/${script_ref}/ovix-ui.service.arch"
                         ;;
                     *)
-                        service_unit_url="https://raw.githubusercontent.com/MHSanaei/3x-ui/${script_ref}/x-ui.service.rhel"
+                        service_unit_url="https://raw.githubusercontent.com/MHSanaei/3x-ui/${script_ref}/ovix-ui.service.rhel"
                         ;;
                 esac
 
                 if ! _install_xui_service_unit "$service_unit_url" "true"; then
-                    echo -e "${red}Failed to install x-ui.service from GitHub (${script_ref}) -- the release tarball did not ship one either${plain}"
+                    echo -e "${red}Failed to install ovix-ui.service from GitHub (${script_ref}) -- the release tarball did not ship one either${plain}"
                     exit 1
                 fi
             fi
         fi
-        chown root:root ${xui_service}/x-ui.service > /dev/null 2>&1
-        chmod 644 ${xui_service}/x-ui.service > /dev/null 2>&1
+        chown root:root ${xui_service}/ovix-ui.service > /dev/null 2>&1
+        chmod 644 ${xui_service}/ovix-ui.service > /dev/null 2>&1
         systemctl daemon-reload > /dev/null 2>&1
-        systemctl enable x-ui > /dev/null 2>&1
-        systemctl start x-ui > /dev/null 2>&1
+        systemctl enable ovix-ui > /dev/null 2>&1
+        systemctl start ovix-ui > /dev/null 2>&1
     fi
 
     config_after_update
 
     # IP Limit relies on fail2ban; install + configure it now so the feature
-    # works out of the box on update too (no-op when XUI_ENABLE_FAIL2BAN=false).
+    # works out of the box on update too (no-op when OVIX_ENABLE_FAIL2BAN=false).
     # Never fatal.
     setup_fail2ban
 
-    echo -e "${green}x-ui ${tag_version}${plain} updating finished, it is running now..."
+    echo -e "${green}ovix-ui ${tag_version}${plain} updating finished, it is running now..."
     echo -e ""
     echo -e "┌───────────────────────────────────────────────────────┐
-│  ${blue}x-ui control menu usages (subcommands):${plain}              │
+│  ${blue}ovix-ui control menu usages (subcommands):${plain}              │
 │                                                       │
-│  ${blue}x-ui${plain}              - Admin Management Script          │
-│  ${blue}x-ui start${plain}        - Start                            │
-│  ${blue}x-ui stop${plain}         - Stop                             │
-│  ${blue}x-ui restart${plain}      - Restart                          │
-│  ${blue}x-ui status${plain}       - Current Status                   │
-│  ${blue}x-ui settings${plain}     - Current Settings                 │
-│  ${blue}x-ui enable${plain}       - Enable Autostart on OS Startup   │
-│  ${blue}x-ui disable${plain}      - Disable Autostart on OS Startup  │
-│  ${blue}x-ui log${plain}          - Check logs                       │
-│  ${blue}x-ui banlog${plain}       - Check Fail2ban ban logs          │
-│  ${blue}x-ui update${plain}       - Update                           │
-│  ${blue}x-ui legacy${plain}       - Legacy version                   │
-│  ${blue}x-ui install${plain}      - Install                          │
-│  ${blue}x-ui uninstall${plain}    - Uninstall                        │
+│  ${blue}ovix-ui${plain}              - Admin Management Script          │
+│  ${blue}ovix-ui start${plain}        - Start                            │
+│  ${blue}ovix-ui stop${plain}         - Stop                             │
+│  ${blue}ovix-ui restart${plain}      - Restart                          │
+│  ${blue}ovix-ui status${plain}       - Current Status                   │
+│  ${blue}ovix-ui settings${plain}     - Current Settings                 │
+│  ${blue}ovix-ui enable${plain}       - Enable Autostart on OS Startup   │
+│  ${blue}ovix-ui disable${plain}      - Disable Autostart on OS Startup  │
+│  ${blue}ovix-ui log${plain}          - Check logs                       │
+│  ${blue}ovix-ui banlog${plain}       - Check Fail2ban ban logs          │
+│  ${blue}ovix-ui update${plain}       - Update                           │
+│  ${blue}ovix-ui legacy${plain}       - Legacy version                   │
+│  ${blue}ovix-ui install${plain}      - Install                          │
+│  ${blue}ovix-ui uninstall${plain}    - Uninstall                        │
 └───────────────────────────────────────────────────────┘"
 }
 
 echo -e "${green}Running...${plain}"
 require_writable_update_paths
 install_base
-update_x-ui $1
+update_ovix-ui $1

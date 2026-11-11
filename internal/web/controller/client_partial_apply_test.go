@@ -10,11 +10,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/dbtest"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/entity"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/dbtest"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/web/entity"
+	"ovix.store/ovix-ui/internal/web/service"
 )
 
 // seedPartlyApplyingClient puts one client on two inbounds and corrupts the second
@@ -22,8 +22,8 @@ import (
 func seedPartlyApplyingClient(t *testing.T, email string, basePort int) (healthyID, brokenID int) {
 	t.Helper()
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "ovix-ui.db"))
 
 	db := database.GetDB()
 	ids := make([]int, 0, 2)
@@ -126,8 +126,8 @@ func TestDeleteHandlerFlagsRestartOnPartialApply(t *testing.T) {
 // after the clients are committed, so its failure must not discard their restart.
 func TestImportHandlerFlagsRestartWhenTrafficRestoreFails(t *testing.T) {
 	dbDir := t.TempDir()
-	t.Setenv("XUI_DB_FOLDER", dbDir)
-	dbtest.InitDB(t, filepath.Join(dbDir, "x-ui.db"))
+	t.Setenv("OVIX_DB_FOLDER", dbDir)
+	dbtest.InitDB(t, filepath.Join(dbDir, "ovix-ui.db"))
 	db := database.GetDB()
 	ib := &model.Inbound{
 		UserId: 1, Enable: true, Port: 43340, Tag: "in-import-partial",

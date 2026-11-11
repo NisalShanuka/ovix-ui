@@ -14,11 +14,11 @@ import (
 
 	"gorm.io/gorm"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/common"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/crypto"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/runtime"
+	"ovix.store/ovix-ui/internal/database"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/util/common"
+	"ovix.store/ovix-ui/internal/util/crypto"
+	"ovix.store/ovix-ui/internal/web/runtime"
 )
 
 var masterClientCredentialMu sync.Mutex
@@ -53,7 +53,7 @@ func (s *SettingService) EnsureNodeMtlsCA() (crypto.CertKeyPEM, error) {
 	if certPem != "" || keyPem != "" {
 		return crypto.CertKeyPEM{}, common.NewError("node mTLS CA is incomplete: one of cert/key is missing; refusing to regenerate")
 	}
-	ca, err := crypto.GenerateNodeCA("3x-ui node mTLS CA")
+	ca, err := crypto.GenerateNodeCA("ovix-ui node mTLS CA")
 	if err != nil {
 		return crypto.CertKeyPEM{}, err
 	}
@@ -126,7 +126,7 @@ func (s *SettingService) EnsureMasterClientCert() (crypto.CertKeyPEM, error) {
 	if err != nil {
 		return crypto.CertKeyPEM{}, err
 	}
-	client, err := crypto.IssueClientCert(ca, "3x-ui master")
+	client, err := crypto.IssueClientCert(ca, "ovix-ui master")
 	if err != nil {
 		return crypto.CertKeyPEM{}, err
 	}

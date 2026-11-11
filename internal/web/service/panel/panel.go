@@ -17,11 +17,11 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/config"
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/version"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/global"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
+	"ovix.store/ovix-ui/internal/config"
+	"ovix.store/ovix-ui/internal/logger"
+	"ovix.store/ovix-ui/internal/util/version"
+	"ovix.store/ovix-ui/internal/web/global"
+	"ovix.store/ovix-ui/internal/web/service"
 )
 
 // PanelService provides business logic for panel management operations.
@@ -126,7 +126,7 @@ func (s *PanelService) RestartPanel(delay time.Duration) error {
 	return nil
 }
 
-// GetUpdateInfo checks GitHub for the latest 3x-ui release. When the dev channel
+// GetUpdateInfo checks GitHub for the latest ovix-ui release. When the dev channel
 // is enabled on a dev build it compares commits against the rolling dev release;
 // otherwise it compares versions against the latest stable tag.
 func (s *PanelService) GetUpdateInfo() (*PanelUpdateInfo, error) {
@@ -247,17 +247,17 @@ func (s *PanelService) startUpdate(useDev bool) (int64, error) {
 		updateTag = devReleaseTag
 	}
 	updateScript := fmt.Sprintf("set -e; trap 'rm -f %s' EXIT; %s %s", shellQuote(scriptPath), shellQuote(bash), shellQuote(scriptPath))
-	runIDEnv := "XUI_UPDATE_RUN_ID=" + strconv.FormatInt(runID, 10)
-	statusFileEnv := "XUI_UPDATE_STATUS_FILE=" + statusFile
+	runIDEnv := "OVIX_UPDATE_RUN_ID=" + strconv.FormatInt(runID, 10)
+	statusFileEnv := "OVIX_UPDATE_STATUS_FILE=" + statusFile
 	proxyEnv := updateProxyEnvVars()
 
 	if systemdRun, err := exec.LookPath("systemd-run"); err == nil {
-		unitName := fmt.Sprintf("x-ui-web-update-%d", time.Now().Unix())
+		unitName := fmt.Sprintf("ovix-ui-web-update-%d", time.Now().Unix())
 		args := []string{
 			"--unit", unitName,
-			"--setenv", "XUI_MAIN_FOLDER=" + mainFolder,
-			"--setenv", "XUI_SERVICE=" + serviceFolder,
-			"--setenv", "XUI_UPDATE_TAG=" + updateTag,
+			"--setenv", "OVIX_MAIN_FOLDER=" + mainFolder,
+			"--setenv", "OVIX_SERVICE=" + serviceFolder,
+			"--setenv", "OVIX_UPDATE_TAG=" + updateTag,
 			"--setenv", runIDEnv,
 			"--setenv", statusFileEnv,
 		}
@@ -284,9 +284,9 @@ func (s *PanelService) startUpdate(useDev bool) (int64, error) {
 
 	cmd := exec.CommandContext(context.Background(), bash, "-lc", updateScript)
 	cmd.Env = append(os.Environ(),
-		"XUI_MAIN_FOLDER="+mainFolder,
-		"XUI_SERVICE="+serviceFolder,
-		"XUI_UPDATE_TAG="+updateTag,
+		"OVIX_MAIN_FOLDER="+mainFolder,
+		"OVIX_SERVICE="+serviceFolder,
+		"OVIX_UPDATE_TAG="+updateTag,
 		runIDEnv,
 		statusFileEnv,
 	)
@@ -387,7 +387,7 @@ func downloadPanelUpdater() (string, error) {
 		return "", fmt.Errorf("download panel updater: unexpected HTTP %d", resp.StatusCode)
 	}
 
-	file, err := os.CreateTemp("", "3x-ui-update-*.sh")
+	file, err := os.CreateTemp("", "ovix-ui-update-*.sh")
 	if err != nil {
 		return "", err
 	}
@@ -505,17 +505,17 @@ func commitsEqual(a, b string) bool {
 }
 
 func resolveUpdateFolders() (string, string) {
-	mainFolder := os.Getenv("XUI_MAIN_FOLDER")
+	mainFolder := os.Getenv("OVIX_MAIN_FOLDER")
 	if mainFolder == "" {
 		if exePath, err := os.Executable(); err == nil {
 			mainFolder = filepath.Dir(exePath)
 		}
 	}
 	if mainFolder == "" {
-		mainFolder = "/usr/local/x-ui"
+		mainFolder = "/usr/local/ovix-ui"
 	}
 
-	serviceFolder := os.Getenv("XUI_SERVICE")
+	serviceFolder := os.Getenv("OVIX_SERVICE")
 	if serviceFolder == "" {
 		serviceFolder = "/etc/systemd/system"
 	}

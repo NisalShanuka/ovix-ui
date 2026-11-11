@@ -9,12 +9,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/config"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/logger"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/common"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/config"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/logger"
+	"ovix.store/ovix-ui/internal/util/common"
+	"ovix.store/ovix-ui/internal/web/service"
+	"ovix.store/ovix-ui/internal/xray"
 )
 
 // ServerProvider abstracts server status and database backup operations.
@@ -33,7 +33,7 @@ type InboundProvider interface {
 func (s *DiscordService) BuildReport(ctx context.Context, server ServerProvider, inbound InboundProvider) (MessagePayload, []FileAttachment, error) {
 	hostname, _ := os.Hostname()
 	if hostname == "" {
-		hostname = "3x-ui"
+		hostname = "ovix-ui"
 	}
 
 	var status *service.Status
@@ -175,7 +175,7 @@ func (s *DiscordService) BuildReport(ctx context.Context, server ServerProvider,
 		} else if len(dbData) > 0 {
 			filename := server.BackupFilename("")
 			if filename == "" {
-				filename = "x-ui.db"
+				filename = "ovix-ui.db"
 			}
 			files = append(files, FileAttachment{
 				Filename: filename,

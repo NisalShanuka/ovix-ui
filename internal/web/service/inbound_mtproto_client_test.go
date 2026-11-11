@@ -4,9 +4,9 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/mtproto"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/runtime"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/mtproto"
+	"ovix.store/ovix-ui/internal/web/runtime"
 )
 
 func TestClientCrudMtprotoAppliesImmediately(t *testing.T) {

@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/xray"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
@@ -21,7 +21,7 @@ import (
 )
 
 // migrationModels is the FK-aware order in which tables are created and copied
-// during `x-ui migrate-db --dsn` (SQLite → PostgreSQL data migration) and in
+// during `ovix-ui migrate-db --dsn` (SQLite → PostgreSQL data migration) and in
 // related tests.
 //
 // Important: When adding a new top-level model (like OutboundSubscription),
@@ -149,7 +149,7 @@ func MigrateData(srcPath, dstDSN string) error {
 	}
 
 	log.Printf("Migration complete: %d rows across %d tables.", totalRows, len(migrationModels()))
-	log.Println("Set XUI_DB_TYPE=postgres and XUI_DB_DSN=... in /etc/default/x-ui, then restart x-ui.")
+	log.Println("Set OVIX_DB_TYPE=postgres and OVIX_DB_DSN=... in /etc/default/ovix-ui, then restart ovix-ui.")
 	return nil
 }
 
@@ -337,7 +337,7 @@ func PrepareSQLiteForMigration(dbPath string) error {
 
 	for _, table := range []string{"users", "settings", "inbounds"} {
 		if !sqliteTableExists(sqlDB, table) {
-			return fmt.Errorf("not a 3x-ui panel database: required table %q is missing", table)
+			return fmt.Errorf("not a ovix-ui panel database: required table %q is missing", table)
 		}
 	}
 	for _, m := range migrationModels() {

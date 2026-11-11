@@ -46,7 +46,7 @@ formatters:
   settings:
     goimports:
       local-prefixes:
-        - github.com/mhsanaei/3x-ui
+        - ovix.store/ovix-ui
   exclusions:
     paths:
       - frontend

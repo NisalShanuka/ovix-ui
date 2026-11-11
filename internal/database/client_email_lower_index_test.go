@@ -5,13 +5,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
+	"ovix.store/ovix-ui/internal/database/model"
 )
 
 // The migration runs on every start, so its guard has to actually match the
 // index it created — otherwise every boot re-issues the CREATE.
 func TestMigrateClientEmailLowerIndexIsIdempotent(t *testing.T) {
-	if err := InitDB(filepath.Join(t.TempDir(), "x-ui.db")); err != nil {
+	if err := InitDB(filepath.Join(t.TempDir(), "ovix-ui.db")); err != nil {
 		t.Fatalf("InitDB: %v", err)
 	}
 	t.Cleanup(func() { _ = CloseDB() })

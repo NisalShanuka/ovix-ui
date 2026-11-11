@@ -1,8 +1,8 @@
 package job
 
 import (
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/service/tgbot"
+	"ovix.store/ovix-ui/internal/web/service"
+	"ovix.store/ovix-ui/internal/web/service/tgbot"
 )
 
 // LoginStatus represents the status of a login attempt.

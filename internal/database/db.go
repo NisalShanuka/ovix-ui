@@ -20,12 +20,12 @@ import (
 	"strings"
 	"time"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/config"
-	"github.com/mhsanaei/3x-ui/v3/internal/database/model"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/crypto"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/maskcompat"
-	"github.com/mhsanaei/3x-ui/v3/internal/util/random"
-	"github.com/mhsanaei/3x-ui/v3/internal/xray"
+	"ovix.store/ovix-ui/internal/config"
+	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/util/crypto"
+	"ovix.store/ovix-ui/internal/util/maskcompat"
+	"ovix.store/ovix-ui/internal/util/random"
+	"ovix.store/ovix-ui/internal/xray"
 
 	"github.com/mattn/go-sqlite3"
 	"gorm.io/driver/postgres"
@@ -60,7 +60,7 @@ func Dialect() string {
 const (
 	defaultUsername       = "admin"
 	defaultPassword       = "admin"
-	sqliteBackupDirPrefix = ".x-ui-backup-"
+	sqliteBackupDirPrefix = ".ovix-ui-backup-"
 )
 
 func allModels() []any {
@@ -1686,7 +1686,7 @@ const (
 // fail2banEnforcementState separates "fail2ban is not installed" from "the probe
 // itself failed", so a transient failure never drives an irreversible cleanup.
 func fail2banEnforcementState() (fail2banState, error) {
-	if v, ok := os.LookupEnv("XUI_ENABLE_FAIL2BAN"); ok && v != "true" {
+	if v, ok := os.LookupEnv("OVIX_ENABLE_FAIL2BAN"); ok && v != "true" {
 		return fail2banAbsent, nil
 	}
 	if runtime.GOOS == "windows" {
@@ -3069,7 +3069,7 @@ func InitDB(dbPath string) error {
 	case "postgres":
 		dsn := config.GetDBDSN()
 		if dsn == "" {
-			return errors.New("XUI_DB_TYPE=postgres but XUI_DB_DSN is empty")
+			return errors.New("OVIX_DB_TYPE=postgres but OVIX_DB_DSN is empty")
 		}
 		db, err = openPostgresWithRetry(dsn, c)
 		if err != nil {
@@ -3103,8 +3103,8 @@ func InitDB(dbPath string) error {
 			"PRAGMA journal_mode=" + journal,
 			"PRAGMA busy_timeout=10000",
 			"PRAGMA synchronous=" + sync,
-			fmt.Sprintf("PRAGMA cache_size=-%d", envInt("XUI_DB_CACHE_MB", 32)*1024),
-			fmt.Sprintf("PRAGMA mmap_size=%d", int64(envInt("XUI_DB_MMAP_MB", 256))*1024*1024),
+			fmt.Sprintf("PRAGMA cache_size=-%d", envInt("OVIX_DB_CACHE_MB", 32)*1024),
+			fmt.Sprintf("PRAGMA mmap_size=%d", int64(envInt("OVIX_DB_MMAP_MB", 256))*1024*1024),
 			"PRAGMA temp_store=MEMORY",
 		}
 		for _, p := range pragmas {
@@ -3121,11 +3121,11 @@ func InitDB(dbPath string) error {
 	var maxOpen, maxIdle int
 	switch config.GetDBKind() {
 	case "postgres":
-		maxOpen = envInt("XUI_DB_MAX_OPEN_CONNS", 25)
-		maxIdle = envInt("XUI_DB_MAX_IDLE_CONNS", 25)
+		maxOpen = envInt("OVIX_DB_MAX_OPEN_CONNS", 25)
+		maxIdle = envInt("OVIX_DB_MAX_IDLE_CONNS", 25)
 	default:
-		maxOpen = envInt("XUI_DB_MAX_OPEN_CONNS", 8)
-		maxIdle = envInt("XUI_DB_MAX_IDLE_CONNS", 4)
+		maxOpen = envInt("OVIX_DB_MAX_OPEN_CONNS", 8)
+		maxIdle = envInt("OVIX_DB_MAX_IDLE_CONNS", 4)
 	}
 	sqlDB.SetMaxOpenConns(maxOpen)
 	sqlDB.SetMaxIdleConns(maxIdle)
@@ -3211,7 +3211,7 @@ func restrictSQLiteFilePerms(dbPath string) error {
 }
 
 func sqliteJournalMode() string {
-	switch strings.ToUpper(strings.TrimSpace(os.Getenv("XUI_DB_JOURNAL_MODE"))) {
+	switch strings.ToUpper(strings.TrimSpace(os.Getenv("OVIX_DB_JOURNAL_MODE"))) {
 	case "DELETE":
 		return "DELETE"
 	default:
@@ -3245,7 +3245,7 @@ func cleanupSQLiteBackupDirs(dir string) error {
 }
 
 func sqliteSynchronous() string {
-	switch strings.ToUpper(strings.TrimSpace(os.Getenv("XUI_DB_SYNCHRONOUS"))) {
+	switch strings.ToUpper(strings.TrimSpace(os.Getenv("OVIX_DB_SYNCHRONOUS"))) {
 	case "OFF":
 		return "OFF"
 	case "NORMAL":

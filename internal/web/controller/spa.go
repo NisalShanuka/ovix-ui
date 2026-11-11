@@ -5,14 +5,14 @@ import (
 	"path"
 	"strings"
 
-	"github.com/mhsanaei/3x-ui/v3/internal/web/entity"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/middleware"
-	"github.com/mhsanaei/3x-ui/v3/internal/web/session"
+	"ovix.store/ovix-ui/internal/web/entity"
+	"ovix.store/ovix-ui/internal/web/middleware"
+	"ovix.store/ovix-ui/internal/web/session"
 
 	"github.com/gin-gonic/gin"
 )
 
-// XUIController is the main controller for the X-UI panel, serving the SPA shell.
+// XUIController is the main controller for the OVIX-UI panel, serving the SPA shell.
 type XUIController struct {
 	BaseController
 }
