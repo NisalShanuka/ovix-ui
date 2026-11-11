@@ -124,12 +124,13 @@
     "pinSidebar": "固定侧边栏",
     "unpinSidebar": "取消固定侧边栏",
     "subFormats": "Sub Formats",
-    "resellers": "Resellers"
+    "resellers": "Resellers",
+    "mainNav": "Main",
+    "more": "More"
   },
   "pages": {
     "login": {
-      "hello": "你好",
-      "title": "欢迎",
+      "title": "Welcome back",
       "loginAgain": "登录时效已过，请重新登录",
       "toasts": {
         "invalidFormData": "数据格式错误",
@@ -137,7 +138,14 @@
         "emptyPassword": "请输入密码",
         "wrongUsernameOrPassword": "用户名、密码或双重验证码无效。",
         "successLogin": "您已成功登录您的账户。"
-      }
+      },
+      "caption": "Control panel",
+      "headline": "Your VPN business, in one panel.",
+      "sub": "Clients, resellers, live traffic and the server itself, all in real time.",
+      "point1": "Live traffic map of every client",
+      "point2": "Reseller credit and client renewals",
+      "point3": "Torrent watch with Sentinel",
+      "signInSub": "Sign in with your panel account to continue."
     },
     "index": {
       "cpu": "CPU",
@@ -2588,6 +2596,21 @@
       "viewAll": "View all",
       "xrayDown": "Xray stopped",
       "xrayRunning": "Xray running"
+    },
+    "shell": {
+      "nodeDown": "Xray stopped",
+      "nodeOnline": "Server online",
+      "sub": {
+        "apiDocs": "Every panel endpoint, with examples",
+        "clients": "Every client, its traffic and its time left",
+        "groups": "Clients grouped for bulk changes",
+        "hosts": "Addresses your share links point to",
+        "inbounds": "Ports and protocols your clients connect to",
+        "nodes": "Other servers this panel manages",
+        "resellers": "Shops, their credit and their clients",
+        "settings": "Panel, security, bots and subscriptions",
+        "xray": "Core config, routing, outbounds and DNS"
+      }
     }
   },
   "tgbot": {

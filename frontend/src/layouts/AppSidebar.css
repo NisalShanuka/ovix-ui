@@ -346,3 +346,12 @@ body.dark .ant-drawer-body .drawer-menu .ant-menu-item-group-list {
 .sider-utility {
   border-top-color: var(--ov-line) !important;
 }
+
+/* The top bar carries the theme toggle; the brand row keeps only the pin. */
+.brand-actions .sidebar-theme-cycle {
+  display: none;
+}
+
+.sider-brand {
+  padding: 0 8px 0 18px;
+}

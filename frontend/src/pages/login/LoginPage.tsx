@@ -1,10 +1,9 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, ConfigProvider, Form, Input, Layout, Spin, message } from 'antd';
+import { Button, ConfigProvider, Form, Input, Spin, message } from 'antd';
 import {
   KeyOutlined,
   LockOutlined,
-  MoonFilled,
   MoonOutlined,
   SunOutlined,
   UserOutlined,
@@ -14,19 +13,20 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { HttpUtil } from '@/utils';
 import { FormField, rhfZodValidate } from '@/components/form/rhf';
 import { setMessageInstance } from '@/utils/messageBus';
-import { pauseAnimationsUntilLeave, useTheme } from '@/hooks/useTheme';
+import { useTheme } from '@/hooks/useTheme';
+import { BrandMark } from '@/ds/BrandMark';
 import { LoginFormSchema, TwoFactorCodeSchema, type LoginFormValues } from '@/schemas/login';
 import './LoginPage.css';
-
-const HEADLINE_INTERVAL_MS = 2000;
 
 type LoginForm = LoginFormValues;
 
 const basePath = window.X_UI_BASE_PATH || '';
 
+const POINTS = ['pages.login.point1', 'pages.login.point2', 'pages.login.point3'] as const;
+
 export default function LoginPage() {
   const { t } = useTranslation();
-  const { isDark, isUltra, toggleTheme, toggleUltra, antdThemeConfig } = useTheme();
+  const { isDark, toggleTheme, antdThemeConfig } = useTheme();
   const [messageApi, messageContextHolder] = message.useMessage();
 
   useEffect(() => {
@@ -36,19 +36,9 @@ export default function LoginPage() {
   const [fetched, setFetched] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [twoFactorEnable, setTwoFactorEnable] = useState(false);
-  const [headlineIndex, setHeadlineIndex] = useState(0);
   const methods = useForm<LoginForm>({
     defaultValues: { username: '', password: '', twoFactorCode: '' },
   });
-
-  const headlineWords = useMemo(() => [t('pages.login.hello'), t('pages.login.title')], [t]);
-
-  useEffect(() => {
-    const timer = window.setInterval(() => {
-      setHeadlineIndex((i) => (i + 1) % headlineWords.length);
-    }, HEADLINE_INTERVAL_MS);
-    return () => window.clearInterval(timer);
-  }, [headlineWords.length]);
 
   useEffect(() => {
     let cancelled = false;
@@ -73,127 +63,123 @@ export default function LoginPage() {
     }
   }, []);
 
-  const cycleTheme = useCallback(() => {
-    pauseAnimationsUntilLeave('login-theme-cycle');
-    if (!isDark) {
-      toggleTheme();
-      if (isUltra) toggleUltra();
-    } else if (!isUltra) {
-      toggleUltra();
-    } else {
-      toggleUltra();
-      toggleTheme();
-    }
-  }, [isDark, isUltra, toggleTheme, toggleUltra]);
-
-  const pageClass = useMemo(() => {
-    const classes = ['login-app'];
-    if (isDark) classes.push('is-dark');
-    if (isUltra) classes.push('is-ultra');
-    return classes.join(' ');
-  }, [isDark, isUltra]);
-
-  const themeIcon = !isDark ? <SunOutlined /> : !isUltra ? <MoonOutlined /> : <MoonFilled />;
-
   return (
     <ConfigProvider theme={antdThemeConfig}>
       {messageContextHolder}
-      <Layout className={pageClass}>
-        <Layout.Content className="login-content">
-          <div className="login-toolbar">
-            <Button
-              id="login-theme-cycle"
-              shape="circle"
-              size="large"
-              className="toolbar-btn"
-              aria-label={t('menu.theme')}
-              title={t('menu.theme')}
-              icon={themeIcon}
-              onClick={cycleTheme}
-            />
+      <div className="ovl-app">
+        <aside className="ovl-brand">
+          <div className="ovl-brand-top">
+            <BrandMark caption={t('pages.login.caption')} />
           </div>
+          <div className="ovl-brand-copy">
+            <h1>{t('pages.login.headline')}</h1>
+            <p>{t('pages.login.sub')}</p>
+            <ul>
+              {POINTS.map((key, i) => (
+                <li key={key} style={{ animationDelay: `${200 + i * 90}ms` }}>
+                  <i />
+                  {t(key)}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <svg className="ovl-orbit" viewBox="0 0 400 400" aria-hidden="true">
+            <circle cx="200" cy="200" r="150" />
+            <circle cx="200" cy="200" r="100" />
+            <circle className="ovl-orbit-dot" cx="350" cy="200" r="5" />
+          </svg>
+        </aside>
 
-          <div className="login-wrapper">
+        <main className="ovl-main">
+          <button
+            type="button"
+            className="ovl-theme"
+            aria-label={t('menu.theme')}
+            title={t('menu.theme')}
+            onClick={toggleTheme}
+          >
+            {isDark ? <SunOutlined /> : <MoonOutlined />}
+          </button>
+
+          <div className="ovl-card">
+            <div className="ovl-card-brand">
+              <BrandMark />
+            </div>
+            <h2>{t('pages.login.title')}</h2>
+            <p className="ovl-card-sub">{t('pages.login.signInSub')}</p>
+
             {!fetched ? (
-              <div className="login-loading">
+              <div className="ovl-loading">
                 <Spin size="large" />
               </div>
             ) : (
-              <div className="login-card">
-                <div className="brand">
-                  <span className="brand-name">Ovix UI</span>
-                  <span className="brand-accent" aria-hidden="true" />
-                </div>
-                <h2 className="welcome">
-                  <b key={headlineIndex}>{headlineWords[headlineIndex]}</b>
-                </h2>
-
-                <FormProvider {...methods}>
-                  <Form
-                    layout="vertical"
-                    className="login-form"
-                    onFinish={methods.handleSubmit(onSubmit)}
+              <FormProvider {...methods}>
+                <Form
+                  layout="vertical"
+                  className="ovl-form"
+                  requiredMark={false}
+                  onFinish={methods.handleSubmit(onSubmit)}
+                >
+                  <FormField
+                    name="username"
+                    label={t('username')}
+                    rules={{ validate: rhfZodValidate(LoginFormSchema.shape.username) }}
                   >
+                    <Input
+                      prefix={<UserOutlined />}
+                      autoComplete="username"
+                      size="large"
+                      placeholder={t('username')}
+                      autoFocus
+                    />
+                  </FormField>
+
+                  <FormField
+                    name="password"
+                    label={t('password')}
+                    rules={{ validate: rhfZodValidate(LoginFormSchema.shape.password) }}
+                  >
+                    <Input.Password
+                      prefix={<LockOutlined />}
+                      autoComplete="current-password"
+                      size="large"
+                      placeholder={t('password')}
+                    />
+                  </FormField>
+
+                  {twoFactorEnable && (
                     <FormField
-                      name="username"
-                      label={t('username')}
-                      rules={{ validate: rhfZodValidate(LoginFormSchema.shape.username) }}
+                      name="twoFactorCode"
+                      label={t('twoFactorCode')}
+                      rules={{ validate: rhfZodValidate(TwoFactorCodeSchema) }}
                     >
                       <Input
-                        prefix={<UserOutlined />}
-                        autoComplete="username"
+                        prefix={<KeyOutlined />}
+                        autoComplete="one-time-code"
                         size="large"
-                        placeholder={t('username')}
-                        autoFocus
+                        placeholder={t('twoFactorCode')}
                       />
                     </FormField>
+                  )}
 
-                    <FormField
-                      name="password"
-                      label={t('password')}
-                      rules={{ validate: rhfZodValidate(LoginFormSchema.shape.password) }}
+                  <Form.Item className="ovl-submit">
+                    <Button
+                      type="primary"
+                      htmlType="submit"
+                      loading={submitting}
+                      size="large"
+                      block
                     >
-                      <Input.Password
-                        prefix={<LockOutlined />}
-                        autoComplete="current-password"
-                        size="large"
-                        placeholder={t('password')}
-                      />
-                    </FormField>
-
-                    {twoFactorEnable && (
-                      <FormField
-                        name="twoFactorCode"
-                        label={t('twoFactorCode')}
-                        rules={{ validate: rhfZodValidate(TwoFactorCodeSchema) }}
-                      >
-                        <Input
-                          prefix={<KeyOutlined />}
-                          autoComplete="one-time-code"
-                          size="large"
-                          placeholder={t('twoFactorCode')}
-                        />
-                      </FormField>
-                    )}
-
-                    <Form.Item className="submit-row">
-                      <Button
-                        type="primary"
-                        htmlType="submit"
-                        loading={submitting}
-                        size="large"
-                        block
-                      >
-                        {t('login')}
-                      </Button>
-                    </Form.Item>
-                  </Form>
-                </FormProvider>
-              </div>
+                      {t('login')}
+                    </Button>
+                  </Form.Item>
+                </Form>
+              </FormProvider>
             )}
           </div>
-        </Layout.Content>
-      </Layout>
+          <p className="ovl-foot">OVIX STORE VPN · {t('pages.login.caption')}</p>
+        </main>
+      </div>
     </ConfigProvider>
   );
 }

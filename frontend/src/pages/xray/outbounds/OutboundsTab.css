@@ -210,12 +210,12 @@
 }
 
 .traffic-up {
-  color: #008771;
+  color: #047857;
   font-size: 12px;
 }
 
 .traffic-down {
-  color: #3c89e8;
+  color: #f97316;
   font-size: 12px;
 }
 
@@ -235,7 +235,7 @@
 }
 
 .pill-ok {
-  color: #008771;
+  color: #047857;
   background: rgba(0, 135, 113, 0.12);
 }
 
@@ -264,7 +264,7 @@
 }
 
 .outbound-test-popover .td-head.ok {
-  color: #008771;
+  color: #047857;
 }
 
 .outbound-test-popover .td-head.fail {
@@ -302,7 +302,7 @@
 }
 
 .outbound-test-popover .dot-ok {
-  color: #008771;
+  color: #047857;
 }
 
 .outbound-test-popover .dot-fail {

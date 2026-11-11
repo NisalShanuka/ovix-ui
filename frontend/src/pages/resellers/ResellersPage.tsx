@@ -43,6 +43,7 @@ import { usePageTitle } from '@/hooks/usePageTitle';
 import { useInboundOptions } from '@/api/queries/useInboundOptions';
 import { setMessageInstance } from '@/utils/messageBus';
 import AppSidebar from '@/layouts/AppSidebar';
+import PageTop from '@/ds/PageTop';
 import { FormField, useZodForm } from '@/components/form/rhf';
 import {
   fetchAudit,
@@ -353,6 +354,7 @@ export default function ResellersPage() {
         <AppSidebar />
         <Layout className="content-shell">
           <Layout.Content id="content-layout" className="content-area">
+            <PageTop />
             {resellersQuery.isError ? (
               <Result
                 status="error"

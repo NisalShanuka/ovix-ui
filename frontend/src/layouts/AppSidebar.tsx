@@ -41,6 +41,8 @@ import { HttpUtil } from '@/utils';
 import { formatPanelVersion } from '@/lib/panel-version';
 import { pauseAnimationsUntilLeave, useTheme } from '@/hooks/useTheme';
 import { useAllSettings } from '@/api/queries/useAllSettings';
+import MobileNav from '@/ds/MobileNav';
+import NodeCard from '@/ds/NodeCard';
 import { useCommandPalette } from '@/components/command-palette/useCommandPalette';
 import { BrandMark } from '@/ds/BrandMark';
 import './AppSidebar.css';
@@ -50,7 +52,7 @@ import './AppSidebar.css';
 const SHORTCUT_MODIFIER = /Mac|iPhone|iPad|iPod/.test(navigator.userAgent) ? '⌘' : 'Ctrl';
 const LOGOUT_KEY = '__logout__';
 const RAIL_WIDTH = 72;
-const SIDER_WIDTH = 268;
+const SIDER_WIDTH = 248;
 const SIDEBAR_PINNED_KEY = 'sidebar-pinned';
 
 let hoveredAcrossRemounts = false;
@@ -127,9 +129,9 @@ function ThemeCycleButton({
 
 function readSidebarPinned() {
   try {
-    return localStorage.getItem(SIDEBAR_PINNED_KEY) === 'true';
+    return localStorage.getItem(SIDEBAR_PINNED_KEY) !== 'false';
   } catch {
-    return false;
+    return true;
   }
 }
 
@@ -407,6 +409,7 @@ export default function AppSidebar() {
           items={toMenuItems(utilItems)}
           onClick={onMenuClick}
         />
+        {!railCollapsed && <NodeCard />}
         <div className="sider-footer">
           <VersionBadge version={panelVersion} collapsed={railCollapsed} />
         </div>
@@ -495,6 +498,7 @@ export default function AppSidebar() {
         </div>
       </Drawer>
 
+      <MobileNav onMore={() => setDrawerOpen(true)} />
       {!drawerOpen && (
         <button
           className="drawer-handle"

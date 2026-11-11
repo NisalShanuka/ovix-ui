@@ -1,0 +1,96 @@
+.ov-node {
+  margin: 0 12px 8px;
+  padding: 12px 14px;
+  border: 1px solid var(--ov-line);
+  border-radius: 14px;
+  background: var(--ov-solid);
+  font-size: 12px;
+  color: var(--ov-mu);
+}
+
+.ov-node b {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 600 14px var(--ov-font-display);
+  color: var(--ov-tx);
+}
+
+.ov-node-host {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--ov-font-mono);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ov-node-pulse {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ov-ok);
+}
+
+.ov-node-pulse::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid var(--ov-ok);
+  animation: ov-node-ring 2s ease-out infinite;
+}
+
+.ov-node-pulse.is-down {
+  background: var(--ov-bad);
+}
+
+.ov-node-pulse.is-down::after {
+  border-color: var(--ov-bad);
+}
+
+@keyframes ov-node-ring {
+  from {
+    opacity: 0.7;
+    transform: scale(0.6);
+  }
+  to {
+    opacity: 0;
+    transform: scale(1.6);
+  }
+}
+
+.ov-node-bars {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 4px 8px;
+  margin-top: 10px;
+}
+
+.ov-node-bar {
+  display: block;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--ov-track);
+  overflow: hidden;
+}
+
+.ov-node-bar i {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--ov-prog);
+  transition: width 0.8s var(--ov-ease);
+}
+
+.ov-node-num {
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ov-node-pulse::after {
+    animation: none;
+  }
+}

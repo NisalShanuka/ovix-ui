@@ -932,7 +932,7 @@ export default function OutboundsTab({
                         </Tooltip>
                       ) : (
                         <Tooltip title={t('pages.xray.outboundSub.statusOk')}>
-                          <CheckCircleOutlined style={{ color: '#008771' }} />
+                          <CheckCircleOutlined style={{ color: '#047857' }} />
                         </Tooltip>
                       ),
                   },

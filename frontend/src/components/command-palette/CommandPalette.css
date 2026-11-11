@@ -262,18 +262,18 @@ html[data-theme='ultra-dark'] .command-palette-modal {
 }
 
 .command-palette-modal.light .command-palette-item.active {
-  background: #e6f4ff;
+  background: #fff7ed;
   color: var(--ov-pr-text);
 }
 
 .command-palette-modal.dark .command-palette-item.active {
-  background: rgba(22, 119, 255, 0.2);
+  background: rgba(249, 115, 22, 0.2);
   color: var(--ov-pr);
 }
 
 .command-palette-modal.ultra .command-palette-item.active {
-  background: rgba(22, 119, 255, 0.28);
-  color: #69b1ff;
+  background: rgba(249, 115, 22, 0.28);
+  color: #fdba74;
 }
 
 .command-palette-item-main {
@@ -371,7 +371,7 @@ html[data-theme='ultra-dark'] .command-palette-modal {
 }
 
 .command-palette-modal.ultra .command-palette-action-btn:hover {
-  color: #69b1ff;
+  color: #fdba74;
   background: rgba(255, 255, 255, 0.15);
 }
 

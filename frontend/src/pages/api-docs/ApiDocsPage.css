@@ -292,7 +292,7 @@
 }
 
 .api-docs-page.is-dark .swagger-ui .btn.execute:hover {
-  background: #79b9ff;
+  background: #fdba74;
 }
 
 .api-docs-page.is-dark .swagger-ui .btn.authorize {
@@ -376,7 +376,7 @@
 }
 
 .api-docs-page.is-dark .swagger-ui a:hover {
-  color: #79b9ff;
+  color: #fdba74;
 }
 
 .api-docs-page.is-dark .swagger-ui .info .title small {

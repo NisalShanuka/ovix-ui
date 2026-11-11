@@ -25,7 +25,7 @@ const LIGHT_THEME = {
   primaryColor: '#f97316',
   backgroundColor: '#ffffff',
   borderColor: '#d9d9d9',
-  hoverColor: 'rgba(22, 119, 255, 0.10)',
+  hoverColor: 'rgba(249, 115, 22, 0.10)',
   selectedTextColor: '#ffffff',
   textColor: 'rgba(0, 0, 0, 0.88)',
 };
@@ -34,7 +34,7 @@ const DARK_THEME = {
   primaryColor: '#f97316',
   backgroundColor: '#11131d',
   borderColor: 'rgba(255, 255, 255, 0.12)',
-  hoverColor: 'rgba(22, 119, 255, 0.18)',
+  hoverColor: 'rgba(249, 115, 22, 0.18)',
   selectedTextColor: '#ffffff',
   textColor: 'rgba(255, 255, 255, 0.88)',
 };
@@ -43,7 +43,7 @@ const ULTRA_DARK_THEME = {
   primaryColor: '#f97316',
   backgroundColor: '#0b0c12',
   borderColor: 'rgba(255, 255, 255, 0.08)',
-  hoverColor: 'rgba(22, 119, 255, 0.16)',
+  hoverColor: 'rgba(249, 115, 22, 0.16)',
   selectedTextColor: '#ffffff',
   textColor: 'rgba(255, 255, 255, 0.88)',
 };

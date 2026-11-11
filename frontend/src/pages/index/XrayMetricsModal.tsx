@@ -55,7 +55,7 @@ const METRICS: MetricDef[] = [
     title: 'pages.index.xrayTitleHeap',
     icon: <DatabaseOutlined />,
     unit: 'B',
-    stroke: '#7c4dff',
+    stroke: '#9ca3af',
   },
   {
     key: 'xrSys',
@@ -73,7 +73,7 @@ const METRICS: MetricDef[] = [
     title: 'pages.index.xrayTitleObjects',
     icon: <BlockOutlined />,
     unit: '',
-    stroke: '#13c2c2',
+    stroke: '#6b7280',
   },
   {
     key: 'xrNumGC',
@@ -215,7 +215,7 @@ export default function XrayMetricsModal({ open, onClose }: XrayMetricsModalProp
 
   const activeMetric = useMemo(() => METRICS.find((m) => m.key === activeKey), [activeKey]);
   const isObservatory = activeKey === OBS_KEY;
-  const strokeColor = activeMetric?.stroke || '#008771';
+  const strokeColor = activeMetric?.stroke || '#f97316';
   const yFormatter = useMemo(() => unitFormatter(activeMetric?.unit ?? ''), [activeMetric]);
 
   const activeObsTag = obsTags.find((tg) => tg.tag === obsActiveTag) || null;

@@ -22,7 +22,7 @@ describe('computeTrafficDisplay', () => {
     );
     expect(d.percent).toBe(100);
     expect(d.isUnlimited).toBe(true);
-    expect(d.strokeColor).toBe('#722ed1');
+    expect(d.strokeColor).toBe('#c2410c');
   });
 
   it('marks depleted clients with exception status', () => {

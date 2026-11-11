@@ -63,7 +63,7 @@ const METRICS: MetricDef[] = [
     icon: <DatabaseOutlined />,
     valueMax: 100,
     unit: '%',
-    stroke: '#7c4dff',
+    stroke: '#9ca3af',
     key2: 'swap',
     stroke2: '#ffa940',
     name1: 'pages.index.memory',
@@ -79,7 +79,7 @@ const METRICS: MetricDef[] = [
     unit: 'B/s',
     stroke: '#f97316',
     key2: 'netDown',
-    stroke2: '#13c2c2',
+    stroke2: '#6b7280',
     name1: 'Up',
     name2: 'Down',
   },
@@ -91,9 +91,9 @@ const METRICS: MetricDef[] = [
     icon: <DeploymentUnitOutlined />,
     valueMax: null,
     unit: 'pkt/s',
-    stroke: '#2f54eb',
+    stroke: '#ea580c',
     key2: 'pktDown',
-    stroke2: '#36cfc9',
+    stroke2: '#9ca3af',
     name1: 'Up',
     name2: 'Down',
   },
@@ -105,7 +105,7 @@ const METRICS: MetricDef[] = [
     icon: <ApiOutlined />,
     valueMax: null,
     unit: '',
-    stroke: '#597ef7',
+    stroke: '#fb923c',
     key2: 'udpCount',
     stroke2: '#73d13d',
     name1: 'TCP',
@@ -119,9 +119,9 @@ const METRICS: MetricDef[] = [
     icon: <HddOutlined />,
     valueMax: null,
     unit: 'B/s',
-    stroke: '#eb2f96',
+    stroke: '#ea580c',
     key2: 'diskWrite',
-    stroke2: '#722ed1',
+    stroke2: '#c2410c',
     name1: 'Read',
     name2: 'Write',
   },
@@ -133,7 +133,7 @@ const METRICS: MetricDef[] = [
     icon: <PieChartOutlined />,
     valueMax: 100,
     unit: '%',
-    stroke: '#13c2c2',
+    stroke: '#6b7280',
   },
   {
     key: 'online',
@@ -159,7 +159,7 @@ const METRICS: MetricDef[] = [
     name1: '1m',
     name2: '5m',
     key3: 'load15',
-    stroke3: '#a0d911',
+    stroke3: '#6b7280',
     name3: '15m',
   },
 ];
@@ -271,7 +271,7 @@ export default function SystemHistoryModal({ open, status, onClose }: SystemHist
 
   const activeMetric = useMemo(() => METRICS.find((m) => m.key === activeKey), [activeKey]);
   const trName = (n?: string) => (n && n.startsWith('pages.') ? t(n) : n);
-  const strokeColor = activeMetric?.stroke || status?.cpu?.color || '#008771';
+  const strokeColor = activeMetric?.stroke || status?.cpu?.color || '#f97316';
   const yFormatter = useMemo(
     () => unitFormatter(activeMetric?.unit ?? '', activeKey),
     [activeMetric, activeKey],

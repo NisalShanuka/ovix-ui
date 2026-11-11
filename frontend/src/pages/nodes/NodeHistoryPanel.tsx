@@ -110,7 +110,7 @@ export default function NodeHistoryPanel({ node, bucket = 30 }: NodeHistoryPanel
           data={cpuPoints}
           labels={cpuLabels}
           height={120}
-          stroke="#008771"
+          stroke="#f97316"
           showGrid
           showAxes
           tickCountX={4}
@@ -126,7 +126,7 @@ export default function NodeHistoryPanel({ node, bucket = 30 }: NodeHistoryPanel
           data={memPoints}
           labels={memLabels}
           height={120}
-          stroke="#7c4dff"
+          stroke="#9ca3af"
           showGrid
           showAxes
           tickCountX={4}

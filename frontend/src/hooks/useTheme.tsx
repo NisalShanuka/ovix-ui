@@ -49,8 +49,29 @@ const SHARED_TOKENS = {
   colorBgLayout: 'transparent',
 };
 
+// The brand is orange, white and ink only: AntD's preset hues (Tag color="blue",
+// "processing", "purple"...) are reseeded so no screen can fall back to blue.
+const LIGHT_PRESETS = {
+  blue: '#ea580c',
+  geekblue: '#c2410c',
+  purple: '#9a3412',
+  magenta: '#c2410c',
+  pink: '#ea580c',
+  cyan: '#4b5563',
+};
+
+const DARK_PRESETS = {
+  blue: '#fd8e43',
+  geekblue: '#f97316',
+  purple: '#fdba74',
+  magenta: '#fb923c',
+  pink: '#fd8e43',
+  cyan: '#9ca3af',
+};
+
 const LIGHT_TOKENS = {
   ...SHARED_TOKENS,
+  ...LIGHT_PRESETS,
   colorPrimary: '#c2410c',
   colorLink: '#c2410c',
   colorInfo: '#c2410c',
@@ -74,6 +95,7 @@ const LIGHT_TOKENS = {
 
 const DARK_TOKENS = {
   ...SHARED_TOKENS,
+  ...DARK_PRESETS,
   colorPrimary: '#fd8e43',
   colorLink: '#fd8e43',
   colorInfo: '#fd8e43',

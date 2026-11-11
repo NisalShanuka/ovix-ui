@@ -8,15 +8,17 @@ import { fetchSession, ovixKeys } from '@/api/ovix';
 import { useTheme } from '@/hooks/useTheme';
 import { useCommandPalette } from '@/components/command-palette/useCommandPalette';
 import { greetingKey } from './greeting';
+import './top-bar.css';
 
 interface TopBarProps {
   title: string;
-  healthNote: string | null;
+  healthNote?: string | null;
+  sub?: string;
 }
 
 const MOD_KEY = /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘' : 'Ctrl';
 
-export default function TopBar({ title, healthNote }: TopBarProps) {
+export default function TopBar({ title, healthNote = null, sub }: TopBarProps) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { isDark, toggleTheme } = useTheme();
@@ -35,9 +37,7 @@ export default function TopBar({ title, healthNote }: TopBarProps) {
     <div className="ovd-top">
       <h1>
         {title}
-        <small>
-          {who} · {healthNote ?? t('pages.dashboard.allGood')}
-        </small>
+        <small>{sub ?? `${who} · ${healthNote ?? t('pages.dashboard.allGood')}`}</small>
       </h1>
       <button type="button" className="ovd-search" onClick={openPalette}>
         <SearchOutlined />

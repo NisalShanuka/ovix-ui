@@ -1,0 +1,73 @@
+/* Phone tab bar from the brand comp; it replaces the floating menu handle. */
+.ov-mnav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .ov-mnav {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
+    z-index: 900;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    align-items: end;
+    padding: 8px 6px;
+    border: 1px solid var(--ov-line);
+    border-radius: var(--ov-r-lg);
+    background: var(--ov-card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: var(--ov-shadow);
+  }
+
+  .ov-mnav > a,
+  .ov-mnav > button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    min-height: 44px;
+    justify-content: center;
+    padding: 2px 0;
+    border: 0;
+    background: none;
+    color: var(--ov-tx2);
+    font: 500 11px var(--ov-font-body);
+    cursor: pointer;
+    transition: color var(--ov-dur-2) var(--ov-ease);
+  }
+
+  .ov-mnav .anticon {
+    font-size: 20px;
+  }
+
+  .ov-mnav > .is-on {
+    color: var(--ov-pr-text);
+  }
+
+  .ov-mnav-add > span {
+    width: 48px;
+    height: 48px;
+    margin-top: -26px;
+    display: grid;
+    place-items: center;
+    border-radius: 15px;
+    background: var(--ov-pr-fill);
+    color: var(--ov-on-pr);
+    box-shadow: var(--ov-shadow-pr);
+  }
+
+  .ov-mnav-add .anticon {
+    font-size: 20px;
+  }
+
+  .drawer-handle {
+    display: none !important;
+  }
+
+  .content-shell {
+    padding-bottom: calc(88px + env(safe-area-inset-bottom));
+  }
+}

@@ -124,12 +124,13 @@
     "pinSidebar": "Ghim thanh bên",
     "unpinSidebar": "Bỏ ghim thanh bên",
     "subFormats": "Sub Formats",
-    "resellers": "Resellers"
+    "resellers": "Resellers",
+    "mainNav": "Main",
+    "more": "More"
   },
   "pages": {
     "login": {
-      "hello": "Xin chào",
-      "title": "Chào mừng",
+      "title": "Welcome back",
       "loginAgain": "Thời hạn đăng nhập đã hết. Vui lòng đăng nhập lại.",
       "toasts": {
         "invalidFormData": "Dạng dữ liệu nhập không hợp lệ.",
@@ -137,7 +138,14 @@
         "emptyPassword": "Vui lòng nhập mật khẩu.",
         "wrongUsernameOrPassword": "Tên người dùng, mật khẩu hoặc mã xác thực hai yếu tố không hợp lệ.",
         "successLogin": "Bạn đã đăng nhập vào tài khoản thành công."
-      }
+      },
+      "caption": "Control panel",
+      "headline": "Your VPN business, in one panel.",
+      "sub": "Clients, resellers, live traffic and the server itself, all in real time.",
+      "point1": "Live traffic map of every client",
+      "point2": "Reseller credit and client renewals",
+      "point3": "Torrent watch with Sentinel",
+      "signInSub": "Sign in with your panel account to continue."
     },
     "index": {
       "cpu": "CPU",
@@ -2588,6 +2596,21 @@
       "viewAll": "View all",
       "xrayDown": "Xray stopped",
       "xrayRunning": "Xray running"
+    },
+    "shell": {
+      "nodeDown": "Xray stopped",
+      "nodeOnline": "Server online",
+      "sub": {
+        "apiDocs": "Every panel endpoint, with examples",
+        "clients": "Every client, its traffic and its time left",
+        "groups": "Clients grouped for bulk changes",
+        "hosts": "Addresses your share links point to",
+        "inbounds": "Ports and protocols your clients connect to",
+        "nodes": "Other servers this panel manages",
+        "resellers": "Shops, their credit and their clients",
+        "settings": "Panel, security, bots and subscriptions",
+        "xray": "Core config, routing, outbounds and DNS"
+      }
     }
   },
   "tgbot": {

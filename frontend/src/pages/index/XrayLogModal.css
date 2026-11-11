@@ -13,7 +13,7 @@
 
 .log-container {
   --log-blocked: #e04141;
-  --log-proxy: #3c89e8;
+  --log-proxy: #f97316;
   --log-divider: rgba(128, 128, 128, 0.18);
 
   margin-top: 12px;
@@ -112,13 +112,13 @@
 
 body.dark .log-container {
   --log-blocked: #ff7575;
-  --log-proxy: #6aa6ee;
+  --log-proxy: #fb923c;
   --log-divider: rgba(255, 255, 255, 0.1);
 }
 
 html[data-theme='ultra-dark'] .log-container {
   --log-blocked: #ff8a8a;
-  --log-proxy: #7fb6f1;
+  --log-proxy: #fdba74;
   --log-divider: rgba(255, 255, 255, 0.12);
 }
 

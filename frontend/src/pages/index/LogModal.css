@@ -14,10 +14,10 @@
 }
 
 .log-container {
-  --log-stamp: #3c89e8;
-  --log-debug: #3c89e8;
-  --log-info: #008771;
-  --log-notice: #008771;
+  --log-stamp: #f97316;
+  --log-debug: #f97316;
+  --log-info: #047857;
+  --log-notice: #047857;
   --log-warning: #f37b24;
   --log-error: #e04141;
   --log-unknown: #595959;
@@ -141,10 +141,10 @@
 }
 
 body.dark .log-container {
-  --log-stamp: #6aa6ee;
-  --log-debug: #6aa6ee;
-  --log-info: #4ed3a6;
-  --log-notice: #4ed3a6;
+  --log-stamp: #9ca3af;
+  --log-debug: #9ca3af;
+  --log-info: #34d399;
+  --log-notice: #34d399;
   --log-warning: #ffb872;
   --log-error: #ff7575;
   --log-unknown: #b5b5b5;
@@ -152,10 +152,10 @@ body.dark .log-container {
 }
 
 html[data-theme='ultra-dark'] .log-container {
-  --log-stamp: #7fb6f1;
-  --log-debug: #7fb6f1;
-  --log-info: #5fd9b0;
-  --log-notice: #5fd9b0;
+  --log-stamp: #8b93a1;
+  --log-debug: #8b93a1;
+  --log-info: #34d399;
+  --log-notice: #34d399;
   --log-warning: #ffcc88;
   --log-error: #ff8a8a;
   --log-unknown: #c4c4c4;
