@@ -80,9 +80,33 @@ if (!i18next.isInitialized) {
   });
 }
 
+// rc-component's useDelayState never clears its setTimeout on unmount; one firing
+// after jsdom teardown throws "window is not defined", so orphans are cleared below.
+const pendingTimers = new Set<ReturnType<typeof setTimeout>>();
+const nativeSetTimeout = globalThis.setTimeout;
+const nativeClearTimeout = globalThis.clearTimeout;
+globalThis.setTimeout = ((handler: (...args: unknown[]) => void, ms?: number, ...args: unknown[]) => {
+  const id = nativeSetTimeout(
+    (...cbArgs: unknown[]) => {
+      pendingTimers.delete(id);
+      handler(...cbArgs);
+    },
+    ms,
+    ...args,
+  );
+  pendingTimers.add(id);
+  return id;
+}) as typeof setTimeout;
+globalThis.clearTimeout = ((id?: ReturnType<typeof setTimeout>) => {
+  if (id !== undefined) pendingTimers.delete(id);
+  nativeClearTimeout(id);
+}) as typeof clearTimeout;
+
 afterEach(async () => {
   cleanup();
   document.body.innerHTML = '';
+  for (const id of pendingTimers) nativeClearTimeout(id);
+  pendingTimers.clear();
   /*
    * React 19 defers passive-effect flushes onto a macrotask (setImmediate),
    * whose callback reads `window.event`. If one is still queued when vitest
