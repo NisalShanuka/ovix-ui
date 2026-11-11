@@ -20,12 +20,14 @@ DELETE_GLOBS = ["README.*.md"]
 DOCS_KEEP = {"docs/architecture.md"}
 
 # Files never rewritten.
-SKIP_FILES = {"LICENSE", "go.sum", "ovix/rebrand.py"}
+SKIP_FILES = {"LICENSE", "go.sum", "ovix/rebrand.py", "README.md"}
 
 # Tokens that must survive untouched: upstream links/issue refs and the
 # User-Agents remote 3x-ui servers recognise.
 PROTECT = [
     "MHSanaei/3x-ui",
+    "upstream 3x-ui",
+    "plain 3x-ui",
     "3x-ui-outbound-sub/1.0",
     "3x-ui-pia/1.0",
     "3x-ui-remote-routing/1.0",

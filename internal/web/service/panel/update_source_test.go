@@ -7,8 +7,8 @@ import (
 	"ovix.store/ovix-ui/internal/config"
 )
 
-// Without an Ovix release source, self-update must never reach the upstream
-// 3x-ui releases: that would replace the Ovix binary with plain 3x-ui.
+// Without an Ovix release source, self-update must never fetch upstream 3x-ui
+// releases: that would replace the Ovix binary with plain 3x-ui.
 func TestSelfUpdateDisabledWithoutReleaseSource(t *testing.T) {
 	prev := ovixReleaseRepo
 	ovixReleaseRepo = ""
