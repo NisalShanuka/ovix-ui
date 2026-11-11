@@ -2236,6 +2236,153 @@ export const sections: readonly Section[] = [
   },
 
   {
+    id: 'ovix-reseller-api',
+    title: 'Reseller API',
+    description:
+      "Called by a logged-in reseller (Ovix UI). Every call works only on the reseller's own clients and only on inbounds the owner allowed. Creating or renewing a client costs 1 credit per day; a failed create is refunded, a delete is not.",
+    endpoints: [
+      {
+        method: 'GET',
+        path: '/panel/api/reseller/me',
+        summary: 'Your balance and the inbounds you may put clients on.',
+        responseSchema: 'MeView',
+      },
+      {
+        method: 'GET',
+        path: '/panel/api/reseller/ledger',
+        summary: 'Your credit history, newest first.',
+        params: [
+          {
+            name: 'limit',
+            in: 'query',
+            type: 'integer',
+            desc: 'Rows to return, 1-500.',
+            optional: true,
+            defaultValue: 500,
+          },
+        ],
+        response:
+          '{\n  "success": true,\n  "obj": [\n    {\n      "id": 7,\n      "userId": 2,\n      "delta": -30,\n      "balanceAfter": 90,\n      "reason": "client_create",\n      "clientEmail": "kasun",\n      "days": 30,\n      "actorId": 2,\n      "createdAt": 1762819200000\n    }\n  ]\n}',
+      },
+      {
+        method: 'GET',
+        path: '/panel/api/reseller/clients',
+        summary: 'Your clients with their used traffic.',
+        responseSchema: 'ClientView',
+        responseSchemaArray: true,
+      },
+      {
+        method: 'POST',
+        path: '/panel/api/reseller/clients/add',
+        summary:
+          'Create a client. Charges `days` credit before the client is made and refunds it if the create fails.',
+        params: [
+          { name: 'email', in: 'body', type: 'string', desc: 'Unique client name.' },
+          {
+            name: 'days',
+            in: 'body',
+            type: 'integer',
+            desc: 'Validity in days, 1-3650. Costs this much credit.',
+          },
+          {
+            name: 'inboundIds',
+            in: 'body',
+            type: 'integer[]',
+            desc: 'Inbounds from /reseller/me.',
+          },
+          {
+            name: 'trafficLimitGB',
+            in: 'body',
+            type: 'integer',
+            desc: '0 = unlimited.',
+            optional: true,
+          },
+          {
+            name: 'limitIp',
+            in: 'body',
+            type: 'integer',
+            desc: 'Max simultaneous IPs, 0 = unlimited.',
+            optional: true,
+          },
+          { name: 'comment', in: 'body', type: 'string', desc: 'Free text.', optional: true },
+          {
+            name: 'tgId',
+            in: 'body',
+            type: 'integer',
+            desc: 'Telegram user ID for notices.',
+            optional: true,
+          },
+          {
+            name: 'startOnFirstUse',
+            in: 'body',
+            type: 'boolean',
+            desc: 'Start counting the days at the first connection instead of now.',
+            optional: true,
+          },
+        ],
+        body: '{\n  "email": "kasun",\n  "days": 30,\n  "inboundIds": [1],\n  "trafficLimitGB": 100,\n  "limitIp": 2\n}',
+        responseSchema: 'ClientView',
+        errorResponse: '{\n  "success": false,\n  "msg": "not enough credit"\n}',
+      },
+      {
+        method: 'POST',
+        path: '/panel/api/reseller/clients/renew/:email',
+        summary:
+          'Add days to a client, counted from the later of now and its current expiry. Charges `days` credit and enables the client.',
+        params: [
+          { name: 'email', in: 'path', type: 'string', desc: 'Client email.' },
+          { name: 'days', in: 'body', type: 'integer', desc: 'Days to add, 1-3650.' },
+        ],
+        body: '{\n  "days": 30\n}',
+        responseSchema: 'ClientView',
+      },
+      {
+        method: 'POST',
+        path: '/panel/api/reseller/clients/update/:email',
+        summary:
+          'Change the fields that cost no credit. Expiry and inbounds can not be changed here.',
+        params: [
+          { name: 'email', in: 'path', type: 'string', desc: 'Client email.' },
+          { name: 'enable', in: 'body', type: 'boolean', desc: 'Whether the client may connect.' },
+          { name: 'trafficLimitGB', in: 'body', type: 'integer', desc: '0 = unlimited.' },
+          {
+            name: 'limitIp',
+            in: 'body',
+            type: 'integer',
+            desc: 'Max simultaneous IPs, 0 = unlimited.',
+          },
+          { name: 'comment', in: 'body', type: 'string', desc: 'Free text.' },
+          { name: 'tgId', in: 'body', type: 'integer', desc: 'Telegram user ID.' },
+        ],
+        body: '{\n  "enable": true,\n  "trafficLimitGB": 100,\n  "limitIp": 2,\n  "comment": "Kasun, Galle",\n  "tgId": 0\n}',
+        responseSchema: 'ClientView',
+      },
+      {
+        method: 'POST',
+        path: '/panel/api/reseller/clients/resetTraffic/:email',
+        summary: "Reset a client's used traffic to zero.",
+        params: [{ name: 'email', in: 'path', type: 'string', desc: 'Client email.' }],
+        response: '{\n  "success": true\n}',
+      },
+      {
+        method: 'POST',
+        path: '/panel/api/reseller/clients/del/:email',
+        summary: 'Delete a client. Unused days are not refunded.',
+        params: [{ name: 'email', in: 'path', type: 'string', desc: 'Client email.' }],
+        response: '{\n  "success": true\n}',
+      },
+      {
+        method: 'GET',
+        path: '/panel/api/reseller/clients/links/:email',
+        summary: "A client's subscription URLs and share links.",
+        params: [{ name: 'email', in: 'path', type: 'string', desc: 'Client email.' }],
+        response:
+          '{\n  "success": true,\n  "obj": {\n    "subscription": ["https://sub.example.com/sub/k7d9s2f1x0q4m8n3"],\n    "links": ["vless://...@example.com:443?type=tcp&security=reality#kasun"]\n  }\n}',
+      },
+    ],
+  },
+
+  {
     id: 'xray-settings',
     title: 'Xray Settings',
     description:

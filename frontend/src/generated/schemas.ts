@@ -2345,6 +2345,85 @@ export const SCHEMAS: Record<string, unknown> = {
     ],
     "type": "object"
   },
+  "ClientView": {
+    "description": "ClientView is one reseller client as the reseller API returns it.",
+    "properties": {
+      "comment": {
+        "example": "Kasun, Galle",
+        "type": "string"
+      },
+      "createdAt": {
+        "example": 1762819200000,
+        "format": "int64",
+        "type": "integer"
+      },
+      "down": {
+        "example": 2147483648,
+        "format": "int64",
+        "type": "integer"
+      },
+      "email": {
+        "example": "kasun",
+        "type": "string"
+      },
+      "enable": {
+        "example": true,
+        "type": "boolean"
+      },
+      "expiryTime": {
+        "example": 1765411200000,
+        "format": "int64",
+        "type": "integer"
+      },
+      "inboundIds": {
+        "example": [
+          1
+        ],
+        "items": {
+          "type": "integer"
+        },
+        "type": "array"
+      },
+      "limitIp": {
+        "example": 2,
+        "type": "integer"
+      },
+      "subId": {
+        "example": "k7d9s2f1x0q4m8n3",
+        "type": "string"
+      },
+      "tgId": {
+        "example": 0,
+        "format": "int64",
+        "type": "integer"
+      },
+      "totalBytes": {
+        "example": 53687091200,
+        "format": "int64",
+        "type": "integer"
+      },
+      "up": {
+        "example": 104857600,
+        "format": "int64",
+        "type": "integer"
+      }
+    },
+    "required": [
+      "comment",
+      "createdAt",
+      "down",
+      "email",
+      "enable",
+      "expiryTime",
+      "inboundIds",
+      "limitIp",
+      "subId",
+      "tgId",
+      "totalBytes",
+      "up"
+    ],
+    "type": "object"
+  },
   "ClientsSummary": {
     "description": "ClientsSummary collects per-bucket counts plus the matching email lists so\nthe clients page can render the dashboard stat cards and their hover\npopovers without shipping the full client array. The counters are exact;\nthe lists stop at clientSummaryEmailCap entries and only back the popovers.",
     "properties": {
@@ -3179,6 +3258,34 @@ export const SCHEMAS: Record<string, unknown> = {
     ],
     "type": "object"
   },
+  "InboundBrief": {
+    "description": "InboundBrief is an inbound a reseller may use, without its secrets.",
+    "properties": {
+      "id": {
+        "example": 1,
+        "type": "integer"
+      },
+      "port": {
+        "example": 443,
+        "type": "integer"
+      },
+      "protocol": {
+        "example": "vless",
+        "type": "string"
+      },
+      "remark": {
+        "example": "VLESS-443",
+        "type": "string"
+      }
+    },
+    "required": [
+      "id",
+      "port",
+      "protocol",
+      "remark"
+    ],
+    "type": "object"
+  },
   "InboundClientIps": {
     "description": "InboundClientIps stores IP addresses associated with inbound clients for access control.",
     "properties": {
@@ -3448,6 +3555,32 @@ export const SCHEMAS: Record<string, unknown> = {
     "required": [
       "client",
       "seed"
+    ],
+    "type": "object"
+  },
+  "MeView": {
+    "description": "MeView is the reseller's own account summary.",
+    "properties": {
+      "credit": {
+        "example": 120,
+        "format": "int64",
+        "type": "integer"
+      },
+      "inbounds": {
+        "items": {
+          "$ref": "#/components/schemas/InboundBrief"
+        },
+        "type": "array"
+      },
+      "username": {
+        "example": "shop1",
+        "type": "string"
+      }
+    },
+    "required": [
+      "credit",
+      "inbounds",
+      "username"
     ],
     "type": "object"
   },

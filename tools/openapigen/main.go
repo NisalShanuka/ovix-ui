@@ -118,7 +118,7 @@ func run(root, outDir string) error {
 		},
 		{
 			Path:        resolveRel(root, "internal/ovix/reseller"),
-			StructAllow: setOf("ResellerView"),
+			StructAllow: setOf("ResellerView", "ClientView", "MeView", "InboundBrief"),
 		},
 		{
 			Path:        resolveRel(root, "internal/amneziawg"),

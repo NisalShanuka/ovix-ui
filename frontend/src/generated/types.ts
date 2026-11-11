@@ -556,6 +556,21 @@ export interface ClientTraffic {
   uuid: string;
 }
 
+export interface ClientView {
+  comment: string;
+  createdAt: number;
+  down: number;
+  email: string;
+  enable: boolean;
+  expiryTime: number;
+  inboundIds: number[];
+  limitIp: number;
+  subId: string;
+  tgId: number;
+  totalBytes: number;
+  up: number;
+}
+
 export interface ClientsSummary {
   active: number;
   deactive: string[];
@@ -730,6 +745,13 @@ export interface Inbound {
   up: number;
 }
 
+export interface InboundBrief {
+  id: number;
+  port: number;
+  protocol: string;
+  remark: string;
+}
+
 export interface InboundClientIps {
   clientEmail: string;
   id: number;
@@ -798,6 +820,12 @@ export interface MLDSA65Response {
 export interface MLKEM768Response {
   client: string;
   seed: string;
+}
+
+export interface MeView {
+  credit: number;
+  inbounds: InboundBrief[];
+  username: string;
 }
 
 export interface Msg {

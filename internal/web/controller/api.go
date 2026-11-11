@@ -213,6 +213,7 @@ func (a *APIController) initRouter(g *gin.RouterGroup) {
 	NewSubBalancerController(api)
 
 	reseller.RegisterOwnerRoutes(api)
+	reseller.RegisterResellerRoutes(api)
 
 	// Extra routes
 	api.POST("/backuptotgbot", a.BackuptoTgbot)

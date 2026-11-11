@@ -2371,6 +2371,85 @@
         ],
         "type": "object"
       },
+      "ClientView": {
+        "description": "ClientView is one reseller client as the reseller API returns it.",
+        "properties": {
+          "comment": {
+            "example": "Kasun, Galle",
+            "type": "string"
+          },
+          "createdAt": {
+            "example": 1762819200000,
+            "format": "int64",
+            "type": "integer"
+          },
+          "down": {
+            "example": 2147483648,
+            "format": "int64",
+            "type": "integer"
+          },
+          "email": {
+            "example": "kasun",
+            "type": "string"
+          },
+          "enable": {
+            "example": true,
+            "type": "boolean"
+          },
+          "expiryTime": {
+            "example": 1765411200000,
+            "format": "int64",
+            "type": "integer"
+          },
+          "inboundIds": {
+            "example": [
+              1
+            ],
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
+          },
+          "limitIp": {
+            "example": 2,
+            "type": "integer"
+          },
+          "subId": {
+            "example": "k7d9s2f1x0q4m8n3",
+            "type": "string"
+          },
+          "tgId": {
+            "example": 0,
+            "format": "int64",
+            "type": "integer"
+          },
+          "totalBytes": {
+            "example": 53687091200,
+            "format": "int64",
+            "type": "integer"
+          },
+          "up": {
+            "example": 104857600,
+            "format": "int64",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "comment",
+          "createdAt",
+          "down",
+          "email",
+          "enable",
+          "expiryTime",
+          "inboundIds",
+          "limitIp",
+          "subId",
+          "tgId",
+          "totalBytes",
+          "up"
+        ],
+        "type": "object"
+      },
       "ClientsSummary": {
         "description": "ClientsSummary collects per-bucket counts plus the matching email lists so\nthe clients page can render the dashboard stat cards and their hover\npopovers without shipping the full client array. The counters are exact;\nthe lists stop at clientSummaryEmailCap entries and only back the popovers.",
         "properties": {
@@ -3205,6 +3284,34 @@
         ],
         "type": "object"
       },
+      "InboundBrief": {
+        "description": "InboundBrief is an inbound a reseller may use, without its secrets.",
+        "properties": {
+          "id": {
+            "example": 1,
+            "type": "integer"
+          },
+          "port": {
+            "example": 443,
+            "type": "integer"
+          },
+          "protocol": {
+            "example": "vless",
+            "type": "string"
+          },
+          "remark": {
+            "example": "VLESS-443",
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "port",
+          "protocol",
+          "remark"
+        ],
+        "type": "object"
+      },
       "InboundClientIps": {
         "description": "InboundClientIps stores IP addresses associated with inbound clients for access control.",
         "properties": {
@@ -3474,6 +3581,32 @@
         "required": [
           "client",
           "seed"
+        ],
+        "type": "object"
+      },
+      "MeView": {
+        "description": "MeView is the reseller's own account summary.",
+        "properties": {
+          "credit": {
+            "example": 120,
+            "format": "int64",
+            "type": "integer"
+          },
+          "inbounds": {
+            "items": {
+              "$ref": "#/components/schemas/InboundBrief"
+            },
+            "type": "array"
+          },
+          "username": {
+            "example": "shop1",
+            "type": "string"
+          }
+        },
+        "required": [
+          "credit",
+          "inbounds",
+          "username"
         ],
         "type": "object"
       },
@@ -4833,6 +4966,10 @@
     {
       "name": "Resellers",
       "description": "Owner-only management of reseller logins (Ovix UI). Resellers pay with prepaid credit: 1 credit = 1 client-day. A reseller session can reach only /panel/api/reseller/*; every other route answers 403."
+    },
+    {
+      "name": "Reseller API",
+      "description": "Called by a logged-in reseller (Ovix UI). Every call works only on the reseller's own clients and only on inbounds the owner allowed. Creating or renewing a client costs 1 credit per day; a failed create is refunded, a delete is not."
     },
     {
       "name": "Xray Settings",
@@ -13980,6 +14117,633 @@
                       "createdAt": 1762819200000
                     }
                   ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/panel/api/reseller/me": {
+      "get": {
+        "tags": [
+          "Reseller API"
+        ],
+        "summary": "Your balance and the inbounds you may put clients on.",
+        "operationId": "get_panel_api_reseller_me",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "obj": {
+                      "$ref": "#/components/schemas/MeView"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "obj": {
+                    "credit": 120,
+                    "inbounds": [
+                      {
+                        "id": 1,
+                        "port": 443,
+                        "protocol": "vless",
+                        "remark": "VLESS-443"
+                      }
+                    ],
+                    "username": "shop1"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/panel/api/reseller/ledger": {
+      "get": {
+        "tags": [
+          "Reseller API"
+        ],
+        "summary": "Your credit history, newest first.",
+        "operationId": "get_panel_api_reseller_ledger",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Rows to return, 1-500.",
+            "schema": {
+              "type": "integer",
+              "default": 500
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "obj": {}
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "obj": [
+                    {
+                      "id": 7,
+                      "userId": 2,
+                      "delta": -30,
+                      "balanceAfter": 90,
+                      "reason": "client_create",
+                      "clientEmail": "kasun",
+                      "days": 30,
+                      "actorId": 2,
+                      "createdAt": 1762819200000
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/panel/api/reseller/clients": {
+      "get": {
+        "tags": [
+          "Reseller API"
+        ],
+        "summary": "Your clients with their used traffic.",
+        "operationId": "get_panel_api_reseller_clients",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "obj": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ClientView"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "obj": [
+                    {
+                      "comment": "Kasun, Galle",
+                      "createdAt": 1762819200000,
+                      "down": 2147483648,
+                      "email": "kasun",
+                      "enable": true,
+                      "expiryTime": 1765411200000,
+                      "inboundIds": [
+                        1
+                      ],
+                      "limitIp": 2,
+                      "subId": "k7d9s2f1x0q4m8n3",
+                      "tgId": 0,
+                      "totalBytes": 53687091200,
+                      "up": 104857600
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/panel/api/reseller/clients/add": {
+      "post": {
+        "tags": [
+          "Reseller API"
+        ],
+        "summary": "Create a client. Charges `days` credit before the client is made and refunds it if the create fails.",
+        "operationId": "post_panel_api_reseller_clients_add",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "Unique client name."
+                  },
+                  "days": {
+                    "type": "integer",
+                    "description": "Validity in days, 1-3650. Costs this much credit."
+                  },
+                  "inboundIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "description": "Inbounds from /reseller/me."
+                  },
+                  "trafficLimitGB": {
+                    "type": "integer",
+                    "description": "0 = unlimited."
+                  },
+                  "limitIp": {
+                    "type": "integer",
+                    "description": "Max simultaneous IPs, 0 = unlimited."
+                  },
+                  "comment": {
+                    "type": "string",
+                    "description": "Free text."
+                  },
+                  "tgId": {
+                    "type": "integer",
+                    "description": "Telegram user ID for notices."
+                  },
+                  "startOnFirstUse": {
+                    "type": "boolean",
+                    "description": "Start counting the days at the first connection instead of now."
+                  }
+                },
+                "required": [
+                  "email",
+                  "days",
+                  "inboundIds"
+                ]
+              },
+              "example": {
+                "email": "kasun",
+                "days": 30,
+                "inboundIds": [
+                  1
+                ],
+                "trafficLimitGB": 100,
+                "limitIp": 2
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "obj": {
+                      "$ref": "#/components/schemas/ClientView"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "obj": {
+                    "comment": "Kasun, Galle",
+                    "createdAt": 1762819200000,
+                    "down": 2147483648,
+                    "email": "kasun",
+                    "enable": true,
+                    "expiryTime": 1765411200000,
+                    "inboundIds": [
+                      1
+                    ],
+                    "limitIp": 2,
+                    "subId": "k7d9s2f1x0q4m8n3",
+                    "tgId": 0,
+                    "totalBytes": 53687091200,
+                    "up": 104857600
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "msg": "not enough credit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/panel/api/reseller/clients/renew/{email}": {
+      "post": {
+        "tags": [
+          "Reseller API"
+        ],
+        "summary": "Add days to a client, counted from the later of now and its current expiry. Charges `days` credit and enables the client.",
+        "operationId": "post_panel_api_reseller_clients_renew_email",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "description": "Client email.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "days": {
+                    "type": "integer",
+                    "description": "Days to add, 1-3650."
+                  }
+                },
+                "required": [
+                  "days"
+                ]
+              },
+              "example": {
+                "days": 30
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "obj": {
+                      "$ref": "#/components/schemas/ClientView"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "obj": {
+                    "comment": "Kasun, Galle",
+                    "createdAt": 1762819200000,
+                    "down": 2147483648,
+                    "email": "kasun",
+                    "enable": true,
+                    "expiryTime": 1765411200000,
+                    "inboundIds": [
+                      1
+                    ],
+                    "limitIp": 2,
+                    "subId": "k7d9s2f1x0q4m8n3",
+                    "tgId": 0,
+                    "totalBytes": 53687091200,
+                    "up": 104857600
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/panel/api/reseller/clients/update/{email}": {
+      "post": {
+        "tags": [
+          "Reseller API"
+        ],
+        "summary": "Change the fields that cost no credit. Expiry and inbounds can not be changed here.",
+        "operationId": "post_panel_api_reseller_clients_update_email",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "description": "Client email.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "enable": {
+                    "type": "boolean",
+                    "description": "Whether the client may connect."
+                  },
+                  "trafficLimitGB": {
+                    "type": "integer",
+                    "description": "0 = unlimited."
+                  },
+                  "limitIp": {
+                    "type": "integer",
+                    "description": "Max simultaneous IPs, 0 = unlimited."
+                  },
+                  "comment": {
+                    "type": "string",
+                    "description": "Free text."
+                  },
+                  "tgId": {
+                    "type": "integer",
+                    "description": "Telegram user ID."
+                  }
+                },
+                "required": [
+                  "enable",
+                  "trafficLimitGB",
+                  "limitIp",
+                  "comment",
+                  "tgId"
+                ]
+              },
+              "example": {
+                "enable": true,
+                "trafficLimitGB": 100,
+                "limitIp": 2,
+                "comment": "Kasun, Galle",
+                "tgId": 0
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "obj": {
+                      "$ref": "#/components/schemas/ClientView"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "obj": {
+                    "comment": "Kasun, Galle",
+                    "createdAt": 1762819200000,
+                    "down": 2147483648,
+                    "email": "kasun",
+                    "enable": true,
+                    "expiryTime": 1765411200000,
+                    "inboundIds": [
+                      1
+                    ],
+                    "limitIp": 2,
+                    "subId": "k7d9s2f1x0q4m8n3",
+                    "tgId": 0,
+                    "totalBytes": 53687091200,
+                    "up": 104857600
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/panel/api/reseller/clients/resetTraffic/{email}": {
+      "post": {
+        "tags": [
+          "Reseller API"
+        ],
+        "summary": "Reset a client's used traffic to zero.",
+        "operationId": "post_panel_api_reseller_clients_resetTraffic_email",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "description": "Client email.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "obj": {}
+                  }
+                },
+                "example": {
+                  "success": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/panel/api/reseller/clients/del/{email}": {
+      "post": {
+        "tags": [
+          "Reseller API"
+        ],
+        "summary": "Delete a client. Unused days are not refunded.",
+        "operationId": "post_panel_api_reseller_clients_del_email",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "description": "Client email.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "obj": {}
+                  }
+                },
+                "example": {
+                  "success": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/panel/api/reseller/clients/links/{email}": {
+      "get": {
+        "tags": [
+          "Reseller API"
+        ],
+        "summary": "A client's subscription URLs and share links.",
+        "operationId": "get_panel_api_reseller_clients_links_email",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "description": "Client email.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "obj": {}
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "obj": {
+                    "subscription": [
+                      "https://sub.example.com/sub/k7d9s2f1x0q4m8n3"
+                    ],
+                    "links": [
+                      "vless://...@example.com:443?type=tcp&security=reality#kasun"
+                    ]
+                  }
                 }
               }
             }

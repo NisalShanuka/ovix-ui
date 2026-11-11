@@ -594,6 +594,22 @@ export const EXAMPLES: Record<string, unknown> = {
     "up": 1048576,
     "uuid": "e18c9a96-71bf-48d4-933f-8b9a46d4290c"
   },
+  "ClientView": {
+    "comment": "Kasun, Galle",
+    "createdAt": 1762819200000,
+    "down": 2147483648,
+    "email": "kasun",
+    "enable": true,
+    "expiryTime": 1765411200000,
+    "inboundIds": [
+      1
+    ],
+    "limitIp": 2,
+    "subId": "k7d9s2f1x0q4m8n3",
+    "tgId": 0,
+    "totalBytes": 53687091200,
+    "up": 104857600
+  },
   "ClientsSummary": {
     "active": 1850,
     "deactive": [
@@ -819,6 +835,12 @@ export const EXAMPLES: Record<string, unknown> = {
     "trafficResetDay": 1,
     "up": 0
   },
+  "InboundBrief": {
+    "id": 1,
+    "port": 443,
+    "protocol": "vless",
+    "remark": "VLESS-443"
+  },
   "InboundClientIps": {
     "clientEmail": "",
     "id": 0,
@@ -881,6 +903,18 @@ export const EXAMPLES: Record<string, unknown> = {
   "MLKEM768Response": {
     "client": "mlkem768-client",
     "seed": "mlkem768-seed"
+  },
+  "MeView": {
+    "credit": 120,
+    "inbounds": [
+      {
+        "id": 1,
+        "port": 443,
+        "protocol": "vless",
+        "remark": "VLESS-443"
+      }
+    ],
+    "username": "shop1"
   },
   "Msg": {
     "msg": "",

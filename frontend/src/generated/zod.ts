@@ -588,6 +588,22 @@ export const ClientTrafficSchema = z.object({
 });
 export type ClientTraffic = z.infer<typeof ClientTrafficSchema>;
 
+export const ClientViewSchema = z.object({
+  comment: z.string(),
+  createdAt: z.number().int(),
+  down: z.number().int(),
+  email: z.string(),
+  enable: z.boolean(),
+  expiryTime: z.number().int(),
+  inboundIds: z.array(z.number().int()),
+  limitIp: z.number().int(),
+  subId: z.string(),
+  tgId: z.number().int(),
+  totalBytes: z.number().int(),
+  up: z.number().int(),
+});
+export type ClientView = z.infer<typeof ClientViewSchema>;
+
 export const ClientsSummarySchema = z.object({
   active: z.number().int(),
   deactive: z.array(z.string()),
@@ -776,6 +792,14 @@ export const InboundSchema = z.object({
 });
 export type Inbound = z.infer<typeof InboundSchema>;
 
+export const InboundBriefSchema = z.object({
+  id: z.number().int(),
+  port: z.number().int(),
+  protocol: z.string(),
+  remark: z.string(),
+});
+export type InboundBrief = z.infer<typeof InboundBriefSchema>;
+
 export const InboundClientIpsSchema = z.object({
   clientEmail: z.string(),
   id: z.number().int(),
@@ -852,6 +876,13 @@ export const MLKEM768ResponseSchema = z.object({
   seed: z.string(),
 });
 export type MLKEM768Response = z.infer<typeof MLKEM768ResponseSchema>;
+
+export const MeViewSchema = z.object({
+  credit: z.number().int(),
+  inbounds: z.array(z.lazy(() => InboundBriefSchema)),
+  username: z.string(),
+});
+export type MeView = z.infer<typeof MeViewSchema>;
 
 export const MsgSchema = z.object({
   msg: z.string(),
