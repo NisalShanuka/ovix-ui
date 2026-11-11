@@ -85,7 +85,11 @@ if (!i18next.isInitialized) {
 const pendingTimers = new Set<ReturnType<typeof setTimeout>>();
 const nativeSetTimeout = globalThis.setTimeout;
 const nativeClearTimeout = globalThis.clearTimeout;
-globalThis.setTimeout = ((handler: (...args: unknown[]) => void, ms?: number, ...args: unknown[]) => {
+globalThis.setTimeout = ((
+  handler: (...args: unknown[]) => void,
+  ms?: number,
+  ...args: unknown[]
+) => {
   const id = nativeSetTimeout(
     (...cbArgs: unknown[]) => {
       pendingTimers.delete(id);
