@@ -1061,6 +1061,19 @@ export const EXAMPLES: Record<string, unknown> = {
     "tlsVersion": "1.3",
     "x25519": true
   },
+  "ResellerView": {
+    "clientCount": 14,
+    "createdAt": 1762819200000,
+    "credit": 120,
+    "disabled": false,
+    "inboundIds": [
+      1,
+      3
+    ],
+    "note": "Kandy shop",
+    "userId": 2,
+    "username": "shop1"
+  },
   "ServerSettings": {
     "contentPaddingAddition": "",
     "disableCookies": false,

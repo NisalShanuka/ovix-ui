@@ -4331,6 +4331,63 @@
         ],
         "type": "object"
       },
+      "ResellerView": {
+        "description": "ResellerView is what the owner API returns for one reseller.",
+        "properties": {
+          "clientCount": {
+            "example": 14,
+            "format": "int64",
+            "type": "integer"
+          },
+          "createdAt": {
+            "example": 1762819200000,
+            "format": "int64",
+            "type": "integer"
+          },
+          "credit": {
+            "example": 120,
+            "format": "int64",
+            "type": "integer"
+          },
+          "disabled": {
+            "example": false,
+            "type": "boolean"
+          },
+          "inboundIds": {
+            "example": [
+              1,
+              3
+            ],
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
+          },
+          "note": {
+            "example": "Kandy shop",
+            "type": "string"
+          },
+          "userId": {
+            "example": 2,
+            "type": "integer"
+          },
+          "username": {
+            "example": "shop1",
+            "type": "string"
+          }
+        },
+        "required": [
+          "clientCount",
+          "createdAt",
+          "credit",
+          "disabled",
+          "inboundIds",
+          "note",
+          "userId",
+          "username"
+        ],
+        "type": "object"
+      },
       "ServerSettings": {
         "description": "ServerSettings is the \"server\" block of an AmneziaWG inbound's Settings\nJSON: the interface-level configuration shared by every client/peer. The\nlisten port is deliberately not duplicated here — it lives on the inbound\nrow itself (Inbound.Port), like every other protocol.",
         "properties": {
@@ -4772,6 +4829,10 @@
     {
       "name": "API Tokens",
       "description": "Manage scoped Bearer tokens for programmatic auth. Tokens grant admin, monitor, or node-sync access, may expire, and are stored as SHA-256 hashes. The plaintext is returned only once at creation."
+    },
+    {
+      "name": "Resellers",
+      "description": "Owner-only management of reseller logins (Ovix UI). Resellers pay with prepaid credit: 1 credit = 1 client-day. A reseller session can reach only /panel/api/reseller/*; every other route answers 403."
     },
     {
       "name": "Xray Settings",
@@ -13311,6 +13372,614 @@
                 },
                 "example": {
                   "success": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/panel/api/ovix/resellers/list": {
+      "get": {
+        "tags": [
+          "Resellers"
+        ],
+        "summary": "List every reseller with its credit, allowed inbounds and live client count.",
+        "operationId": "get_panel_api_ovix_resellers_list",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "obj": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ResellerView"
+                      }
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "obj": [
+                    {
+                      "clientCount": 14,
+                      "createdAt": 1762819200000,
+                      "credit": 120,
+                      "disabled": false,
+                      "inboundIds": [
+                        1,
+                        3
+                      ],
+                      "note": "Kandy shop",
+                      "userId": 2,
+                      "username": "shop1"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/panel/api/ovix/resellers/add": {
+      "post": {
+        "tags": [
+          "Resellers"
+        ],
+        "summary": "Create a reseller login with zero credit.",
+        "operationId": "post_panel_api_ovix_resellers_add",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "1-64 characters, no spaces, unique among all logins."
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "description": "At least 8 characters."
+                  },
+                  "note": {
+                    "type": "string",
+                    "description": "Free text for the owner."
+                  },
+                  "inboundIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "description": "Inbounds the reseller may put clients on."
+                  }
+                },
+                "required": [
+                  "username",
+                  "password"
+                ]
+              },
+              "example": {
+                "username": "shop1",
+                "password": "a-long-password",
+                "note": "Kandy shop",
+                "inboundIds": [
+                  1,
+                  3
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "obj": {
+                      "$ref": "#/components/schemas/ResellerView"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "obj": {
+                    "clientCount": 14,
+                    "createdAt": 1762819200000,
+                    "credit": 120,
+                    "disabled": false,
+                    "inboundIds": [
+                      1,
+                      3
+                    ],
+                    "note": "Kandy shop",
+                    "userId": 2,
+                    "username": "shop1"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "msg": "that username is already used by another login"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/panel/api/ovix/resellers/update/{id}": {
+      "post": {
+        "tags": [
+          "Resellers"
+        ],
+        "summary": "Set note, disabled and allowed inbounds. Disabling ends the reseller sessions at once; its clients keep working.",
+        "operationId": "post_panel_api_ovix_resellers_update_id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Reseller user ID.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "note": {
+                    "type": "string",
+                    "description": "Free text for the owner."
+                  },
+                  "disabled": {
+                    "type": "boolean",
+                    "description": "Block the reseller from logging in."
+                  },
+                  "inboundIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    },
+                    "description": "Replaces the allowed inbound list."
+                  }
+                }
+              },
+              "example": {
+                "note": "Kandy shop",
+                "disabled": false,
+                "inboundIds": [
+                  1
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "obj": {
+                      "$ref": "#/components/schemas/ResellerView"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "obj": {
+                    "clientCount": 14,
+                    "createdAt": 1762819200000,
+                    "credit": 120,
+                    "disabled": false,
+                    "inboundIds": [
+                      1,
+                      3
+                    ],
+                    "note": "Kandy shop",
+                    "userId": 2,
+                    "username": "shop1"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/panel/api/ovix/resellers/password/{id}": {
+      "post": {
+        "tags": [
+          "Resellers"
+        ],
+        "summary": "Replace a reseller's password and end its open sessions.",
+        "operationId": "post_panel_api_ovix_resellers_password_id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Reseller user ID.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "minLength": 8,
+                    "description": "At least 8 characters."
+                  }
+                },
+                "required": [
+                  "password"
+                ]
+              },
+              "example": {
+                "password": "a-new-long-password"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "obj": {}
+                  }
+                },
+                "example": {
+                  "success": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/panel/api/ovix/resellers/credit/{id}": {
+      "post": {
+        "tags": [
+          "Resellers"
+        ],
+        "summary": "Add (top-up) or remove credit. The balance can never go below zero; every change is written to the ledger.",
+        "operationId": "post_panel_api_ovix_resellers_credit_id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Reseller user ID.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "delta": {
+                    "type": "integer",
+                    "description": "Credit to add (positive) or remove (negative)."
+                  }
+                },
+                "required": [
+                  "delta"
+                ]
+              },
+              "example": {
+                "delta": 300
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "obj": {}
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "obj": {
+                    "credit": 420
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "msg": "not enough credit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/panel/api/ovix/resellers/ledger/{id}": {
+      "get": {
+        "tags": [
+          "Resellers"
+        ],
+        "summary": "A reseller's credit history, newest first.",
+        "operationId": "get_panel_api_ovix_resellers_ledger_id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Reseller user ID.",
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Rows to return, 1-500.",
+            "schema": {
+              "type": "integer",
+              "default": 500
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "obj": {}
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "obj": [
+                    {
+                      "id": 7,
+                      "userId": 2,
+                      "delta": -30,
+                      "balanceAfter": 390,
+                      "reason": "client_create",
+                      "clientEmail": "kasun",
+                      "days": 30,
+                      "actorId": 2,
+                      "createdAt": 1762819200000
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/panel/api/ovix/resellers/del/{id}": {
+      "post": {
+        "tags": [
+          "Resellers"
+        ],
+        "summary": "Delete a reseller login. Refused while it still owns clients; disable it instead. Ledger and audit history are kept.",
+        "operationId": "post_panel_api_ovix_resellers_del_id",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Reseller user ID.",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "obj": {}
+                  }
+                },
+                "example": {
+                  "success": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "example": {
+                  "success": false,
+                  "msg": "reseller still has clients: disable it instead, or move or delete its clients first"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/panel/api/ovix/resellers/audit": {
+      "get": {
+        "tags": [
+          "Resellers"
+        ],
+        "summary": "Audit log of reseller actions and owner actions on resellers, newest first.",
+        "operationId": "get_panel_api_ovix_resellers_audit",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Rows to return, 1-500.",
+            "schema": {
+              "type": "integer",
+              "default": 500
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "obj": {}
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "obj": [
+                    {
+                      "id": 3,
+                      "actorId": 1,
+                      "action": "reseller.credit",
+                      "target": "2",
+                      "detail": "{\"balance\":420,\"delta\":300}",
+                      "ip": "203.0.113.5",
+                      "createdAt": 1762819200000
+                    }
+                  ]
                 }
               }
             }

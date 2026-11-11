@@ -2070,6 +2070,172 @@ export const sections: readonly Section[] = [
   },
 
   {
+    id: 'ovix-resellers',
+    title: 'Resellers',
+    description:
+      'Owner-only management of reseller logins (Ovix UI). Resellers pay with prepaid credit: 1 credit = 1 client-day. A reseller session can reach only /panel/api/reseller/*; every other route answers 403.',
+    endpoints: [
+      {
+        method: 'GET',
+        path: '/panel/api/ovix/resellers/list',
+        summary: 'List every reseller with its credit, allowed inbounds and live client count.',
+        responseSchema: 'ResellerView',
+        responseSchemaArray: true,
+      },
+      {
+        method: 'POST',
+        path: '/panel/api/ovix/resellers/add',
+        summary: 'Create a reseller login with zero credit.',
+        params: [
+          {
+            name: 'username',
+            in: 'body',
+            type: 'string',
+            desc: '1-64 characters, no spaces, unique among all logins.',
+          },
+          {
+            name: 'password',
+            in: 'body',
+            type: 'string',
+            desc: 'At least 8 characters.',
+            minLength: 8,
+          },
+          {
+            name: 'note',
+            in: 'body',
+            type: 'string',
+            desc: 'Free text for the owner.',
+            optional: true,
+          },
+          {
+            name: 'inboundIds',
+            in: 'body',
+            type: 'integer[]',
+            desc: 'Inbounds the reseller may put clients on.',
+            optional: true,
+          },
+        ],
+        body: '{\n  "username": "shop1",\n  "password": "a-long-password",\n  "note": "Kandy shop",\n  "inboundIds": [1, 3]\n}',
+        responseSchema: 'ResellerView',
+        errorResponse:
+          '{\n  "success": false,\n  "msg": "that username is already used by another login"\n}',
+      },
+      {
+        method: 'POST',
+        path: '/panel/api/ovix/resellers/update/:id',
+        summary:
+          'Set note, disabled and allowed inbounds. Disabling ends the reseller sessions at once; its clients keep working.',
+        params: [
+          { name: 'id', in: 'path', type: 'integer', desc: 'Reseller user ID.' },
+          {
+            name: 'note',
+            in: 'body',
+            type: 'string',
+            desc: 'Free text for the owner.',
+            optional: true,
+          },
+          {
+            name: 'disabled',
+            in: 'body',
+            type: 'boolean',
+            desc: 'Block the reseller from logging in.',
+            optional: true,
+          },
+          {
+            name: 'inboundIds',
+            in: 'body',
+            type: 'integer[]',
+            desc: 'Replaces the allowed inbound list.',
+            optional: true,
+          },
+        ],
+        body: '{\n  "note": "Kandy shop",\n  "disabled": false,\n  "inboundIds": [1]\n}',
+        responseSchema: 'ResellerView',
+      },
+      {
+        method: 'POST',
+        path: '/panel/api/ovix/resellers/password/:id',
+        summary: "Replace a reseller's password and end its open sessions.",
+        params: [
+          { name: 'id', in: 'path', type: 'integer', desc: 'Reseller user ID.' },
+          {
+            name: 'password',
+            in: 'body',
+            type: 'string',
+            desc: 'At least 8 characters.',
+            minLength: 8,
+          },
+        ],
+        body: '{\n  "password": "a-new-long-password"\n}',
+        response: '{\n  "success": true\n}',
+      },
+      {
+        method: 'POST',
+        path: '/panel/api/ovix/resellers/credit/:id',
+        summary:
+          'Add (top-up) or remove credit. The balance can never go below zero; every change is written to the ledger.',
+        params: [
+          { name: 'id', in: 'path', type: 'integer', desc: 'Reseller user ID.' },
+          {
+            name: 'delta',
+            in: 'body',
+            type: 'integer',
+            desc: 'Credit to add (positive) or remove (negative).',
+          },
+        ],
+        body: '{\n  "delta": 300\n}',
+        response: '{\n  "success": true,\n  "obj": { "credit": 420 }\n}',
+        errorResponse: '{\n  "success": false,\n  "msg": "not enough credit"\n}',
+      },
+      {
+        method: 'GET',
+        path: '/panel/api/ovix/resellers/ledger/:id',
+        summary: "A reseller's credit history, newest first.",
+        params: [
+          { name: 'id', in: 'path', type: 'integer', desc: 'Reseller user ID.' },
+          {
+            name: 'limit',
+            in: 'query',
+            type: 'integer',
+            desc: 'Rows to return, 1-500.',
+            optional: true,
+            defaultValue: 500,
+          },
+        ],
+        response:
+          '{\n  "success": true,\n  "obj": [\n    {\n      "id": 7,\n      "userId": 2,\n      "delta": -30,\n      "balanceAfter": 390,\n      "reason": "client_create",\n      "clientEmail": "kasun",\n      "days": 30,\n      "actorId": 2,\n      "createdAt": 1762819200000\n    }\n  ]\n}',
+      },
+      {
+        method: 'POST',
+        path: '/panel/api/ovix/resellers/del/:id',
+        summary:
+          'Delete a reseller login. Refused while it still owns clients; disable it instead. Ledger and audit history are kept.',
+        params: [{ name: 'id', in: 'path', type: 'integer', desc: 'Reseller user ID.' }],
+        response: '{\n  "success": true\n}',
+        errorResponse:
+          '{\n  "success": false,\n  "msg": "reseller still has clients: disable it instead, or move or delete its clients first"\n}',
+      },
+      {
+        method: 'GET',
+        path: '/panel/api/ovix/resellers/audit',
+        summary: 'Audit log of reseller actions and owner actions on resellers, newest first.',
+        params: [
+          {
+            name: 'limit',
+            in: 'query',
+            type: 'integer',
+            desc: 'Rows to return, 1-500.',
+            optional: true,
+            defaultValue: 500,
+          },
+        ],
+        response:
+          '{\n  "success": true,\n  "obj": [\n    {\n      "id": 3,\n      "actorId": 1,\n      "action": "reseller.credit",\n      "target": "2",\n      "detail": "{\\"balance\\":420,\\"delta\\":300}",\n      "ip": "203.0.113.5",\n      "createdAt": 1762819200000\n    }\n  ]\n}',
+      },
+    ],
+  },
+
+  {
     id: 'xray-settings',
     title: 'Xray Settings',
     description:

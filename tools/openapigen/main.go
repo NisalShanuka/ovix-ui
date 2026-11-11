@@ -117,6 +117,10 @@ func run(root, outDir string) error {
 			StructAllow: setOf("ApiTokenView", "PanelUpdateStatus"),
 		},
 		{
+			Path:        resolveRel(root, "internal/ovix/reseller"),
+			StructAllow: setOf("ResellerView"),
+		},
+		{
 			Path:        resolveRel(root, "internal/amneziawg"),
 			StructAllow: setOf("ServerSettings"),
 		},

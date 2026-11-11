@@ -3,6 +3,7 @@ export type GeoKind = string;
 export type OnlineAPISupport = number;
 export type ProcessState = string;
 export type Protocol = string;
+export type Role = string;
 export type addrFamily = number;
 export type staticEgressResolver = string;
 export type trafficLocalApplyAction = number;
@@ -978,6 +979,17 @@ export interface RealityScanResult {
   tls13: boolean;
   tlsVersion: string;
   x25519: boolean;
+}
+
+export interface ResellerView {
+  clientCount: number;
+  createdAt: number;
+  credit: number;
+  disabled: boolean;
+  inboundIds: number[];
+  note: string;
+  userId: number;
+  username: string;
 }
 
 export interface ServerSettings {

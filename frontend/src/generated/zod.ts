@@ -12,6 +12,9 @@ export type ProcessState = z.infer<typeof ProcessStateSchema>;
 export const ProtocolSchema = z.string();
 export type Protocol = z.infer<typeof ProtocolSchema>;
 
+export const RoleSchema = z.string();
+export type Role = z.infer<typeof RoleSchema>;
+
 export const addrFamilySchema = z.number().int();
 export type addrFamily = z.infer<typeof addrFamilySchema>;
 
@@ -1040,6 +1043,18 @@ export const RealityScanResultSchema = z.object({
   x25519: z.boolean(),
 });
 export type RealityScanResult = z.infer<typeof RealityScanResultSchema>;
+
+export const ResellerViewSchema = z.object({
+  clientCount: z.number().int(),
+  createdAt: z.number().int(),
+  credit: z.number().int(),
+  disabled: z.boolean(),
+  inboundIds: z.array(z.number().int()),
+  note: z.string(),
+  userId: z.number().int(),
+  username: z.string(),
+});
+export type ResellerView = z.infer<typeof ResellerViewSchema>;
 
 export const ServerSettingsSchema = z.object({
   contentPaddingAddition: z.string().optional(),

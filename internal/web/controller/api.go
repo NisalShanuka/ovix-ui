@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/ovix/reseller"
 	"ovix.store/ovix-ui/internal/web/middleware"
 	"ovix.store/ovix-ui/internal/web/service/panel"
 	"ovix.store/ovix-ui/internal/web/service/tgbot"
@@ -210,6 +211,8 @@ func (a *APIController) initRouter(g *gin.RouterGroup) {
 
 	// Subscription balancers — client-side balancers for the JSON sub output
 	NewSubBalancerController(api)
+
+	reseller.RegisterOwnerRoutes(api)
 
 	// Extra routes
 	api.POST("/backuptotgbot", a.BackuptoTgbot)

@@ -9,6 +9,7 @@ import (
 	"ovix.store/ovix-ui/internal/database"
 	"ovix.store/ovix-ui/internal/database/model"
 	"ovix.store/ovix-ui/internal/logger"
+	"ovix.store/ovix-ui/internal/ovix/reseller"
 	"ovix.store/ovix-ui/internal/util/crypto"
 	ldaputil "ovix.store/ovix-ui/internal/util/ldap"
 	"ovix.store/ovix-ui/internal/util/totp"
@@ -85,13 +86,18 @@ func (s *UserService) CheckUser(username string, password string, twoFactorCode 
 		}
 	}
 
+	ownerLogin, err := reseller.LoginPolicy(user.Id)
+	if err != nil {
+		return nil, err
+	}
+
 	twoFactorEnable, err := s.settingService.GetTwoFactorEnable()
 	if err != nil {
 		logger.Warning("check two factor err:", err)
 		return nil, err
 	}
 
-	if twoFactorEnable {
+	if twoFactorEnable && ownerLogin {
 		twoFactorToken, err := s.settingService.GetTwoFactorToken()
 		if err != nil {
 			logger.Warning("check two factor token err:", err)

@@ -4305,6 +4305,63 @@ export const SCHEMAS: Record<string, unknown> = {
     ],
     "type": "object"
   },
+  "ResellerView": {
+    "description": "ResellerView is what the owner API returns for one reseller.",
+    "properties": {
+      "clientCount": {
+        "example": 14,
+        "format": "int64",
+        "type": "integer"
+      },
+      "createdAt": {
+        "example": 1762819200000,
+        "format": "int64",
+        "type": "integer"
+      },
+      "credit": {
+        "example": 120,
+        "format": "int64",
+        "type": "integer"
+      },
+      "disabled": {
+        "example": false,
+        "type": "boolean"
+      },
+      "inboundIds": {
+        "example": [
+          1,
+          3
+        ],
+        "items": {
+          "type": "integer"
+        },
+        "type": "array"
+      },
+      "note": {
+        "example": "Kandy shop",
+        "type": "string"
+      },
+      "userId": {
+        "example": 2,
+        "type": "integer"
+      },
+      "username": {
+        "example": "shop1",
+        "type": "string"
+      }
+    },
+    "required": [
+      "clientCount",
+      "createdAt",
+      "credit",
+      "disabled",
+      "inboundIds",
+      "note",
+      "userId",
+      "username"
+    ],
+    "type": "object"
+  },
   "ServerSettings": {
     "description": "ServerSettings is the \"server\" block of an AmneziaWG inbound's Settings\nJSON: the interface-level configuration shared by every client/peer. The\nlisten port is deliberately not duplicated here — it lives on the inbound\nrow itself (Inbound.Port), like every other protocol.",
     "properties": {
