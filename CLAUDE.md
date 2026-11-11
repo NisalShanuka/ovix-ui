@@ -7,6 +7,20 @@ For a deep navigation map (request lifecycle, cron-job table, symptom → file
 index, layering rules), read `docs/architecture.md` on demand — do not guess
 file locations when it can answer in one hop.
 
+## Ovix UI fork (read first)
+This repo is Ovix UI, a rebranded fork of MHSanaei/3x-ui (GPL-3.0; keep
+`LICENSE` and credit). Fork-specific rules:
+- Upstream merges: `git fetch upstream --tags`, merge the new tag, then run
+  `python ovix/rebrand.py --apply` (idempotent) and commit its output separately.
+  Never hand-edit what the script renames; extend its rules instead.
+- Self-update is off until Ovix releases exist: `ovixReleaseRepo`
+  (`internal/web/service/panel/panel.go`) and `OVIX_RELEASE_REPO` in
+  `ovix-ui.sh` / `update.sh`. Never point them back at MHSanaei/3x-ui.
+- English only. Brand tokens and product facts: `../PRODUCT.md`; build plan:
+  `../OVIX_PANEL_PLAN.md`; UI direction contract: `.impeccable/surfaces/`.
+- On Windows, Defender blocks `install.sh` (kept as skip-worktree); build and
+  edit it inside WSL.
+
 ## Stack
 - Backend: Go 1.27 (`module ovix.store/ovix-ui`), Gin, GORM.
   Runs Xray-core as a managed child process (`internal/xray/process.go`) and
@@ -69,10 +83,8 @@ file locations when it can answer in one hop.
   into `frontend/src/generated/` from Go structs. The OpenAPI doc itself
   (`frontend/public/openapi.json`) is assembled from those + `endpoints.ts` by
   `frontend/scripts/build-openapi.mjs`.
-- `docs/` — separate Next.js/Fumadocs site (pnpm, own CI in `docs-ci.yml`,
-  outside `make verify`). Holds a THIRD independent implementation of
-  link/subscription generation in `docs/lib/xray/` — check it whenever
-  share-link or install-command output changes.
+- `docs/` — only `architecture.md` is kept; the upstream docs site was removed.
+- `ovix/` — fork tooling (`rebrand.py`).
 
 ## Hard rules (non-negotiable)
 - Correct fix over small fix. Find the root cause and fix it the right way, however
@@ -102,10 +114,6 @@ file locations when it can answer in one hop.
   never hand-write them. A new struct must be added to openapigen's `StructAllow`
   allowlist (`tools/openapigen/main.go`) or it is silently omitted from
   schemas/examples (and `build-openapi.mjs` then fails on the missing schema).
-- A new or renamed endpoint has a FOURTH step nothing checks: copy
-  `frontend/public/openapi.json` → `docs/public/openapi.json`, then
-  `cd docs && pnpm gen:api` to refresh the MDX under
-  `docs/content/docs/en/reference/api/`. `docs-ci.yml` fires only on `docs/**`.
 - A new English i18n key goes in EVERY locale JSON in `internal/web/translation/`
   (13 files) AND must be referenced from `frontend/src` or Go in the SAME commit —
   `frontend/src/test/i18n-dead-keys.test.ts` fails both ways. It is a frontend
