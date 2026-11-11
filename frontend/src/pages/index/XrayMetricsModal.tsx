@@ -64,7 +64,7 @@ const METRICS: MetricDef[] = [
     title: 'pages.index.xrayTitleSys',
     icon: <CloudServerOutlined />,
     unit: 'B',
-    stroke: '#1890ff',
+    stroke: '#f97316',
   },
   {
     key: 'xrHeapObjects',

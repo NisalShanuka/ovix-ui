@@ -42,6 +42,7 @@ import { formatPanelVersion } from '@/lib/panel-version';
 import { pauseAnimationsUntilLeave, useTheme } from '@/hooks/useTheme';
 import { useAllSettings } from '@/api/queries/useAllSettings';
 import { useCommandPalette } from '@/components/command-palette/useCommandPalette';
+import { BrandMark } from '@/ds/BrandMark';
 import './AppSidebar.css';
 
 // The palette listens for Ctrl as well as Cmd, so the chip must not show a
@@ -49,7 +50,7 @@ import './AppSidebar.css';
 const SHORTCUT_MODIFIER = /Mac|iPhone|iPad|iPod/.test(navigator.userAgent) ? '⌘' : 'Ctrl';
 const LOGOUT_KEY = '__logout__';
 const RAIL_WIDTH = 72;
-const SIDER_WIDTH = 220;
+const SIDER_WIDTH = 268;
 const SIDEBAR_PINNED_KEY = 'sidebar-pinned';
 
 let hoveredAcrossRemounts = false;
@@ -340,7 +341,7 @@ export default function AppSidebar() {
       >
         <div className="sider-brand">
           <div className="brand-block">
-            <span className="brand-text">{railCollapsed ? 'OV' : 'Ovix UI'}</span>
+            <BrandMark compact={railCollapsed} caption="Control panel" />
           </div>
           {!railCollapsed && (
             <div className="brand-actions">
@@ -426,7 +427,7 @@ export default function AppSidebar() {
       >
         <div className="drawer-header">
           <div className="brand-block">
-            <span className="drawer-brand">Ovix UI</span>
+            <BrandMark caption="Control panel" />
           </div>
           <div className="drawer-header-actions">
             <ThemeCycleButton

@@ -40,7 +40,7 @@ test('keeps the sidebar expanded after pinning it from the header and restores t
   fireEvent.mouseLeave(sidebarRoot!);
 
   expect(sidebar?.classList.contains('ant-layout-sider-collapsed')).toBe(false);
-  expect(sidebarRoot?.getAttribute('style')).toContain('--sider-rail: 220px');
+  expect(sidebarRoot?.getAttribute('style')).toContain('--sider-rail: 268px');
   expect(localStorage.getItem('sidebar-pinned')).toBe('true');
 
   first.unmount();
@@ -50,7 +50,7 @@ test('keeps the sidebar expanded after pinning it from the header and restores t
   const restoredSidebarRoot = second.container.querySelector('.ant-sidebar');
 
   expect(restoredSidebar?.classList.contains('ant-layout-sider-collapsed')).toBe(false);
-  expect(restoredSidebarRoot?.getAttribute('style')).toContain('--sider-rail: 220px');
+  expect(restoredSidebarRoot?.getAttribute('style')).toContain('--sider-rail: 268px');
   expect(screen.getByRole('button', { name: 'Pin sidebar' })).not.toBeNull();
 });
 

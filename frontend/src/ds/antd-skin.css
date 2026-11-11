@@ -1,0 +1,64 @@
+/* Brand finish for Ant Design widgets the theme tokens can't reach. Pages
+   still built on AntD read as Ovix until Phase 4 replaces them. */
+.ant-card {
+  border-color: var(--ov-line) !important;
+  box-shadow: var(--ov-shadow);
+}
+
+.ant-card .ant-card-head-title,
+.ant-modal .ant-modal-title,
+.ant-drawer .ant-drawer-title {
+  font-family: var(--ov-font-display);
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+.ant-statistic .ant-statistic-content {
+  font-family: var(--ov-font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.ant-statistic .ant-statistic-title {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.ant-table .ant-table-thead > tr > th {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--ov-mu) !important;
+}
+
+.ant-table .ant-table-tbody > tr > td {
+  font-variant-numeric: tabular-nums;
+}
+
+.ant-btn-primary:not(:disabled) {
+  background: var(--ov-pr-fill);
+  border: 0;
+}
+
+.ant-btn-primary:not(:disabled):hover {
+  background: var(--ov-pr-fill-solid);
+  transform: translateY(-1px);
+}
+
+.ant-btn {
+  transition:
+    transform var(--ov-dur-1) var(--ov-ease),
+    background var(--ov-dur-2) var(--ov-ease),
+    box-shadow var(--ov-dur-2) var(--ov-ease);
+}
+
+.ant-tabs-ink-bar {
+  background: var(--ov-pr) !important;
+}
+
+.ant-progress-bg {
+  background: var(--ov-prog) !important;
+}

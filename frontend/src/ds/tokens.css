@@ -1,0 +1,148 @@
+/* Ovix UI design tokens: the vpn.ovix.store brand (PRODUCT.md, Brand
+   Commitments). useTheme puts body.light / body.dark on <body>; ultra-dark is
+   the same dark world on a pure black ground. */
+@import '@fontsource-variable/outfit/wght.css';
+@import '@fontsource-variable/inter/wght.css';
+@import '@fontsource-variable/jetbrains-mono/wght.css';
+
+:root,
+body.light {
+  --ov-font-display: 'Outfit Variable', 'Outfit', 'Inter Variable', sans-serif;
+  --ov-font-body: 'Inter Variable', 'Inter', system-ui, sans-serif;
+  --ov-font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, monospace;
+
+  --ov-bg: #fafafa;
+  --ov-card: rgba(255, 255, 255, 0.86);
+  --ov-solid: #ffffff;
+  --ov-line: rgba(17, 24, 39, 0.08);
+  --ov-line-strong: rgba(17, 24, 39, 0.14);
+  --ov-tx: #111827;
+  --ov-tx2: #4b5563;
+  --ov-mu: #5f6672;
+
+  /* Bright orange is for fills, icons and large type; small orange text on a
+     light ground uses --ov-pr-text, which passes AA. */
+  --ov-pr: #f97316;
+  --ov-pr2: #ea580c;
+  --ov-pr-text: #c2410c;
+  --ov-pr-soft: rgba(249, 115, 22, 0.1);
+  /* Both stops keep white 14px button text at AA (4.8:1 and above). */
+  --ov-pr-fill: linear-gradient(135deg, #c8450e, #ad3a0b);
+  --ov-pr-fill-solid: #c2410c;
+  --ov-on-pr: #ffffff;
+  --ov-prog: linear-gradient(90deg, #fdba74, #f97316 50%, #ea580c);
+
+  --ov-ok: #047857;
+  --ov-ok-bg: rgba(16, 185, 129, 0.12);
+  --ov-bad: #b91c1c;
+  --ov-bad-bg: rgba(239, 68, 68, 0.12);
+  --ov-exp: #9a3f07;
+  --ov-exp-bg: rgba(245, 158, 11, 0.14);
+  --ov-track: #eef0f3;
+
+  --ov-dot: rgba(249, 115, 22, 0.14);
+  --ov-shadow: 0 10px 30px -12px rgba(17, 24, 39, 0.12), 0 1px 2px rgba(17, 24, 39, 0.04);
+  --ov-shadow-pr: 0 8px 20px -8px rgba(234, 88, 12, 0.55);
+
+  --ov-r-sm: 9px;
+  --ov-r: 12px;
+  --ov-r-lg: 18px;
+
+  --ov-dur-1: 120ms;
+  --ov-dur-2: 200ms;
+  --ov-dur-3: 320ms;
+  --ov-dur-sig: 600ms;
+  --ov-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+body.dark {
+  --ov-bg: #090a0f;
+  --ov-card: rgba(18, 20, 32, 0.72);
+  --ov-solid: #11131d;
+  --ov-line: rgba(255, 255, 255, 0.08);
+  --ov-line-strong: rgba(255, 255, 255, 0.14);
+  --ov-tx: #f3f4f6;
+  --ov-tx2: #9ca3af;
+  --ov-mu: #8b93a1;
+
+  --ov-pr: #fd8e43;
+  --ov-pr2: #f97316;
+  --ov-pr-text: #fd8e43;
+  --ov-pr-soft: rgba(253, 142, 67, 0.14);
+  --ov-pr-fill: linear-gradient(135deg, #fd8e43, #f97316);
+  --ov-pr-fill-solid: #fd8e43;
+  --ov-on-pr: #111827;
+  --ov-prog: linear-gradient(90deg, #fb923c, #f97316 50%, #ea580c);
+
+  --ov-ok: #34d399;
+  --ov-ok-bg: rgba(16, 185, 129, 0.15);
+  --ov-bad: #f87171;
+  --ov-bad-bg: rgba(239, 68, 68, 0.15);
+  --ov-exp: #fbbf24;
+  --ov-exp-bg: rgba(245, 158, 11, 0.15);
+  --ov-track: #1b1e2b;
+
+  --ov-dot: rgba(253, 142, 67, 0.13);
+  --ov-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+  --ov-shadow-pr: 0 8px 20px -8px rgba(249, 115, 22, 0.45);
+}
+
+html[data-theme='ultra-dark'] body.dark {
+  --ov-bg: #000000;
+  --ov-solid: #0b0c12;
+  --ov-card: rgba(11, 12, 18, 0.8);
+}
+
+body {
+  background-color: var(--ov-bg);
+  background-image: radial-gradient(var(--ov-dot) 1.2px, transparent 1.2px);
+  background-size: 22px 22px;
+  background-attachment: fixed;
+  color: var(--ov-tx);
+  font-family: var(--ov-font-body);
+  font-feature-settings: 'cv11', 'ss01';
+}
+
+::selection {
+  background: color-mix(in srgb, var(--ov-pr) 32%, transparent);
+  color: var(--ov-tx);
+}
+
+:root {
+  accent-color: var(--ov-pr);
+  caret-color: var(--ov-pr);
+  scrollbar-color: color-mix(in srgb, var(--ov-tx2) 40%, transparent) transparent;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ov-pr);
+  outline-offset: 2px;
+}
+
+h1,
+h2,
+h3,
+h4,
+.ov-display {
+  font-family: var(--ov-font-display);
+  letter-spacing: -0.01em;
+}
+
+.ov-num {
+  font-variant-numeric: tabular-nums;
+}
+
+.ov-mono {
+  font-family: var(--ov-font-mono);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

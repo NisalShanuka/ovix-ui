@@ -1,18 +1,18 @@
 .subscription-page {
-  --bg-page: #e6e8ec;
+  --bg-page: transparent;
   --bg-card: #ffffff;
   min-height: 100vh;
   background: var(--bg-page);
 }
 
 .subscription-page.is-dark {
-  --bg-page: #1a1b1f;
-  --bg-card: #23252b;
+  --bg-page: transparent;
+  --bg-card: var(--ov-solid);
 }
 
 .subscription-page.is-dark.is-ultra {
   --bg-page: #000;
-  --bg-card: #101013;
+  --bg-card: var(--ov-solid);
 }
 
 .subscription-page .ant-layout,

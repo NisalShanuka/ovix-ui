@@ -1,0 +1,34 @@
+.ov-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  user-select: none;
+}
+
+.ov-shield {
+  flex: none;
+  color: var(--ov-pr);
+}
+
+.ov-brand-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.ov-brand-text b {
+  font: 700 17px/1.1 var(--ov-font-display);
+  letter-spacing: 0;
+  white-space: nowrap;
+  color: var(--ov-tx);
+}
+
+.ov-brand-text b span {
+  color: var(--ov-pr-text);
+}
+
+.ov-brand-text small {
+  font: 500 11px/1.3 var(--ov-font-body);
+  color: var(--ov-mu);
+}

@@ -1,7 +1,7 @@
 .api-docs-page.is-dark {
   --sw-bg: #1f2026;
   --sw-bg-soft: #25272e;
-  --sw-bg-input: #15161a;
+  --sw-bg-input: var(--ov-solid);
   --sw-bg-code: #0d0e12;
   --sw-border: rgba(255, 255, 255, 0.08);
   --sw-border-strong: rgba(255, 255, 255, 0.15);
@@ -15,7 +15,7 @@
 .api-docs-page.is-dark.is-ultra {
   --sw-bg: #0a0a0d;
   --sw-bg-soft: #131316;
-  --sw-bg-input: #050507;
+  --sw-bg-input: var(--ov-solid);
   --sw-bg-code: #000;
   --sw-border: rgba(255, 255, 255, 0.06);
   --sw-border-strong: rgba(255, 255, 255, 0.12);

@@ -2,22 +2,22 @@
    page-shell.css so upstream merges of that file stay clean. */
 .resellers-page,
 .reseller-portal {
-  --bg-page: #e6e8ec;
-  --bg-card: #ffffff;
+  --bg-page: transparent;
+  --bg-card: var(--ov-solid);
   min-height: 100vh;
   background: var(--bg-page);
 }
 
 .resellers-page.is-dark,
 .reseller-portal.is-dark {
-  --bg-page: #1a1b1f;
-  --bg-card: #23252b;
+  --bg-page: transparent;
+  --bg-card: var(--ov-solid);
 }
 
 .resellers-page.is-dark.is-ultra,
 .reseller-portal.is-dark.is-ultra {
-  --bg-page: #000;
-  --bg-card: #101013;
+  --bg-page: transparent;
+  --bg-card: var(--ov-solid);
 }
 
 .resellers-page .ant-layout,

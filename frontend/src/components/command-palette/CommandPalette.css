@@ -117,7 +117,7 @@ html[data-theme='ultra-dark'] .command-palette-modal {
   font-size: 24px;
   width: 28px;
   height: 28px;
-  color: #1677ff;
+  color: var(--ov-pr-text);
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
@@ -126,7 +126,7 @@ html[data-theme='ultra-dark'] .command-palette-modal {
 }
 
 .command-palette-search-icon.spinning {
-  color: #1677ff;
+  color: var(--ov-pr-text);
   animation: cp-spin 0.8s linear infinite;
 }
 
@@ -263,12 +263,12 @@ html[data-theme='ultra-dark'] .command-palette-modal {
 
 .command-palette-modal.light .command-palette-item.active {
   background: #e6f4ff;
-  color: #0958d9;
+  color: var(--ov-pr-text);
 }
 
 .command-palette-modal.dark .command-palette-item.active {
   background: rgba(22, 119, 255, 0.2);
-  color: #4096ff;
+  color: var(--ov-pr);
 }
 
 .command-palette-modal.ultra .command-palette-item.active {
@@ -353,7 +353,7 @@ html[data-theme='ultra-dark'] .command-palette-modal {
 }
 
 .command-palette-modal.light .command-palette-action-btn:hover {
-  color: #0958d9;
+  color: var(--ov-pr-text);
   background: rgba(0, 0, 0, 0.06);
 }
 
@@ -362,7 +362,7 @@ html[data-theme='ultra-dark'] .command-palette-modal {
 }
 
 .command-palette-modal.dark .command-palette-action-btn:hover {
-  color: #4096ff;
+  color: var(--ov-pr);
   background: rgba(255, 255, 255, 0.1);
 }
 
@@ -429,7 +429,7 @@ html[data-theme='ultra-dark'] .command-palette-modal {
 }
 
 .command-palette-modal.ultra .command-palette-footer {
-  background: #050507;
+  background: var(--ov-solid);
   border-top-color: rgba(255, 255, 255, 0.12);
   color: #8c8c8c;
 }

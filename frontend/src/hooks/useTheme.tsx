@@ -30,73 +30,121 @@ function applyDom(isDark: boolean, isUltra: boolean) {
 }
 
 // module load so the document is in the right theme before React mounts.
-const initialDark = readBool(STORAGE_DARK, true);
+// The brand site (vpn.ovix.store) opens light; a saved choice still wins.
+const initialDark = readBool(STORAGE_DARK, false);
 const initialUltra = readBool(STORAGE_ULTRA, false);
 applyDom(initialDark, initialUltra);
 
+// Ovix brand (vpn.ovix.store), mirrored from src/ds/tokens.css. Light fills
+// use #C2410C so white 14px text on primary buttons meets AA.
+const FONT_BODY = "'Inter Variable', 'Inter', system-ui, sans-serif";
+const FONT_MONO = "'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, monospace";
+
+const SHARED_TOKENS = {
+  fontFamily: FONT_BODY,
+  fontFamilyCode: FONT_MONO,
+  borderRadius: 10,
+  borderRadiusLG: 18,
+  borderRadiusSM: 8,
+  colorBgLayout: 'transparent',
+};
+
+const LIGHT_TOKENS = {
+  ...SHARED_TOKENS,
+  colorPrimary: '#c2410c',
+  colorLink: '#c2410c',
+  colorInfo: '#c2410c',
+  colorSuccess: '#047857',
+  colorWarning: '#b45309',
+  colorError: '#b91c1c',
+  colorErrorText: '#b91c1c',
+  colorSuccessText: '#047857',
+  colorText: '#111827',
+  colorTextSecondary: '#4b5563',
+  colorTextTertiary: '#5f6672',
+  colorTextDescription: '#5f6672',
+  colorTextPlaceholder: '#6b7280',
+  colorBorder: 'rgba(17, 24, 39, 0.14)',
+  colorBorderSecondary: 'rgba(17, 24, 39, 0.08)',
+  colorBgContainer: '#ffffff',
+  colorBgElevated: '#ffffff',
+  colorFillSecondary: 'rgba(249, 115, 22, 0.08)',
+  boxShadowTertiary: '0 10px 30px -12px rgba(17, 24, 39, 0.12), 0 1px 2px rgba(17, 24, 39, 0.04)',
+};
+
 const DARK_TOKENS = {
-  colorBgBase: '#1a1b1f',
-  colorBgLayout: '#1a1b1f',
-  colorBgContainer: '#23252b',
-  colorBgElevated: '#2d2f37',
+  ...SHARED_TOKENS,
+  colorPrimary: '#fd8e43',
+  colorLink: '#fd8e43',
+  colorInfo: '#fd8e43',
+  colorSuccess: '#34d399',
+  colorWarning: '#fbbf24',
+  colorError: '#f87171',
+  colorText: '#f3f4f6',
+  colorTextSecondary: '#9ca3af',
+  colorTextTertiary: '#8b93a1',
+  colorTextDescription: '#8b93a1',
+  colorTextPlaceholder: '#7c8492',
+  colorBorder: 'rgba(255, 255, 255, 0.14)',
+  colorBorderSecondary: 'rgba(255, 255, 255, 0.08)',
+  colorBgBase: '#090a0f',
+  colorBgContainer: '#11131d',
+  colorBgElevated: '#171a26',
 };
+
 const ULTRA_DARK_TOKENS = {
-  colorBgBase: '#000',
-  colorBgLayout: '#000',
-  colorBgContainer: '#101013',
-  colorBgElevated: '#1a1a1e',
+  ...DARK_TOKENS,
+  colorBgBase: '#000000',
+  colorBgContainer: '#0b0c12',
+  colorBgElevated: '#12141c',
 };
-const DARK_LAYOUT_TOKENS = {
-  bodyBg: '#1a1b1f',
-  headerBg: '#15161a',
-  headerColor: '#ffffff',
-  footerBg: '#1a1b1f',
-  siderBg: '#15161a',
-  triggerBg: '#23252b',
-  triggerColor: '#ffffff',
+
+const LAYOUT_TOKENS = {
+  bodyBg: 'transparent',
+  headerBg: 'transparent',
+  footerBg: 'transparent',
+  siderBg: 'transparent',
+  triggerBg: 'transparent',
 };
-const ULTRA_DARK_LAYOUT_TOKENS = {
-  bodyBg: '#000',
-  headerBg: '#050507',
-  headerColor: '#ffffff',
-  footerBg: '#000',
-  siderBg: '#050507',
-  triggerBg: '#1a1a1e',
-  triggerColor: '#ffffff',
+
+const MENU_TOKENS = {
+  itemBg: 'transparent',
+  subMenuItemBg: 'transparent',
+  darkItemBg: 'transparent',
+  darkSubMenuItemBg: 'transparent',
+  itemBorderRadius: 10,
+  itemMarginInline: 10,
 };
-const DARK_MENU_TOKENS = {
-  darkItemBg: '#15161a',
-  darkSubMenuItemBg: '#1a1b1f',
-  darkPopupBg: '#23252b',
-};
-const ULTRA_DARK_MENU_TOKENS = {
-  darkItemBg: '#050507',
-  darkSubMenuItemBg: '#000',
-  darkPopupBg: '#101013',
-};
-const DARK_CARD_TOKENS = {
-  colorBorderSecondary: 'rgba(255, 255, 255, 0.06)',
-};
-const ULTRA_DARK_CARD_TOKENS = {
-  colorBorderSecondary: 'rgba(255, 255, 255, 0.04)',
-};
+
 const STATISTIC_TOKENS = {
-  contentFontSize: 17,
-  titleFontSize: 11,
+  contentFontSize: 26,
+  titleFontSize: 12,
 };
-const LIGHT_CONTRAST_TOKENS = {
-  colorTextDescription: 'rgba(0, 0, 0, 0.58)',
-  colorTextTertiary: 'rgba(0, 0, 0, 0.58)',
-  colorTextPlaceholder: '#767676',
-  colorError: '#cf1322',
-  colorErrorText: '#cf1322',
-  colorSuccessText: '#237804',
-};
-const LIGHT_BUTTON_TOKENS = {
-  colorPrimary: '#0958d9',
-  colorPrimaryHover: '#2468e5',
-  colorPrimaryActive: '#073ea8',
-};
+
+function componentTokens(isDark: boolean, isUltra: boolean) {
+  return {
+    Layout: LAYOUT_TOKENS,
+    Menu: {
+      ...MENU_TOKENS,
+      darkPopupBg: isUltra ? '#12141c' : '#171a26',
+    },
+    Button: {
+      primaryShadow: isDark
+        ? '0 8px 20px -8px rgba(249, 115, 22, 0.45)'
+        : '0 8px 20px -8px rgba(234, 88, 12, 0.55)',
+      primaryColor: isDark ? '#111827' : '#ffffff',
+      fontWeight: 600,
+    },
+    Card: { headerFontSize: 16 },
+    Table: {
+      headerBg: 'transparent',
+      headerSplitColor: 'transparent',
+      rowHoverBg: isDark ? 'rgba(253, 142, 67, 0.08)' : 'rgba(249, 115, 22, 0.06)',
+    },
+    Statistic: STATISTIC_TOKENS,
+    Tag: { defaultBg: isDark ? '#1b1e2b' : '#eef0f3' },
+  };
+}
 
 // hashed:false drops the `:where(.css-<hash>)` wrapper antd puts around every
 // rule. It costs nothing in specificity — `:where()` contributes zero, so the
@@ -117,23 +165,15 @@ export function buildAntdThemeConfig(isDark: boolean, isUltra: boolean): ThemeCo
     return {
       ...SHARED_STYLE_CONFIG,
       algorithm: antdTheme.defaultAlgorithm,
-      token: LIGHT_CONTRAST_TOKENS,
-      components: {
-        Statistic: STATISTIC_TOKENS,
-        Button: LIGHT_BUTTON_TOKENS,
-      },
+      token: LIGHT_TOKENS,
+      components: componentTokens(false, false),
     };
   }
   return {
     ...SHARED_STYLE_CONFIG,
     algorithm: antdTheme.darkAlgorithm,
     token: isUltra ? ULTRA_DARK_TOKENS : DARK_TOKENS,
-    components: {
-      Layout: isUltra ? ULTRA_DARK_LAYOUT_TOKENS : DARK_LAYOUT_TOKENS,
-      Menu: isUltra ? ULTRA_DARK_MENU_TOKENS : DARK_MENU_TOKENS,
-      Card: isUltra ? ULTRA_DARK_CARD_TOKENS : DARK_CARD_TOKENS,
-      Statistic: STATISTIC_TOKENS,
-    },
+    components: componentTokens(true, isUltra),
   };
 }
 
