@@ -28,11 +28,12 @@ type OvixResellerInbound struct {
 
 func (OvixResellerInbound) TableName() string { return "ovix_reseller_inbounds" }
 
-// OvixClientOwner records which reseller created a client; no row means the
-// client belongs to the owner.
+// OvixClientOwner ties a client to the reseller that made it (no row = owner's).
+// ClientCreatedAt must match too: SQLite may reuse a deleted client's id.
 type OvixClientOwner struct {
-	ClientId int `json:"clientId" gorm:"primaryKey;autoIncrement:false;column:client_id"`
-	UserId   int `json:"userId" gorm:"not null;index:idx_ovix_client_owners_user;column:user_id"`
+	ClientId        int   `json:"clientId" gorm:"primaryKey;autoIncrement:false;column:client_id"`
+	UserId          int   `json:"userId" gorm:"not null;index:idx_ovix_client_owners_user;column:user_id"`
+	ClientCreatedAt int64 `json:"clientCreatedAt" gorm:"not null;default:0;column:client_created_at"`
 }
 
 func (OvixClientOwner) TableName() string { return "ovix_client_owners" }

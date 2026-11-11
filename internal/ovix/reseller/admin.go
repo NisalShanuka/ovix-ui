@@ -202,11 +202,12 @@ func listResellers(onlyID int) ([]ResellerView, error) {
 	return views, nil
 }
 
-// ownedClientCount ignores owner rows whose client was deleted elsewhere.
+// ownedClientCount ignores owner rows whose client was deleted elsewhere,
+// even when its id was reused by a newer client.
 func ownedClientCount(db *gorm.DB, userID int) (int64, error) {
 	var n int64
 	err := db.Table("ovix_client_owners AS o").
-		Joins("JOIN clients AS c ON c.id = o.client_id").
+		Joins("JOIN clients AS c ON c.id = o.client_id AND c.created_at = o.client_created_at").
 		Where("o.user_id = ?", userID).Count(&n).Error
 	return n, err
 }

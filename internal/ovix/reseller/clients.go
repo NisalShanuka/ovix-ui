@@ -110,7 +110,8 @@ func ownedRecord(userID int, email string) (*model.ClientRecord, error) {
 	}
 	var n int64
 	if err := database.GetDB().Model(&model.OvixClientOwner{}).
-		Where("client_id = ? AND user_id = ?", rec.Id, userID).Count(&n).Error; err != nil {
+		Where("client_id = ? AND user_id = ? AND client_created_at = ?", rec.Id, userID, rec.CreatedAt).
+		Count(&n).Error; err != nil {
 		return nil, err
 	}
 	if n == 0 {
@@ -200,7 +201,7 @@ func CreateClient(userID int, in NewClientInput) (*ClientView, error) {
 	}
 	rec, err := clientService.GetRecordByEmail(nil, in.Email)
 	if err == nil {
-		err = database.GetDB().Create(&model.OvixClientOwner{ClientId: rec.Id, UserId: userID}).Error
+		err = database.GetDB().Create(&model.OvixClientOwner{ClientId: rec.Id, UserId: userID, ClientCreatedAt: rec.CreatedAt}).Error
 	}
 	afterClientChange(needRestart)
 	if err != nil {
@@ -334,25 +335,24 @@ func ClientLinks(userID int, email, host string) (map[string][]string, error) {
 
 // ListClients returns the reseller's own clients with their traffic.
 func ListClients(userID int) ([]ClientView, error) {
-	var owned []int
-	if err := database.GetDB().Model(&model.OvixClientOwner{}).Where("user_id = ?", userID).
-		Pluck("client_id", &owned).Error; err != nil {
+	var owned []model.OvixClientOwner
+	if err := database.GetDB().Where("user_id = ?", userID).Find(&owned).Error; err != nil {
 		return nil, err
 	}
 	views := []ClientView{}
 	if len(owned) == 0 {
 		return views, nil
 	}
-	mine := make(map[int]bool, len(owned))
-	for _, id := range owned {
-		mine[id] = true
+	mine := make(map[int]int64, len(owned))
+	for _, o := range owned {
+		mine[o.ClientId] = o.ClientCreatedAt
 	}
 	rows, err := clientService.List()
 	if err != nil {
 		return nil, err
 	}
 	for i := range rows {
-		if mine[rows[i].Id] {
+		if created, ok := mine[rows[i].Id]; ok && created == rows[i].CreatedAt {
 			views = append(views, viewOf(&rows[i]))
 		}
 	}

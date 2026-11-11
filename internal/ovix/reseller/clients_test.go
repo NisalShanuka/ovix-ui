@@ -259,6 +259,32 @@ func TestResellerCannotTouchOthersClients(t *testing.T) {
 	}
 }
 
+func TestStaleOwnerRowDoesNotClaimAReusedClientID(t *testing.T) {
+	f := setupClients(t)
+	if _, err := CreateClient(f.shop, NewClientInput{Email: "gone", Days: 1, InboundIds: []int{f.inbound}}); err != nil {
+		t.Fatalf("create: %v", err)
+	}
+	old, _ := recordOf(t, "gone")
+	// The owner deletes it from the owner pages, which know nothing of
+	// ovix_client_owners, and a new owner client then gets the same id.
+	if err := database.GetDB().Delete(&model.ClientRecord{}, old.Id).Error; err != nil {
+		t.Fatalf("owner delete: %v", err)
+	}
+	reused := &model.ClientRecord{Id: old.Id, Email: "owner-new", SubID: "owner-new-sub", Enable: true, CreatedAt: old.CreatedAt + 5000}
+	if err := database.GetDB().Create(reused).Error; err != nil {
+		t.Fatalf("reuse id: %v", err)
+	}
+	if _, err := RenewClient(f.shop, "owner-new", 1); !errors.Is(err, ErrNotYourClient) {
+		t.Fatalf("renew of the owner's client on a reused id: err = %v, want ErrNotYourClient", err)
+	}
+	if list, _ := ListClients(f.shop); len(list) != 0 {
+		t.Fatalf("list = %+v, want empty", list)
+	}
+	if n, _ := ownedClientCount(database.GetDB(), f.shop); n != 0 {
+		t.Fatalf("owned count = %d, want 0", n)
+	}
+}
+
 func TestResellerUpdateKeepsExpiryAndDeleteDoesNotRefund(t *testing.T) {
 	f := setupClients(t)
 	if _, err := CreateClient(f.shop, NewClientInput{Email: "edit", Days: 5, InboundIds: []int{f.inbound}}); err != nil {

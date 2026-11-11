@@ -169,7 +169,7 @@ func TestDisableEndsSessionsAndDeleteNeedsNoClients(t *testing.T) {
 	if err := database.GetDB().Create(client).Error; err != nil {
 		t.Fatalf("seed client: %v", err)
 	}
-	if err := database.GetDB().Create(&model.OvixClientOwner{ClientId: client.Id, UserId: view.UserId}).Error; err != nil {
+	if err := database.GetDB().Create(&model.OvixClientOwner{ClientId: client.Id, UserId: view.UserId, ClientCreatedAt: client.CreatedAt}).Error; err != nil {
 		t.Fatalf("seed owner: %v", err)
 	}
 	if err := DeleteReseller(view.UserId); !errors.Is(err, ErrResellerHasClients) {
