@@ -53,6 +53,7 @@ export type ClientLinks = z.infer<typeof ClientLinksSchema>;
 
 export const ovixKeys = {
   root: () => ['ovix'] as const,
+  session: () => ['ovix', 'session'] as const,
   resellers: () => ['ovix', 'resellers'] as const,
   ledger: (userId: number) => ['ovix', 'ledger', userId] as const,
   audit: () => ['ovix', 'audit'] as const,

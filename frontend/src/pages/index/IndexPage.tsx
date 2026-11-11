@@ -2,15 +2,15 @@ import { lazy, useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, ConfigProvider, Layout, Modal, Result, Spin, message } from 'antd';
 import {
+  ArrowDownOutlined,
+  ArrowUpOutlined,
   CopyOutlined,
   CloudDownloadOutlined,
-  DashboardOutlined,
-  DatabaseOutlined,
-  HddOutlined,
-  SwapOutlined,
+  NodeIndexOutlined,
+  TeamOutlined,
 } from '@ant-design/icons';
 
-import { HttpUtil, CPUFormatter, SizeFormatter, ClipboardManager, FileManager } from '@/utils';
+import { HttpUtil, SizeFormatter, ClipboardManager, FileManager } from '@/utils';
 import {
   USAGE_CRIT_COLOR,
   USAGE_CRIT_PERCENT,
@@ -24,11 +24,19 @@ import AppSidebar from '@/layouts/AppSidebar';
 import { LazyMount } from '@/components/utility';
 import { setMessageInstance } from '@/utils/messageBus';
 import OverviewActionBar from './OverviewActionBar';
-import VitalTile from './VitalTile';
 import ThroughputCard from './ThroughputCard';
 import ConnectionsCard from './ConnectionsCard';
 import SystemStrip from './SystemStrip';
-import { mean, peak, useOverviewHistory } from './useOverviewHistory';
+import { useOverviewHistory } from './useOverviewHistory';
+import TopBar from '@/ds/dashboard/TopBar';
+import StatCard from '@/ds/dashboard/StatCard';
+import LiveNetwork from '@/ds/dashboard/LiveNetwork';
+import ServerCard from '@/ds/dashboard/ServerCard';
+import ActivityFeed from '@/ds/dashboard/ActivityFeed';
+import ClientsPanel from '@/ds/dashboard/ClientsPanel';
+import { useDashboard } from '@/ds/dashboard/useDashboard';
+import { useSampleSeries } from '@/ds/dashboard/useSampleSeries';
+import '@/ds/dashboard/dashboard.css';
 import type { PanelUpdateInfo } from './PanelUpdateModal';
 const JsonEditor = lazy(() => import('@/components/form/JsonEditor'));
 const PanelUpdateModal = lazy(() => import('./PanelUpdateModal'));
@@ -40,6 +48,11 @@ const XrayLogModal = lazy(() => import('./XrayLogModal'));
 const AmneziaWGLogModal = lazy(() => import('./AmneziaWGLogModal'));
 const VersionModal = lazy(() => import('./VersionModal'));
 import './IndexPage.css';
+
+function splitSpeed(bytesPerSecond: number): [string, string] {
+  const [value, unit = ''] = SizeFormatter.speedFormat(bytesPerSecond).split(' ');
+  return [value, unit];
+}
 
 export default function IndexPage() {
   const { t } = useTranslation();
@@ -76,6 +89,14 @@ export default function IndexPage() {
   const [loadingTip, setLoadingTip] = useState(t('loading'));
 
   const history = useOverviewHistory(status, fetched && !fetchError);
+  const dash = useDashboard();
+  const needAttention = dash.summary.expiringCount + dash.summary.depletedCount;
+  const hasXrayVersion = !!status.xray.version && status.xray.version !== 'Unknown';
+  const onlineSeries = useSampleSeries(dash.onlines.length, fetched ? status : undefined);
+  const connSeries = useMemo(
+    () => history.series.tcpCount.map((tcp, i) => tcp + (history.series.udpCount[i] ?? 0)),
+    [history.series.tcpCount, history.series.udpCount],
+  );
 
   useEffect(() => {
     HttpUtil.post<{ accessLogEnable?: boolean; devChannelEnable?: boolean }>(
@@ -141,8 +162,6 @@ export default function IndexPage() {
   }
 
   const pageClass = `index-page ${isDark ? 'is-dark' : ''} ${isUltra ? 'is-ultra' : ''}`.trim();
-  const totalDisk = status.disk.total;
-  const freeDisk = Math.max(0, totalDisk - status.disk.current);
 
   const health = useMemo(() => {
     const items = [
@@ -192,7 +211,9 @@ export default function IndexPage() {
                   }
                 />
               ) : (
-                <div className="ov-page">
+                <div className="ovd-page">
+                  <TopBar title={t('menu.dashboard')} healthNote={health?.text ?? null} />
+
                   <OverviewActionBar
                     status={status}
                     isMobile={isMobile}
@@ -213,62 +234,95 @@ export default function IndexPage() {
                     onOpenVersionSwitch={() => setVersionOpen(true)}
                   />
 
-                  {health && (
-                    <div className="ov-health" style={{ color: health.color }}>
-                      <span className="ov-health-mark" />
-                      {health.text}
+                  <section className="ovd-stats">
+                    <StatCard
+                      icon={<TeamOutlined />}
+                      label={t('pages.dashboard.online')}
+                      value={dash.onlines.length}
+                      unit={`/ ${dash.summary.total}`}
+                      note={
+                        needAttention > 0
+                          ? t('pages.dashboard.onlineNote', { count: needAttention })
+                          : t('pages.dashboard.noneNeedAttention')
+                      }
+                      series={onlineSeries}
+                      onClick={() => dash.setFilter('online')}
+                    />
+                    <StatCard
+                      icon={<ArrowDownOutlined />}
+                      label={t('pages.index.download')}
+                      value={status.netIO.down}
+                      format={splitSpeed}
+                      note={t('pages.dashboard.liveNote')}
+                      series={history.series.netDown}
+                    />
+                    <StatCard
+                      icon={<ArrowUpOutlined />}
+                      label={t('pages.index.upload')}
+                      value={status.netIO.up}
+                      format={splitSpeed}
+                      note={t('pages.dashboard.liveNote')}
+                      series={history.series.netUp}
+                      accent={false}
+                    />
+                    <StatCard
+                      icon={<NodeIndexOutlined />}
+                      label={t('pages.dashboard.connections')}
+                      value={status.tcpCount + status.udpCount}
+                      note={`TCP ${status.tcpCount} · UDP ${status.udpCount}`}
+                      series={connSeries}
+                      accent={false}
+                    />
+                  </section>
+
+                  <div className="ovd-grid">
+                    <section className="ovd-card ovd-flow">
+                      <header className="ovd-head">
+                        <h2>{t('pages.dashboard.liveNetwork')}</h2>
+                        <span className="ovd-hide-sm">{t('pages.dashboard.liveNetworkSub')}</span>
+                        <span className="ovd-chip">
+                          <i />
+                          {t('pages.dashboard.live')}
+                        </span>
+                      </header>
+                      <LiveNetwork
+                        inbounds={dash.netInbounds}
+                        clients={dash.netClients}
+                        serverLabel={t('pages.dashboard.server')}
+                        serverSub={hasXrayVersion ? `Xray ${status.xray.version}` : 'Xray'}
+                        idleLabel={t('pages.dashboard.idle')}
+                        formatRate={SizeFormatter.speedFormat}
+                        themeKey={`${isDark}-${isUltra}`}
+                        ariaLabel={t('pages.dashboard.networkAria', {
+                          online: dash.onlines.length,
+                          inbounds: dash.netInbounds.length,
+                        })}
+                      />
+                      {dash.onlines.length === 0 && (
+                        <p className="ovd-net-empty">{t('pages.dashboard.nobodyOnline')}</p>
+                      )}
+                    </section>
+                    <div className="ovd-side">
+                      <ServerCard status={status} onOpenHistory={() => setSysHistoryOpen(true)} />
+                      <ActivityFeed events={dash.events} />
                     </div>
-                  )}
-
-                  <hr className="ov-rule" />
-
-                  <div className="ov-vitals">
-                    <VitalTile
-                      icon={<DashboardOutlined />}
-                      label={t('pages.index.cpu')}
-                      percent={status.cpu.percent}
-                      statusColor={status.cpu.color}
-                      detail={`${CPUFormatter.cpuCoreFormat(status.cpuCores)} / ${status.logicalPro}T · ${CPUFormatter.cpuSpeedFormat(status.cpuSpeedMhz)}`}
-                      footLeft={`${t('pages.index.avg')} ${mean(history.series.cpu).toFixed(0)}%`}
-                      footRight={`${t('pages.index.peak')} ${peak(history.series.cpu).toFixed(0)}%`}
-                      data={history.series.cpu}
-                      isMobile={isMobile}
-                    />
-                    <VitalTile
-                      icon={<DatabaseOutlined />}
-                      label={t('pages.index.memory')}
-                      percent={status.mem.percent}
-                      statusColor={status.mem.color}
-                      detail={`${SizeFormatter.sizeFormat(status.mem.current)} / ${SizeFormatter.sizeFormat(status.mem.total)}`}
-                      footLeft={`${t('pages.index.avg')} ${mean(history.series.mem).toFixed(0)}%`}
-                      footRight={`${t('pages.index.peak')} ${peak(history.series.mem).toFixed(0)}%`}
-                      data={history.series.mem}
-                      isMobile={isMobile}
-                    />
-                    <VitalTile
-                      icon={<SwapOutlined />}
-                      label={t('pages.index.swap')}
-                      percent={status.swap.percent}
-                      statusColor={status.swap.color}
-                      detail={`${SizeFormatter.sizeFormat(status.swap.current)} / ${SizeFormatter.sizeFormat(status.swap.total)}`}
-                      footLeft={`${t('pages.index.avg')} ${mean(history.series.swap).toFixed(1)}%`}
-                      footRight={`${t('pages.index.peak')} ${peak(history.series.swap).toFixed(0)}%`}
-                      data={history.series.swap}
-                      isMobile={isMobile}
-                    />
-                    <VitalTile
-                      icon={<HddOutlined />}
-                      label={t('pages.index.storage')}
-                      percent={status.disk.percent}
-                      statusColor={status.disk.color}
-                      detail={`${SizeFormatter.sizeFormat(status.disk.current)} / ${SizeFormatter.sizeFormat(totalDisk)}`}
-                      footLeft={`${t('pages.index.free')} ${SizeFormatter.sizeFormat(freeDisk)}`}
-                      footRight={`${t('pages.index.avg')} ${mean(history.series.diskUsage).toFixed(1)}%`}
-                      data={history.series.diskUsage}
-                      isMobile={isMobile}
-                    />
                   </div>
 
+                  <ClientsPanel
+                    filter={dash.filter}
+                    onFilter={dash.setFilter}
+                    clients={dash.clients}
+                    total={dash.summary.total}
+                    onlineCount={dash.onlines.length}
+                    onlines={dash.onlines}
+                    speeds={dash.clientSpeed}
+                    inbounds={dash.inbounds}
+                    expireDiffMs={dash.expireDiff}
+                    trafficDiffBytes={dash.trafficDiff}
+                    loaded={dash.fetched}
+                  />
+
+                  <h2 className="ovd-section">{t('pages.dashboard.serverDetails')}</h2>
                   <div className="ov-mid">
                     <ThroughputCard
                       status={status}

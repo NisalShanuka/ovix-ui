@@ -1,0 +1,795 @@
+/* Ovix dashboard (surface brief: .impeccable/surfaces/, comp:
+   .impeccable/mocks/styles/ovix-brand-sample.html). Tokens live in ds/tokens.css. */
+.ovd-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0 28px 40px;
+  max-width: 1480px;
+  margin: 0 auto;
+  font-family: var(--ov-font-body);
+  color: var(--ov-tx);
+}
+
+.ovd-num,
+.ovd-mono {
+  font-variant-numeric: tabular-nums;
+}
+
+.ovd-mono {
+  font-family: var(--ov-font-mono);
+}
+
+.ovd-card {
+  background: var(--ov-card);
+  border: 1px solid var(--ov-line);
+  border-radius: var(--ov-r-lg);
+  box-shadow: var(--ov-shadow);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+}
+
+/* top bar */
+.ovd-top {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 -28px -4px;
+  padding: 16px 28px 12px;
+  background: linear-gradient(var(--ov-bg) 86%, transparent);
+}
+
+.ovd-top h1 {
+  margin: 0;
+  min-width: 0;
+  font: 700 24px/1.2 var(--ov-font-display);
+  letter-spacing: -0.01em;
+  color: var(--ov-tx);
+}
+
+.ovd-top h1 small {
+  display: block;
+  margin-top: 2px;
+  font: 500 13px/1.4 var(--ov-font-body);
+  letter-spacing: 0;
+  color: var(--ov-mu);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ovd-search {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: min(360px, 34vw);
+  height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--ov-line);
+  border-radius: var(--ov-r);
+  background: var(--ov-card);
+  backdrop-filter: blur(20px);
+  color: var(--ov-mu);
+  font: 400 14px var(--ov-font-body);
+  cursor: pointer;
+  transition: border-color var(--ov-dur-2) var(--ov-ease);
+}
+
+.ovd-search:hover {
+  border-color: var(--ov-line-strong);
+}
+
+.ovd-search span {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ovd-search kbd {
+  margin-left: auto;
+  font: 500 11px var(--ov-font-mono);
+  border: 1px solid var(--ov-line);
+  border-radius: 6px;
+  padding: 2px 7px;
+  background: transparent;
+  color: var(--ov-mu);
+}
+
+.ovd-icon-btn {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid var(--ov-line);
+  border-radius: var(--ov-r-sm);
+  background: var(--ov-card);
+  color: var(--ov-tx2);
+  cursor: pointer;
+  transition:
+    color var(--ov-dur-2) var(--ov-ease),
+    border-color var(--ov-dur-2) var(--ov-ease),
+    transform var(--ov-dur-2) var(--ov-ease);
+}
+
+.ovd-icon-btn.is-lg {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--ov-r);
+  font-size: 17px;
+}
+
+.ovd-icon-btn:hover {
+  color: var(--ov-pr-text);
+  border-color: var(--ov-pr);
+  transform: translateY(-1px);
+}
+
+.ovd-primary {
+  flex: none;
+  height: 42px;
+  padding: 0 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 0;
+  border-radius: var(--ov-r);
+  background: var(--ov-pr-fill);
+  color: var(--ov-on-pr);
+  font: 600 14px var(--ov-font-body);
+  box-shadow: var(--ov-shadow-pr);
+  cursor: pointer;
+  transition:
+    transform var(--ov-dur-2) var(--ov-ease),
+    box-shadow var(--ov-dur-2) var(--ov-ease);
+}
+
+.ovd-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px -10px rgba(234, 88, 12, 0.6);
+}
+
+/* stats */
+.ovd-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.ovd-stat {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 16px 18px 12px;
+  overflow: hidden;
+  animation: ovd-rise var(--ov-dur-sig) var(--ov-ease) both;
+}
+
+.ovd-stat:nth-child(2) {
+  animation-delay: 60ms;
+}
+.ovd-stat:nth-child(3) {
+  animation-delay: 120ms;
+}
+.ovd-stat:nth-child(4) {
+  animation-delay: 180ms;
+}
+
+.ovd-stat.is-action {
+  cursor: pointer;
+  transition:
+    transform var(--ov-dur-2) var(--ov-ease),
+    border-color var(--ov-dur-2) var(--ov-ease);
+}
+
+.ovd-stat.is-action:hover {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--ov-pr) 40%, transparent);
+}
+
+@keyframes ovd-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+.ovd-stat-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ov-tx2);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.ovd-stat-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: var(--ov-r-sm);
+  display: grid;
+  place-items: center;
+  background: var(--ov-pr-soft);
+  color: var(--ov-pr-text);
+  font-size: 15px;
+}
+
+.ovd-stat-value {
+  display: block;
+  margin: 10px 0 2px;
+  font: 700 32px/1.1 var(--ov-font-display);
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.ovd-stat-value small {
+  margin-left: 6px;
+  font: 500 14px var(--ov-font-body);
+  letter-spacing: 0;
+  color: var(--ov-mu);
+}
+
+.ovd-stat-note {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--ov-mu);
+}
+
+.ovd-spark {
+  display: block;
+  width: 100%;
+  height: 40px;
+  margin-top: 8px;
+}
+
+.ovd-spark polyline {
+  transition: all var(--ov-dur-3) var(--ov-ease);
+}
+
+/* network + side column */
+.ovd-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 16px;
+}
+
+.ovd-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+  min-width: 0;
+}
+
+.ovd-head h2,
+.ovd-section {
+  margin: 0;
+  font: 600 18px/1.3 var(--ov-font-display);
+  color: var(--ov-tx);
+}
+
+.ovd-section {
+  margin-top: 8px;
+}
+
+.ovd-head > span {
+  font-size: 12px;
+  color: var(--ov-mu);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ovd-chip {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--ov-pr-soft);
+  color: var(--ov-pr-text) !important;
+  font: 600 12px var(--ov-font-body);
+  letter-spacing: 0.04em;
+}
+
+.ovd-chip i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: ovd-blink 1.6s ease-in-out infinite;
+}
+
+@keyframes ovd-blink {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.ovd-flow {
+  position: relative;
+  padding: 18px 20px;
+  overflow: hidden;
+}
+
+.ovd-net {
+  display: block;
+  width: 100%;
+  height: 300px;
+}
+
+.ovd-net-empty {
+  position: absolute;
+  right: 20px;
+  bottom: 16px;
+  margin: 0;
+  font-size: 12px;
+  color: var(--ov-mu);
+}
+
+.ovd-side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.ovd-server {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 4px 16px;
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: border-color var(--ov-dur-2) var(--ov-ease);
+}
+
+.ovd-server:hover {
+  border-color: color-mix(in srgb, var(--ov-pr) 40%, transparent);
+}
+
+.ovd-gauge circle:last-child {
+  transition: stroke-dasharray 0.9s var(--ov-ease);
+}
+
+.ovd-server-body {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.ovd-server-value {
+  font: 700 26px/1.1 var(--ov-font-display);
+}
+
+.ovd-server-sub,
+.ovd-server-foot {
+  font-size: 12px;
+  color: var(--ov-mu);
+}
+
+.ovd-server-body .ovd-pill {
+  margin-top: 6px;
+}
+
+.ovd-meters {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 6px 10px;
+  margin-top: 12px;
+  font-size: 12px;
+  color: var(--ov-mu);
+}
+
+.ovd-server-foot {
+  grid-column: 1 / -1;
+  margin-top: 4px;
+}
+
+.ovd-meter {
+  display: block;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--ov-track);
+  overflow: hidden;
+}
+
+.ovd-meter i {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--ov-prog);
+  transition: width 0.8s var(--ov-ease);
+}
+
+/* status pills share the brand's status colours */
+.ovd-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font: 600 12px var(--ov-font-body);
+  white-space: nowrap;
+}
+
+.ovd-pill i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.is-ok {
+  color: var(--ov-ok);
+  background: var(--ov-ok-bg);
+}
+.is-exp {
+  color: var(--ov-exp);
+  background: var(--ov-exp-bg);
+}
+.is-bad {
+  color: var(--ov-bad);
+  background: var(--ov-bad-bg);
+}
+.is-mu {
+  color: var(--ov-tx2);
+  background: var(--ov-track);
+}
+.is-pr {
+  color: var(--ov-pr-text);
+  background: var(--ov-pr-soft);
+}
+
+/* activity */
+.ovd-feed {
+  flex: 1;
+  padding: 18px 20px;
+}
+
+.ovd-feed ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ovd-ev {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr);
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--ov-line);
+  animation: ovd-slide 0.55s var(--ov-ease);
+}
+
+.ovd-ev:last-child {
+  border-bottom: 0;
+}
+
+@keyframes ovd-slide {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+}
+
+.ovd-ev-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+}
+
+.ovd-ev p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ov-tx2);
+  overflow-wrap: anywhere;
+}
+
+.ovd-ev b {
+  color: var(--ov-tx);
+  font-weight: 600;
+}
+
+.ovd-ev time {
+  display: block;
+  font-size: 11px;
+  color: var(--ov-mu);
+}
+
+.ovd-empty {
+  margin: 0;
+  padding: 12px 0;
+  font-size: 13px;
+  color: var(--ov-mu);
+}
+
+/* clients */
+.ovd-clients {
+  overflow: hidden;
+}
+
+.ovd-clients .ovd-head {
+  padding: 16px 20px 0;
+}
+
+.ovd-link {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ov-pr-text);
+}
+
+.ovd-link:hover {
+  color: var(--ov-pr2);
+}
+
+.ovd-chips {
+  display: flex;
+  gap: 6px;
+  padding: 0 20px 12px;
+  border-bottom: 1px solid var(--ov-line);
+  overflow-x: auto;
+}
+
+.ovd-chips button {
+  flex: none;
+  padding: 6px 12px;
+  border: 1px solid var(--ov-line);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--ov-tx2);
+  font: 500 13px var(--ov-font-body);
+  cursor: pointer;
+  transition: all var(--ov-dur-2) var(--ov-ease);
+}
+
+.ovd-chips button:hover {
+  color: var(--ov-tx);
+  border-color: var(--ov-line-strong);
+}
+
+.ovd-chips button.is-on {
+  background: var(--ov-tx);
+  border-color: var(--ov-tx);
+  color: var(--ov-bg);
+}
+
+.ovd-table-wrap {
+  overflow-x: auto;
+}
+
+.ovd-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.ovd-table th {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--ov-line);
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ov-mu);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+
+.ovd-table td {
+  padding: 12px 20px;
+  border-bottom: 1px solid var(--ov-line);
+  vertical-align: middle;
+  font-size: 13px;
+}
+
+.ovd-table tbody tr {
+  transition: background var(--ov-dur-2) var(--ov-ease);
+}
+
+.ovd-table tbody tr:hover {
+  background: var(--ov-pr-soft);
+}
+
+.ovd-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.ovd-table td.ovd-who {
+  position: relative;
+  padding-left: 68px;
+}
+
+.ovd-who .ovd-avatar {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.ovd-who b {
+  display: block;
+  font-weight: 600;
+  font-size: 14px;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ovd-who > span:last-child {
+  display: block;
+  font-size: 12px;
+  color: var(--ov-mu);
+  white-space: nowrap;
+}
+
+.ovd-avatar {
+  grid-row: span 2;
+}
+
+.ovd-who b {
+  font-weight: 600;
+  font-size: 14px;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ovd-who > span:last-child {
+  font-size: 12px;
+  color: var(--ov-mu);
+  white-space: nowrap;
+}
+
+.ovd-avatar {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  display: grid;
+  place-items: center;
+  background: var(--ov-pr-fill);
+  color: var(--ov-on-pr);
+  font: 700 14px var(--ov-font-display);
+}
+
+.ovd-avatar.is-muted {
+  background: var(--ov-track);
+  color: var(--ov-tx2);
+}
+
+.ovd-live {
+  white-space: nowrap;
+}
+
+.ovd-use {
+  min-width: 180px;
+}
+
+.ovd-use .ovd-meter {
+  height: 6px;
+  margin-bottom: 5px;
+}
+
+.ovd-use .ovd-num {
+  font-size: 12px;
+  color: var(--ov-tx2);
+  white-space: nowrap;
+}
+
+.ovd-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* The upstream action bar sits under the top bar as the Xray control row. */
+.ovd-page .ov-bar {
+  margin: 0;
+}
+
+@media (max-width: 1100px) {
+  .ovd-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .ovd-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .ovd-page {
+    padding: 0 16px 32px;
+    gap: 12px;
+  }
+  .ovd-top {
+    margin: 0 -16px -4px;
+    padding: 12px 16px 10px 66px;
+  }
+  .ovd-top h1 {
+    font-size: 21px;
+  }
+  .ovd-search {
+    display: none;
+  }
+  .ovd-primary {
+    padding: 0 13px;
+  }
+  .ovd-primary-label {
+    display: none;
+  }
+  .ovd-stats {
+    gap: 10px;
+  }
+  .ovd-stat {
+    padding: 14px;
+  }
+  .ovd-stat-value {
+    font-size: 24px;
+  }
+  .ovd-stat-label {
+    font-size: 11px;
+  }
+  .ovd-stat-icon {
+    width: 26px;
+    height: 26px;
+  }
+  .ovd-net {
+    height: 240px;
+  }
+  .ovd-flow {
+    padding: 16px;
+  }
+  .ovd-hide-sm {
+    display: none;
+  }
+  .ovd-table th,
+  .ovd-table td {
+    padding: 11px 14px;
+  }
+  .ovd-use {
+    min-width: 120px;
+  }
+  .ovd-table td.ovd-who {
+    padding-left: 60px;
+  }
+  .ovd-who .ovd-avatar {
+    left: 14px;
+  }
+  .ovd-who b {
+    max-width: 130px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ovd-stat,
+  .ovd-ev,
+  .ovd-chip i {
+    animation: none;
+  }
+}

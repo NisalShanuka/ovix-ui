@@ -431,7 +431,7 @@ export default function ClientsPage() {
 
   const initial = readFilterState();
   const location = useLocation();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const searchParam = searchParams.get('search');
   const [searchKey, setSearchKey] = useState(
     searchParam !== null ? searchParam : initial.searchKey,
@@ -683,14 +683,23 @@ export default function ClientsPage() {
     }
   }
 
-  function onAdd() {
+  const onAdd = useCallback(() => {
     setFormMode('add');
     setEditingClient(null);
     setEditingAttachedIds([]);
     setEditingExternalLinks([]);
     setEditingTunnelAllowedIPs({});
     setFormOpen(true);
-  }
+  }, []);
+
+  // The dashboard's Add Client button lands here with ?new=1: open the form once.
+  useEffect(() => {
+    if (searchParams.get('new') !== '1') return;
+    onAdd();
+    const next = new URLSearchParams(searchParams);
+    next.delete('new');
+    setSearchParams(next, { replace: true });
+  }, [searchParams, setSearchParams, onAdd]);
 
   const onEdit = useCallback(
     async (email: string) => {

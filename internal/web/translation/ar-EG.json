@@ -269,9 +269,7 @@
       "importDatabasePgDesc": "انقر لاختيار ورفع نسخة احتياطية من PostgreSQL (.dump) أو قاعدة بيانات SQLite (.db) أو ملف ترحيل SQLite لاستعادة قاعدة البيانات. سيؤدي هذا إلى استبدال جميع البيانات الحالية.",
       "migrationDownload": "تنزيل ملف الترحيل",
       "migrationDownloadPgDesc": "انقر لتنزيل قاعدة بيانات SQLite بامتداد .db مبنية من بيانات PostgreSQL الخاصة بك، جاهزة لتشغيل هذه اللوحة على SQLite.",
-      "avg": "متوسط",
       "peak": "ذروة",
-      "free": "متاح",
       "openSockets": "مقابس مفتوحة",
       "throughputSub": "إجمالي الواجهة",
       "avgWindow": "متوسط الفترة",
@@ -2519,6 +2517,77 @@
       "traffic": "Used / limit",
       "trafficLimitGB": "Traffic limit (GB)",
       "zeroUnlimited": "0 = unlimited"
+    },
+    "dashboard": {
+      "activity": "Activity",
+      "activityEmpty": "Nothing new yet. Clients coming online and going offline show up here.",
+      "allGood": "all systems running",
+      "clients": "Clients",
+      "clientsSub": "{total} total · {online} online",
+      "col": {
+        "client": "Client",
+        "expires": "Expires",
+        "live": "Live",
+        "open": "Open",
+        "status": "Status",
+        "usage": "Usage"
+      },
+      "connections": "Connections",
+      "cpuLoad": "CPU load",
+      "darkTheme": "Switch to dark theme",
+      "daysLeft": "{days} days left",
+      "events": {
+        "depleted": "has run out of time or data",
+        "expiring": "is close to running out",
+        "notice": "update",
+        "offline": "went offline",
+        "online": "came online",
+        "xray": "reported an error"
+      },
+      "filters": {
+        "all": "All",
+        "disabled": "Disabled",
+        "ended": "Ended",
+        "expiring": "Expiring soon",
+        "online": "Online"
+      },
+      "firstUse": "On first use",
+      "greeting": {
+        "afternoon": "Good afternoon",
+        "evening": "Good evening",
+        "morning": "Good morning",
+        "night": "Good night"
+      },
+      "idle": "idle",
+      "lightTheme": "Switch to light theme",
+      "live": "LIVE",
+      "liveNetwork": "Live network",
+      "liveNetworkSub": "Server → inbounds → clients online now",
+      "liveNote": "live",
+      "networkAria": "Live network map: {online} clients online across {inbounds} inbounds",
+      "needsAction": "needs action",
+      "never": "Never",
+      "nobodyOnline": "No client is online right now",
+      "noClients": "No clients in this view",
+      "noneNeedAttention": "none need action",
+      "online": "Online",
+      "onlineNote": "{count} need attention",
+      "openClient": "Open {name} on the Clients page",
+      "search": "Search clients, inbounds, settings",
+      "server": "Server",
+      "serverDetails": "Server details",
+      "state": {
+        "active": "Active",
+        "disabled": "Disabled",
+        "ended": "Ended",
+        "expiring": "Expiring",
+        "online": "Online"
+      },
+      "unlimited": "unlimited",
+      "uptime": "Up for {time}",
+      "viewAll": "View all",
+      "xrayDown": "Xray stopped",
+      "xrayRunning": "Xray running"
     }
   },
   "tgbot": {
