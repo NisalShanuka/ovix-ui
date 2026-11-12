@@ -13,6 +13,7 @@ import {
 import { ClipboardManager, LanguageManager } from '@/utils';
 import { setMessageInstance } from '@/utils/messageBus';
 import { useTheme } from '@/hooks/useTheme';
+import Credit from '@/ds/Credit';
 import SubAppsTab from './SubAppsTab';
 import SubConfigsTab from './SubConfigsTab';
 import SubHeader from './SubHeader';
@@ -153,6 +154,7 @@ export default function SubPage() {
               </footer>
             )}
           </Card>
+          <Credit className="is-center" />
         </Layout.Content>
       </Layout>
     </ConfigProvider>

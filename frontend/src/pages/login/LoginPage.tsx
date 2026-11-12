@@ -15,6 +15,7 @@ import { FormField, rhfZodValidate } from '@/components/form/rhf';
 import { setMessageInstance } from '@/utils/messageBus';
 import { useTheme } from '@/hooks/useTheme';
 import { BrandMark } from '@/ds/BrandMark';
+import Credit from '@/ds/Credit';
 import { LoginFormSchema, TwoFactorCodeSchema, type LoginFormValues } from '@/schemas/login';
 import './LoginPage.css';
 
@@ -178,6 +179,7 @@ export default function LoginPage() {
             )}
           </div>
           <p className="ovl-foot">OVIX STORE VPN · {t('pages.login.caption')}</p>
+          <Credit />
         </main>
       </div>
     </ConfigProvider>

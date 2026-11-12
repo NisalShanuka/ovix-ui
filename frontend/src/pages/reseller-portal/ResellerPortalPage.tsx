@@ -44,6 +44,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { FormProvider } from 'react-hook-form';
 import { z } from 'zod';
 
+import Credit from '@/ds/Credit';
 import { useTheme } from '@/hooks/useTheme';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { ClipboardManager, HttpUtil, SizeFormatter } from '@/utils';
@@ -534,6 +535,7 @@ export default function ResellerPortalPage() {
               </Col>
             </Row>
           )}
+          <Credit className="is-center" />
         </Layout.Content>
 
         <Modal
