@@ -1,0 +1,143 @@
+name: Release Ovix UI
+
+# A pushed v*.*.* tag builds the Linux bundles and publishes them as the latest
+# release. Panels read the release through the GitHub API with a read-only token.
+on:
+  push:
+    tags:
+      - "v*.*.*"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  XRAY_VERSION: v26.10.21
+
+jobs:
+  build:
+    strategy:
+      fail-fast: true
+      matrix:
+        platform: [amd64, arm64]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Tag must match internal/config/version
+        if: startsWith(github.ref, 'refs/tags/')
+        run: |
+          want="v$(tr -d '[:space:]' < internal/config/version)"
+          if [ "$GITHUB_REF_NAME" != "$want" ]; then
+            echo "::error::tag $GITHUB_REF_NAME does not match internal/config/version ($want)"
+            exit 1
+          fi
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          check-latest: true
+
+      # internal/web/dist is embedded by go:embed and gitignored, so build it first.
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Build frontend bundle
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
+
+      - name: Build Ovix UI
+        run: |
+          set -euo pipefail
+          CURL_RETRY="--retry 5 --retry-all-errors --retry-delay 3"
+          export CGO_ENABLED=1 GOOS=linux GOARCH=${{ matrix.platform }}
+          case "${{ matrix.platform }}" in
+            amd64) BOOTLIN_ARCH="x86-64" ;;
+            arm64) BOOTLIN_ARCH="aarch64" ;;
+          esac
+          # Static musl toolchain: the SQLite driver needs cgo, the binary must run on any distro.
+          TARBALL_BASE="https://toolchains.bootlin.com/downloads/releases/toolchains/$BOOTLIN_ARCH/tarballs/"
+          TARBALL=$(curl -fsSL $CURL_RETRY "$TARBALL_BASE" | grep -oE "${BOOTLIN_ARCH}--musl--stable-[^\"]+\\.tar\\.xz" | sort -r | head -n1)
+          [ -n "$TARBALL" ] || { echo "no Bootlin musl toolchain for $BOOTLIN_ARCH" >&2; exit 1; }
+          (cd /tmp && curl -fL -sS $CURL_RETRY -o "$TARBALL" "$TARBALL_BASE$TARBALL" && tar -xf "$TARBALL")
+          TOOLCHAIN_DIR=$(find /tmp -maxdepth 1 -type d -name "${BOOTLIN_ARCH}--musl--stable-*" | head -n1)
+          export PATH="$TOOLCHAIN_DIR/bin:$PATH"
+          export CC=$(find "$TOOLCHAIN_DIR/bin" -name '*-gcc.br_real' -type f -executable | head -n1)
+          [ -n "$CC" ] || { echo "no gcc in $TOOLCHAIN_DIR" >&2; exit 1; }
+
+          LDFLAGS="-w -s -linkmode external -extldflags '-static'"
+          if [[ "$GITHUB_REF" != refs/tags/* ]]; then
+            LDFLAGS="$LDFLAGS -X ovix.store/ovix-ui/internal/config.buildCommit=${GITHUB_SHA::8} -X ovix.store/ovix-ui/internal/config.buildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          fi
+          go build -buildvcs=true -ldflags "$LDFLAGS" -o ovix-ui-release .
+          file ovix-ui-release
+
+      - name: Bundle Xray, geo data and the MTProto sidecar
+        run: |
+          set -euo pipefail
+          CURL_RETRY="--retry 5 --retry-all-errors --retry-delay 3"
+          mkdir -p ovix-ui/bin
+          mv ovix-ui-release ovix-ui/ovix-ui
+          cp ovix-ui.service.debian ovix-ui.service.arch ovix-ui.service.rhel ovix-ui.sh ovix-ui/
+          cd ovix-ui/bin
+          case "${{ matrix.platform }}" in
+            amd64) XRAY_ZIP=Xray-linux-64.zip ;;
+            arm64) XRAY_ZIP=Xray-linux-arm64-v8a.zip ;;
+          esac
+          curl -fsSLO $CURL_RETRY "https://github.com/XTLS/Xray-core/releases/download/${XRAY_VERSION}/${XRAY_ZIP}"
+          unzip -q "$XRAY_ZIP" && rm -f "$XRAY_ZIP" geoip.dat geosite.dat
+          mv xray "xray-linux-${{ matrix.platform }}"
+          curl -fsSLO $CURL_RETRY https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geoip.dat
+          curl -fsSLO $CURL_RETRY https://github.com/Loyalsoldier/v2ray-rules-dat/releases/latest/download/geosite.dat
+          MTG_VER=$(curl -sf $CURL_RETRY -o /dev/null -w '%{redirect_url}' "https://github.com/mhsanaei/mtg-multi/releases/latest" | sed -n 's#.*/releases/tag/##p')
+          [ -n "$MTG_VER" ] || { echo "could not resolve the mtg-multi release" >&2; exit 1; }
+          MTG_PKG="mtg-multi-${MTG_VER#v}-linux-${{ matrix.platform }}"
+          curl -fsSLO $CURL_RETRY "https://github.com/mhsanaei/mtg-multi/releases/download/${MTG_VER}/${MTG_PKG}.tar.gz"
+          tar -xzf "${MTG_PKG}.tar.gz"
+          mv "${MTG_PKG}/mtg-multi" "mtg-linux-${{ matrix.platform }}"
+          rm -rf "${MTG_PKG}" "${MTG_PKG}.tar.gz"
+
+      - name: Package
+        run: |
+          tar -zcf ovix-ui-linux-${{ matrix.platform }}.tar.gz ovix-ui
+          sha256sum ovix-ui-linux-${{ matrix.platform }}.tar.gz > ovix-ui-linux-${{ matrix.platform }}.tar.gz.sha256
+
+      - name: Keep the bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: ovix-ui-linux-${{ matrix.platform }}
+          path: |
+            ovix-ui-linux-${{ matrix.platform }}.tar.gz
+            ovix-ui-linux-${{ matrix.platform }}.tar.gz.sha256
+
+  publish:
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Collect bundles
+        uses: actions/download-artifact@v4
+        with:
+          path: assets
+          merge-multiple: true
+
+      # Published only once every platform built, so a panel never sees a half-filled release.
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "$GITHUB_REF_NAME" assets/* \
+            --repo "$GITHUB_REPOSITORY" \
+            --title "Ovix UI $GITHUB_REF_NAME" \
+            --generate-notes \
+            --latest

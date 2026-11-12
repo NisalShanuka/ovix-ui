@@ -13,9 +13,13 @@ This repo is Ovix UI, a rebranded fork of MHSanaei/3x-ui (GPL-3.0; keep
 - Upstream merges: `git fetch upstream --tags`, merge the new tag, then run
   `python ovix/rebrand.py --apply` (idempotent) and commit its output separately.
   Never hand-edit what the script renames; extend its rules instead.
-- Self-update is off until Ovix releases exist: `ovixReleaseRepo`
-  (`internal/web/service/panel/panel.go`) and `OVIX_RELEASE_REPO` in
-  `ovix-ui.sh` / `update.sh`. Never point them back at MHSanaei/3x-ui.
+- Self-update reads the private repo `NisalShanuka/ovix-ui` (`ovixReleaseRepo`
+  in `internal/web/service/panel/panel.go`, `OVIX_RELEASE_REPO` in `install.sh` /
+  `update.sh` / `ovix-ui.sh`). Never point them back at MHSanaei/3x-ui. Every
+  download goes through api.github.com with the read-only token in
+  `/etc/ovix-ui/release-token` (saved from the panel's update dialog).
+- Releasing: bump `internal/config/version`, commit, push a matching `vX.Y.Z`
+  tag; `.github/workflows/release.yml` builds and publishes the bundles.
 - English only. Brand tokens and product facts: `../PRODUCT.md`; build plan:
   `../OVIX_PANEL_PLAN.md`; UI direction contract: `.impeccable/surfaces/`.
 - On Windows, Defender blocks `install.sh` (kept as skip-worktree); build and
