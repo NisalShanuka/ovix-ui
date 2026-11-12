@@ -218,7 +218,7 @@ export default function PanelUpdateModal({
           />
         )}
 
-        {(onTokenChange && (hasToken || showTokenForm)) && (
+        {onTokenChange && (hasToken || showTokenForm) && (
           <div className="version-list update-token">
             <div className="version-list-item">
               <span>{t('pages.index.updateToken')}</span>

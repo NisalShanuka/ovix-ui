@@ -103,7 +103,9 @@ describe('panel update access token', () => {
     fireEvent.change(input, { target: { value: 'github_pat_bad' } });
     fireEvent.click(screen.getByRole('button', { name: /Save/ }));
     await vi.waitFor(() => expect(onTokenChange).toHaveBeenCalledOnce());
-    expect((screen.getByLabelText('GitHub access token') as HTMLInputElement).value).toBe('github_pat_bad');
+    expect((screen.getByLabelText('GitHub access token') as HTMLInputElement).value).toBe(
+      'github_pat_bad',
+    );
   });
 
   it('removes a saved token', () => {
