@@ -374,8 +374,10 @@
   filter: invert(1) hue-rotate(180deg) grayscale(0.9) brightness(0.78) contrast(0.95);
 }
 
-/* Filtered tiles show hairline seams at fractional zoom; a half-pixel overlap hides them. */
-.ovm-map .leaflet-tile-container img {
+/* Filtered tiles seam at fractional offsets; overlap them by half a pixel. Leaflet's
+   plus-lighter blend would add the overlap into bright lines, so draw tiles normally. */
+.ovm-map .leaflet-tile-container img.leaflet-tile {
   width: 256.5px !important;
   height: 256.5px !important;
+  mix-blend-mode: normal;
 }
