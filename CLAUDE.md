@@ -18,7 +18,8 @@ This repo is Ovix UI, a rebranded fork of MHSanaei/3x-ui (GPL-3.0; keep
   `update.sh` / `ovix-ui.sh`). Never point them back at MHSanaei/3x-ui. Every
   download goes through api.github.com with the read-only token in
   `/etc/ovix-ui/release-token` (saved from the panel's update dialog).
-- Releasing: bump `internal/config/version`, commit, push a matching `vX.Y.Z`
+- Releasing: Ovix versions are `YY.M.N` (N-th release that month) so tags never
+  collide with upstream 3x-ui tags. Bump `internal/config/version`, commit, push a matching `vYY.M.N`
   tag; `.github/workflows/release.yml` builds and publishes the bundles.
 - English only. Brand tokens and product facts: `../PRODUCT.md`; build plan:
   `../OVIX_PANEL_PLAN.md`; UI direction contract: `.impeccable/surfaces/`.
