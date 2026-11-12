@@ -12,6 +12,7 @@ import {
   ClusterOutlined,
   CodeOutlined,
   DashboardOutlined,
+  EnvironmentOutlined,
   DatabaseOutlined,
   DiscordOutlined,
   ExportOutlined,
@@ -43,6 +44,7 @@ import { pauseAnimationsUntilLeave, useTheme } from '@/hooks/useTheme';
 import { useAllSettings } from '@/api/queries/useAllSettings';
 import MobileNav from '@/ds/MobileNav';
 import NodeCard from '@/ds/NodeCard';
+import Credit from '@/ds/Credit';
 import { useCommandPalette } from '@/components/command-palette/useCommandPalette';
 import { BrandMark } from '@/ds/BrandMark';
 import './AppSidebar.css';
@@ -70,7 +72,8 @@ type IconName =
   | 'apidocs'
   | 'resellers'
   | 'outbound'
-  | 'routing';
+  | 'routing'
+  | 'map';
 
 const iconByName: Record<IconName, ComponentType> = {
   dashboard: DashboardOutlined,
@@ -86,6 +89,7 @@ const iconByName: Record<IconName, ComponentType> = {
   resellers: ShopOutlined,
   outbound: ExportOutlined,
   routing: SwapOutlined,
+  map: EnvironmentOutlined,
 };
 
 function VersionBadge({ version, collapsed }: { version: string; collapsed?: boolean }) {
@@ -188,6 +192,7 @@ export default function AppSidebar() {
       { key: '/', icon: 'dashboard', title: t('menu.dashboard') },
       { key: '/inbounds', icon: 'inbound', title: t('menu.inbounds') },
       { key: '/clients', icon: 'team', title: t('menu.clients') },
+      { key: '/map', icon: 'map', title: t('menu.map') },
       { key: '/groups', icon: 'groups', title: t('menu.groups') },
       { key: '/nodes', icon: 'cluster', title: t('menu.nodes') },
       { key: '/hosts', icon: 'hosts', title: t('menu.hosts') },
@@ -412,6 +417,7 @@ export default function AppSidebar() {
         {!railCollapsed && <NodeCard />}
         <div className="sider-footer">
           <VersionBadge version={panelVersion} collapsed={railCollapsed} />
+          <Credit />
         </div>
       </Layout.Sider>
 
@@ -495,6 +501,7 @@ export default function AppSidebar() {
         />
         <div className="drawer-footer">
           <VersionBadge version={panelVersion} />
+          <Credit />
         </div>
       </Drawer>
 

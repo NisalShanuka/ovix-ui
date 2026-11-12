@@ -48,6 +48,7 @@ func newGateEngine(t *testing.T) *httptest.Server {
 	engine.GET("/panel/api/reseller/me", ok)
 	engine.GET("/panel/api/ovix/session", ok)
 	engine.GET("/panel/api/ovix/resellers/list", ok)
+	engine.GET("/panel/api/ovix/geo/map", ok)
 	engine.POST("/panel/api/reseller/clients/add", ok)
 	engine.GET("/panel/", ok)
 	engine.GET("/panel/csrf-token", ok)
@@ -122,6 +123,7 @@ func TestGateLimitsResellersToTheResellerSurface(t *testing.T) {
 		{http.MethodGet, "/panel/api/reseller/me", http.StatusOK, http.StatusOK},
 		{http.MethodGet, "/panel/api/ovix/session", http.StatusOK, http.StatusOK},
 		{http.MethodGet, "/panel/api/ovix/resellers/list", http.StatusOK, http.StatusForbidden},
+		{http.MethodGet, "/panel/api/ovix/geo/map", http.StatusOK, http.StatusForbidden},
 		{http.MethodPost, "/panel/api/reseller/clients/add", http.StatusOK, http.StatusOK},
 		{http.MethodGet, "/panel/", http.StatusOK, http.StatusOK},
 		{http.MethodGet, "/panel/csrf-token", http.StatusOK, http.StatusOK},

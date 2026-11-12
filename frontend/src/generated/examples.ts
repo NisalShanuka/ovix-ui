@@ -904,6 +904,26 @@ export const EXAMPLES: Record<string, unknown> = {
     "client": "mlkem768-client",
     "seed": "mlkem768-seed"
   },
+  "MapView": {
+    "downloading": false,
+    "points": [
+      {
+        "city": "Colombo",
+        "country": "Sri Lanka",
+        "countryCode": "LK",
+        "email": "kasun",
+        "ip": "175.157.44.10",
+        "lastSeen": 1794423797,
+        "lat": 6.9271,
+        "lon": 79.8612,
+        "region": "Western Province"
+      }
+    ],
+    "ready": true,
+    "server": null,
+    "unlocated": 0,
+    "updated": 1794423797
+  },
   "MeView": {
     "credit": 120,
     "inbounds": [
@@ -1058,6 +1078,25 @@ export const EXAMPLES: Record<string, unknown> = {
     "tag": "inbound-51820",
     "up": 1048576
   },
+  "Place": {
+    "city": "Colombo",
+    "country": "Sri Lanka",
+    "countryCode": "LK",
+    "lat": 6.9271,
+    "lon": 79.8612,
+    "region": "Western Province"
+  },
+  "Point": {
+    "city": "Colombo",
+    "country": "Sri Lanka",
+    "countryCode": "LK",
+    "email": "kasun",
+    "ip": "175.157.44.10",
+    "lastSeen": 1794423797,
+    "lat": 6.9271,
+    "lon": 79.8612,
+    "region": "Western Province"
+  },
   "ProbeResultUI": {
     "cpuPct": 12.5,
     "error": "",
@@ -1107,6 +1146,15 @@ export const EXAMPLES: Record<string, unknown> = {
     "note": "Kandy shop",
     "userId": 2,
     "username": "shop1"
+  },
+  "ServerPoint": {
+    "city": "Colombo",
+    "country": "Sri Lanka",
+    "countryCode": "LK",
+    "ip": "64.120.95.214",
+    "lat": 6.9271,
+    "lon": 79.8612,
+    "region": "Western Province"
   },
   "ServerSettings": {
     "contentPaddingAddition": "",

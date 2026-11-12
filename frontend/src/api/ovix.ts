@@ -4,16 +4,18 @@ import { HttpUtil } from '@/utils';
 import { parseMsg } from '@/utils/zodValidate';
 import {
   ClientViewSchema,
+  MapViewSchema,
   MeViewSchema,
   ResellerViewSchema,
   SessionViewSchema,
   type ClientView,
+  type MapView,
   type MeView,
   type ResellerView,
   type SessionView,
 } from '@/generated/zod';
 
-export type { ClientView, MeView, ResellerView, SessionView };
+export type { ClientView, MapView, MeView, ResellerView, SessionView };
 
 export const LedgerRowSchema = z.object({
   id: z.number().int(),
@@ -60,6 +62,7 @@ export const ovixKeys = {
   me: () => ['ovix', 'me'] as const,
   myClients: () => ['ovix', 'myClients'] as const,
   myLedger: () => ['ovix', 'myLedger'] as const,
+  geoMap: () => ['ovix', 'geoMap'] as const,
 } as const;
 
 async function getList<T extends z.ZodType>(url: string, schema: T): Promise<z.infer<T>[]> {
@@ -143,3 +146,5 @@ export const ovixApi = {
   deleteClient: (email: string) =>
     HttpUtil.post(`/panel/api/reseller/clients/del/${encodeURIComponent(email)}`),
 };
+
+export const fetchGeoMap = (): Promise<MapView> => getOne('/panel/api/ovix/geo/map', MapViewSchema);

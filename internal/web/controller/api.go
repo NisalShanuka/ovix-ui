@@ -5,8 +5,10 @@ import (
 	"strings"
 
 	"ovix.store/ovix-ui/internal/database/model"
+	"ovix.store/ovix-ui/internal/ovix/geo"
 	"ovix.store/ovix-ui/internal/ovix/reseller"
 	"ovix.store/ovix-ui/internal/web/middleware"
+	"ovix.store/ovix-ui/internal/web/service"
 	"ovix.store/ovix-ui/internal/web/service/panel"
 	"ovix.store/ovix-ui/internal/web/service/tgbot"
 	"ovix.store/ovix-ui/internal/web/session"
@@ -215,6 +217,12 @@ func (a *APIController) initRouter(g *gin.RouterGroup) {
 	reseller.RegisterOwnerRoutes(api)
 	reseller.RegisterResellerRoutes(api)
 	reseller.RegisterSessionRoute(api)
+	geo.RegisterRoutes(api, (&service.XrayService{}).GetOnlineUsers, func() string {
+		if st := a.serverController.serverService.LastStatus(); st != nil {
+			return st.PublicIP.IPv4
+		}
+		return ""
+	})
 
 	// Extra routes
 	api.POST("/backuptotgbot", a.BackuptoTgbot)

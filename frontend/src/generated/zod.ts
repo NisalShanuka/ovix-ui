@@ -6,6 +6,9 @@ export type GeoKind = z.infer<typeof GeoKindSchema>;
 export const OnlineAPISupportSchema = z.number().int();
 export type OnlineAPISupport = z.infer<typeof OnlineAPISupportSchema>;
 
+export const OnlineSourceSchema = z.unknown();
+export type OnlineSource = z.infer<typeof OnlineSourceSchema>;
+
 export const ProcessStateSchema = z.string();
 export type ProcessState = z.infer<typeof ProcessStateSchema>;
 
@@ -877,6 +880,16 @@ export const MLKEM768ResponseSchema = z.object({
 });
 export type MLKEM768Response = z.infer<typeof MLKEM768ResponseSchema>;
 
+export const MapViewSchema = z.object({
+  downloading: z.boolean(),
+  points: z.array(z.lazy(() => PointSchema)),
+  ready: z.boolean(),
+  server: z.lazy(() => ServerPointSchema).nullable().optional(),
+  unlocated: z.number().int(),
+  updated: z.number().int(),
+});
+export type MapView = z.infer<typeof MapViewSchema>;
+
 export const MeViewSchema = z.object({
   credit: z.number().int(),
   inbounds: z.array(z.lazy(() => InboundBriefSchema)),
@@ -1036,6 +1049,29 @@ export const PeerActivitySchema = z.object({
 });
 export type PeerActivity = z.infer<typeof PeerActivitySchema>;
 
+export const PlaceSchema = z.object({
+  city: z.string(),
+  country: z.string(),
+  countryCode: z.string(),
+  lat: z.number(),
+  lon: z.number(),
+  region: z.string(),
+});
+export type Place = z.infer<typeof PlaceSchema>;
+
+export const PointSchema = z.object({
+  city: z.string(),
+  country: z.string(),
+  countryCode: z.string(),
+  email: z.string(),
+  ip: z.string(),
+  lastSeen: z.number().int(),
+  lat: z.number(),
+  lon: z.number(),
+  region: z.string(),
+});
+export type Point = z.infer<typeof PointSchema>;
+
 export const ProbeResultUISchema = z.object({
   cpuPct: z.number(),
   error: z.string(),
@@ -1086,6 +1122,17 @@ export const ResellerViewSchema = z.object({
   username: z.string(),
 });
 export type ResellerView = z.infer<typeof ResellerViewSchema>;
+
+export const ServerPointSchema = z.object({
+  city: z.string(),
+  country: z.string(),
+  countryCode: z.string(),
+  ip: z.string(),
+  lat: z.number(),
+  lon: z.number(),
+  region: z.string(),
+});
+export type ServerPoint = z.infer<typeof ServerPointSchema>;
 
 export const ServerSettingsSchema = z.object({
   contentPaddingAddition: z.string().optional(),

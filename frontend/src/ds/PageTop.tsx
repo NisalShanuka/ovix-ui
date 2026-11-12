@@ -16,6 +16,7 @@ const SUB_KEYS: Record<string, string> = {
   '/routing': 'pages.shell.sub.xray',
   '/api-docs': 'pages.shell.sub.apiDocs',
   '/resellers': 'pages.shell.sub.resellers',
+  '/map': 'pages.shell.sub.map',
 };
 
 // The Ovix top bar for every panel page; the dashboard passes its own greeting.

@@ -3558,6 +3558,50 @@ export const SCHEMAS: Record<string, unknown> = {
     ],
     "type": "object"
   },
+  "MapView": {
+    "description": "MapView is everything the client map draws.",
+    "properties": {
+      "downloading": {
+        "example": false,
+        "type": "boolean"
+      },
+      "points": {
+        "items": {
+          "$ref": "#/components/schemas/Point"
+        },
+        "type": "array"
+      },
+      "ready": {
+        "example": true,
+        "type": "boolean"
+      },
+      "server": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ServerPoint"
+          }
+        ],
+        "nullable": true
+      },
+      "unlocated": {
+        "example": 0,
+        "type": "integer"
+      },
+      "updated": {
+        "example": 1794423797,
+        "format": "int64",
+        "type": "integer"
+      }
+    },
+    "required": [
+      "downloading",
+      "points",
+      "ready",
+      "unlocated",
+      "updated"
+    ],
+    "type": "object"
+  },
   "MeView": {
     "description": "MeView is the reseller's own account summary.",
     "properties": {
@@ -4266,6 +4310,98 @@ export const SCHEMAS: Record<string, unknown> = {
     ],
     "type": "object"
   },
+  "Place": {
+    "description": "Place is where an IP address is, as precise as the database knows.",
+    "properties": {
+      "city": {
+        "example": "Colombo",
+        "type": "string"
+      },
+      "country": {
+        "example": "Sri Lanka",
+        "type": "string"
+      },
+      "countryCode": {
+        "example": "LK",
+        "type": "string"
+      },
+      "lat": {
+        "example": 6.9271,
+        "type": "number"
+      },
+      "lon": {
+        "example": 79.8612,
+        "type": "number"
+      },
+      "region": {
+        "example": "Western Province",
+        "type": "string"
+      }
+    },
+    "required": [
+      "city",
+      "country",
+      "countryCode",
+      "lat",
+      "lon",
+      "region"
+    ],
+    "type": "object"
+  },
+  "Point": {
+    "description": "Point is one client connection placed on the map.",
+    "properties": {
+      "city": {
+        "example": "Colombo",
+        "type": "string"
+      },
+      "country": {
+        "example": "Sri Lanka",
+        "type": "string"
+      },
+      "countryCode": {
+        "example": "LK",
+        "type": "string"
+      },
+      "email": {
+        "example": "kasun",
+        "type": "string"
+      },
+      "ip": {
+        "example": "175.157.44.10",
+        "type": "string"
+      },
+      "lastSeen": {
+        "example": 1794423797,
+        "format": "int64",
+        "type": "integer"
+      },
+      "lat": {
+        "example": 6.9271,
+        "type": "number"
+      },
+      "lon": {
+        "example": 79.8612,
+        "type": "number"
+      },
+      "region": {
+        "example": "Western Province",
+        "type": "string"
+      }
+    },
+    "required": [
+      "city",
+      "country",
+      "countryCode",
+      "email",
+      "ip",
+      "lastSeen",
+      "lat",
+      "lon",
+      "region"
+    ],
+    "type": "object"
+  },
   "ProbeResultUI": {
     "properties": {
       "cpuPct": {
@@ -4492,6 +4628,49 @@ export const SCHEMAS: Record<string, unknown> = {
       "note",
       "userId",
       "username"
+    ],
+    "type": "object"
+  },
+  "ServerPoint": {
+    "description": "ServerPoint is where the panel's own server is.",
+    "properties": {
+      "city": {
+        "example": "Colombo",
+        "type": "string"
+      },
+      "country": {
+        "example": "Sri Lanka",
+        "type": "string"
+      },
+      "countryCode": {
+        "example": "LK",
+        "type": "string"
+      },
+      "ip": {
+        "example": "64.120.95.214",
+        "type": "string"
+      },
+      "lat": {
+        "example": 6.9271,
+        "type": "number"
+      },
+      "lon": {
+        "example": 79.8612,
+        "type": "number"
+      },
+      "region": {
+        "example": "Western Province",
+        "type": "string"
+      }
+    },
+    "required": [
+      "city",
+      "country",
+      "countryCode",
+      "ip",
+      "lat",
+      "lon",
+      "region"
     ],
     "type": "object"
   },

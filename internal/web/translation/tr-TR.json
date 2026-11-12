@@ -126,7 +126,8 @@
     "subFormats": "Abonelik Formatları",
     "resellers": "Resellers",
     "mainNav": "Main",
-    "more": "More"
+    "more": "More",
+    "map": "Client map"
   },
   "pages": {
     "login": {
@@ -2609,8 +2610,22 @@
         "nodes": "Other servers this panel manages",
         "resellers": "Shops, their credit and their clients",
         "settings": "Panel, security, bots and subscriptions",
-        "xray": "Core config, routing, outbounds and DNS"
+        "xray": "Core config, routing, outbounds and DNS",
+        "map": "Where your clients connect from, live"
       }
+    },
+    "map": {
+      "countries": "Countries",
+      "downloading": "Downloading the IP location database (about 40 MB). Pins appear as soon as it lands.",
+      "empty": "No client is online right now.",
+      "loadFailed": "Could not load the client map. It will try again in a moment.",
+      "locations": "Locations",
+      "notReady": "The IP location database is not ready yet. Check that the server can reach download.db-ip.com.",
+      "privacy": "Locations come from an offline database on your server. Client IPs are never sent anywhere.",
+      "serverAt": "Your server is in {place}",
+      "summary": "{clients} online · {places} places",
+      "unlocated": "{count} connections come from private or unknown addresses and are not on the map.",
+      "updated": "Location data from {date}"
     }
   },
   "tgbot": {

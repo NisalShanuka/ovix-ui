@@ -2250,6 +2250,19 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'GET',
+        path: '/panel/api/ovix/geo/map',
+        summary:
+          'Owner only. Every live client IP placed on the world map with the offline DB-IP City Lite database, plus the server itself. Private and unknown addresses are only counted. The first call downloads the database in the background (ready=false, downloading=true until it lands); it refreshes monthly.',
+        responseSchema: 'MapView',
+      },
+      {
+        method: 'GET',
+        path: '/panel/api/ovix/geo/tile/:z/:x/:y',
+        summary:
+          'Owner only. One OpenStreetMap base map tile (PNG) for the client map, fetched by the panel and cached, so the browser never contacts the tile server. z is 0-19; x and y must be inside the zoom level.',
+      },
+      {
+        method: 'GET',
         path: '/panel/api/reseller/me',
         summary: 'Your balance and the inbounds you may put clients on.',
         responseSchema: 'MeView',

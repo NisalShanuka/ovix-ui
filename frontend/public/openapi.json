@@ -3584,6 +3584,50 @@
         ],
         "type": "object"
       },
+      "MapView": {
+        "description": "MapView is everything the client map draws.",
+        "properties": {
+          "downloading": {
+            "example": false,
+            "type": "boolean"
+          },
+          "points": {
+            "items": {
+              "$ref": "#/components/schemas/Point"
+            },
+            "type": "array"
+          },
+          "ready": {
+            "example": true,
+            "type": "boolean"
+          },
+          "server": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ServerPoint"
+              }
+            ],
+            "nullable": true
+          },
+          "unlocated": {
+            "example": 0,
+            "type": "integer"
+          },
+          "updated": {
+            "example": 1794423797,
+            "format": "int64",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "downloading",
+          "points",
+          "ready",
+          "unlocated",
+          "updated"
+        ],
+        "type": "object"
+      },
       "MeView": {
         "description": "MeView is the reseller's own account summary.",
         "properties": {
@@ -4292,6 +4336,98 @@
         ],
         "type": "object"
       },
+      "Place": {
+        "description": "Place is where an IP address is, as precise as the database knows.",
+        "properties": {
+          "city": {
+            "example": "Colombo",
+            "type": "string"
+          },
+          "country": {
+            "example": "Sri Lanka",
+            "type": "string"
+          },
+          "countryCode": {
+            "example": "LK",
+            "type": "string"
+          },
+          "lat": {
+            "example": 6.9271,
+            "type": "number"
+          },
+          "lon": {
+            "example": 79.8612,
+            "type": "number"
+          },
+          "region": {
+            "example": "Western Province",
+            "type": "string"
+          }
+        },
+        "required": [
+          "city",
+          "country",
+          "countryCode",
+          "lat",
+          "lon",
+          "region"
+        ],
+        "type": "object"
+      },
+      "Point": {
+        "description": "Point is one client connection placed on the map.",
+        "properties": {
+          "city": {
+            "example": "Colombo",
+            "type": "string"
+          },
+          "country": {
+            "example": "Sri Lanka",
+            "type": "string"
+          },
+          "countryCode": {
+            "example": "LK",
+            "type": "string"
+          },
+          "email": {
+            "example": "kasun",
+            "type": "string"
+          },
+          "ip": {
+            "example": "175.157.44.10",
+            "type": "string"
+          },
+          "lastSeen": {
+            "example": 1794423797,
+            "format": "int64",
+            "type": "integer"
+          },
+          "lat": {
+            "example": 6.9271,
+            "type": "number"
+          },
+          "lon": {
+            "example": 79.8612,
+            "type": "number"
+          },
+          "region": {
+            "example": "Western Province",
+            "type": "string"
+          }
+        },
+        "required": [
+          "city",
+          "country",
+          "countryCode",
+          "email",
+          "ip",
+          "lastSeen",
+          "lat",
+          "lon",
+          "region"
+        ],
+        "type": "object"
+      },
       "ProbeResultUI": {
         "properties": {
           "cpuPct": {
@@ -4518,6 +4654,49 @@
           "note",
           "userId",
           "username"
+        ],
+        "type": "object"
+      },
+      "ServerPoint": {
+        "description": "ServerPoint is where the panel's own server is.",
+        "properties": {
+          "city": {
+            "example": "Colombo",
+            "type": "string"
+          },
+          "country": {
+            "example": "Sri Lanka",
+            "type": "string"
+          },
+          "countryCode": {
+            "example": "LK",
+            "type": "string"
+          },
+          "ip": {
+            "example": "64.120.95.214",
+            "type": "string"
+          },
+          "lat": {
+            "example": 6.9271,
+            "type": "number"
+          },
+          "lon": {
+            "example": 79.8612,
+            "type": "number"
+          },
+          "region": {
+            "example": "Western Province",
+            "type": "string"
+          }
+        },
+        "required": [
+          "city",
+          "country",
+          "countryCode",
+          "ip",
+          "lat",
+          "lon",
+          "region"
         ],
         "type": "object"
       },
@@ -14173,6 +14352,120 @@
                   "obj": {
                     "role": "reseller",
                     "username": "shop1"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/panel/api/ovix/geo/map": {
+      "get": {
+        "tags": [
+          "Reseller API"
+        ],
+        "summary": "Owner only. Every live client IP placed on the world map with the offline DB-IP City Lite database, plus the server itself. Private and unknown addresses are only counted. The first call downloads the database in the background (ready=false, downloading=true until it lands); it refreshes monthly.",
+        "operationId": "get_panel_api_ovix_geo_map",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "obj": {
+                      "$ref": "#/components/schemas/MapView"
+                    }
+                  }
+                },
+                "example": {
+                  "success": true,
+                  "obj": {
+                    "downloading": false,
+                    "points": [
+                      {
+                        "city": "Colombo",
+                        "country": "Sri Lanka",
+                        "countryCode": "LK",
+                        "email": "kasun",
+                        "ip": "175.157.44.10",
+                        "lastSeen": 1794423797,
+                        "lat": 6.9271,
+                        "lon": 79.8612,
+                        "region": "Western Province"
+                      }
+                    ],
+                    "ready": true,
+                    "server": null,
+                    "unlocated": 0,
+                    "updated": 1794423797
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/panel/api/ovix/geo/tile/{z}/{x}/{y}": {
+      "get": {
+        "tags": [
+          "Reseller API"
+        ],
+        "summary": "Owner only. One OpenStreetMap base map tile (PNG) for the client map, fetched by the panel and cached, so the browser never contacts the tile server. z is 0-19; x and y must be inside the zoom level.",
+        "operationId": "get_panel_api_ovix_geo_tile_z_x_y",
+        "parameters": [
+          {
+            "name": "z",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "x",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "y",
+            "in": "path",
+            "required": true,
+            "description": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "obj": {}
                   }
                 }
               }

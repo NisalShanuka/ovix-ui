@@ -4,6 +4,7 @@ import { Spin } from 'antd';
 
 import PanelLayout from '@/layouts/PanelLayout';
 
+const MapPage = lazy(() => import('@/pages/map/MapPage'));
 const IndexPage = lazy(() => import('@/pages/index/IndexPage'));
 const InboundsPage = lazy(() => import('@/pages/inbounds/InboundsPage'));
 const ClientsPage = lazy(() => import('@/pages/clients/ClientsPage'));
@@ -53,6 +54,7 @@ const routes: RouteObject[] = [
       { path: 'routing', element: withSuspense(<XrayPage />) },
       { path: 'api-docs', element: withSuspense(<ApiDocsPage />) },
       { path: 'resellers', element: withSuspense(<ResellersPage />) },
+      { path: 'map', element: withSuspense(<MapPage />) },
     ],
   },
 ];

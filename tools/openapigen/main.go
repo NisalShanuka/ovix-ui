@@ -121,6 +121,10 @@ func run(root, outDir string) error {
 			StructAllow: setOf("ResellerView", "ClientView", "MeView", "InboundBrief", "SessionView"),
 		},
 		{
+			Path:        resolveRel(root, "internal/ovix/geo"),
+			StructAllow: setOf("Place", "Point", "ServerPoint", "MapView"),
+		},
+		{
 			Path:        resolveRel(root, "internal/amneziawg"),
 			StructAllow: setOf("ServerSettings"),
 		},

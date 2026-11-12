@@ -1,0 +1,381 @@
+/* Client map page: a full-height live map beside location lists. */
+.ovm-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 16px;
+}
+
+.ovm-card {
+  border: 1px solid var(--ov-line);
+  border-radius: var(--ov-r-lg);
+  background: var(--ov-card);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: var(--ov-shadow);
+}
+
+.ovm-stage {
+  position: relative;
+  overflow: hidden;
+  height: calc(100vh - 140px);
+  min-height: 460px;
+}
+
+.ovm-map {
+  position: absolute;
+  inset: 0;
+  background: var(--ov-track);
+  font-family: var(--ov-font-body);
+}
+
+.ovm-overlay {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: none;
+}
+
+.ovm-live,
+.ovm-count {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid var(--ov-line);
+  border-radius: 999px;
+  background: var(--ov-solid);
+  box-shadow: var(--ov-shadow);
+  font: 600 12px var(--ov-font-body);
+  color: var(--ov-tx);
+}
+
+.ovm-live {
+  color: var(--ov-pr-text);
+  letter-spacing: 0.04em;
+}
+
+.ovm-live i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: ovm-blink 1.6s ease-in-out infinite;
+}
+
+.ovm-notice {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  z-index: 500;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: calc(100% - 32px);
+  padding: 10px 16px;
+  border-radius: var(--ov-r);
+  background: var(--ov-solid);
+  border: 1px solid var(--ov-line);
+  box-shadow: var(--ov-shadow);
+  font-size: 13px;
+  color: var(--ov-tx2);
+}
+
+.ovm-notice.is-bad {
+  color: var(--ov-bad);
+}
+
+/* pins: an orange dot with a live ring, the count of clients inside */
+.ovm-pin {
+  position: relative;
+}
+
+.ovm-pin-dot {
+  position: absolute;
+  inset: 6px;
+  display: grid;
+  place-items: center;
+  border: 2px solid #ffffff;
+  border-radius: 50%;
+  background: var(--ov-pr);
+  color: #ffffff;
+  font: 700 10px var(--ov-font-display);
+  box-shadow: 0 4px 10px rgba(234, 88, 12, 0.45);
+}
+
+.ovm-pin-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--ov-pr);
+  opacity: 0.35;
+  animation: ovm-ring 2s ease-out infinite;
+}
+
+@keyframes ovm-ring {
+  from {
+    transform: scale(0.5);
+    opacity: 0.55;
+  }
+  to {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+.ovm-server-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transform: translate(-50%, -50%);
+  padding: 6px 10px;
+  border: 2px solid var(--ov-pr);
+  border-radius: 10px;
+  background: #0b0c12;
+  color: #ffffff;
+  font: 700 12px var(--ov-font-display);
+  white-space: nowrap;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+.ovm-server-box svg {
+  color: var(--ov-pr);
+}
+
+.ovm-link {
+  fill: none;
+  stroke: var(--ov-pr);
+  stroke-width: 2;
+  stroke-opacity: 0.7;
+  stroke-dasharray: 6 8;
+  animation: ovm-flow 1.2s linear infinite;
+}
+
+@keyframes ovm-flow {
+  to {
+    stroke-dashoffset: -14;
+  }
+}
+
+/* popups and controls in the brand */
+.ovm-map .leaflet-popup-content-wrapper {
+  border-radius: var(--ov-r);
+  background: var(--ov-solid);
+  color: var(--ov-tx);
+  box-shadow: var(--ov-shadow);
+}
+
+.ovm-map .leaflet-popup-tip {
+  background: var(--ov-solid);
+}
+
+.ovm-pop strong {
+  display: block;
+  margin-bottom: 6px;
+  font: 700 14px var(--ov-font-display);
+}
+
+.ovm-pop ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ovm-pop li {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 3px 0;
+  font-size: 12px;
+}
+
+.ovm-pop li span {
+  font-family: var(--ov-font-mono);
+  color: var(--ov-mu);
+}
+
+.ovm-map .leaflet-bar a {
+  background: var(--ov-solid);
+  color: var(--ov-tx);
+  border-color: var(--ov-line);
+}
+
+.ovm-map .leaflet-control-attribution {
+  background: color-mix(in srgb, var(--ov-solid) 82%, transparent);
+  color: var(--ov-mu);
+  font-size: 10px;
+}
+
+.ovm-map .leaflet-control-attribution a {
+  color: var(--ov-pr-text);
+}
+
+/* side lists */
+.ovm-side {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-width: 0;
+}
+
+.ovm-list,
+.ovm-facts {
+  padding: 16px 18px;
+}
+
+.ovm-list h2 {
+  margin: 0 0 10px;
+  font: 600 16px var(--ov-font-display);
+  color: var(--ov-tx);
+}
+
+.ovm-list ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+.ovm-list li button {
+  display: grid;
+  grid-template-columns: 34px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 6px;
+  border: 0;
+  border-radius: var(--ov-r-sm);
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--ov-dur-2) var(--ov-ease);
+}
+
+.ovm-list li button:hover,
+.ovm-list li button.is-on {
+  background: var(--ov-pr-soft);
+}
+
+.ovm-code {
+  display: grid;
+  place-items: center;
+  height: 26px;
+  border-radius: 7px;
+  background: var(--ov-track);
+  font: 700 11px var(--ov-font-mono);
+  color: var(--ov-tx2);
+}
+
+.ovm-where b {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.ovm-where span {
+  display: block;
+  font-size: 12px;
+  color: var(--ov-mu);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ovm-n {
+  min-width: 24px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--ov-pr-soft);
+  color: var(--ov-pr-text);
+  font: 700 12px var(--ov-font-display);
+  text-align: center;
+}
+
+.ovm-countries li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 4px;
+  border-bottom: 1px dashed var(--ov-line);
+  font-size: 13px;
+  color: var(--ov-tx2);
+}
+
+.ovm-countries li:last-child {
+  border-bottom: 0;
+}
+
+.ovm-countries b {
+  margin-left: auto;
+  color: var(--ov-tx);
+  font-family: var(--ov-font-display);
+}
+
+.ovm-empty {
+  margin: 0;
+  font-size: 13px;
+  color: var(--ov-mu);
+}
+
+.ovm-facts p {
+  display: flex;
+  gap: 8px;
+  margin: 0 0 8px;
+  font-size: 13px;
+  color: var(--ov-tx2);
+}
+
+.ovm-facts p:last-child {
+  margin-bottom: 0;
+}
+
+.ovm-facts .ovm-privacy {
+  font-size: 12px;
+  color: var(--ov-mu);
+}
+
+@media (max-width: 1100px) {
+  .ovm-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .ovm-stage {
+    height: 62vh;
+    min-height: 360px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ovm-pin-ring,
+  .ovm-link,
+  .ovm-live i {
+    animation: none;
+  }
+}
+
+@keyframes ovm-blink {
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* OpenStreetMap tiles muted toward the brand: soft in light, ink in dark. */
+.ovm-tiles {
+  filter: grayscale(0.85) contrast(0.92) brightness(1.04);
+}
+
+.ovm-tiles.is-dark {
+  filter: invert(1) hue-rotate(180deg) grayscale(0.9) brightness(0.78) contrast(0.95);
+}
+
+/* Filtered tiles show hairline seams at fractional zoom; a half-pixel overlap hides them. */
+.ovm-map .leaflet-tile-container img {
+  width: 256.5px !important;
+  height: 256.5px !important;
+}

@@ -15,6 +15,7 @@ export const TITLE_KEYS: Record<string, string> = {
   '/routing': 'menu.routing',
   '/api-docs': 'menu.apiDocs',
   '/resellers': 'menu.resellers',
+  '/map': 'menu.map',
 };
 
 export function usePageTitle() {
