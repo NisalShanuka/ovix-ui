@@ -12,7 +12,7 @@ body.light {
   --ov-font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, monospace;
 
   --ov-bg: #fafafa;
-  --ov-card: rgba(255, 255, 255, 0.86);
+  --ov-card: #ffffff;
   --ov-solid: #ffffff;
   --ov-line: rgba(17, 24, 39, 0.08);
   --ov-line-strong: rgba(17, 24, 39, 0.14);
@@ -57,7 +57,7 @@ body.light {
 
 body.dark {
   --ov-bg: #090a0f;
-  --ov-card: rgba(18, 20, 32, 0.72);
+  --ov-card: #10111b;
   --ov-solid: #11131d;
   --ov-line: rgba(255, 255, 255, 0.08);
   --ov-line-strong: rgba(255, 255, 255, 0.14);
@@ -90,7 +90,7 @@ body.dark {
 html[data-theme='ultra-dark'] body.dark {
   --ov-bg: #000000;
   --ov-solid: #0b0c12;
-  --ov-card: rgba(11, 12, 18, 0.8);
+  --ov-card: #090a0e;
 }
 
 body {

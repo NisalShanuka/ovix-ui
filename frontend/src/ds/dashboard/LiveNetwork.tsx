@@ -23,6 +23,9 @@ interface Packet {
 }
 
 const MAX_CLIENTS = 10;
+// The map repaints at 30 fps: smooth enough for moving dots at half the CPU of 60 fps.
+const PAINT_INTERVAL_MS = 1000 / 30;
+const FRAME_60_MS = 1000 / 60;
 
 function mbps(bytesPerSecond: number): number {
   return (bytesPerSecond * 8) / 1_000_000;
@@ -82,6 +85,7 @@ export default function LiveNetwork({
     let height = 0;
     let packets: Packet[] = [];
     let frame = 0;
+    let lastPaint = 0;
     let onScreen = true;
 
     const resize = () => {
@@ -195,13 +199,14 @@ export default function LiveNetwork({
       }
     };
 
-    const spawn = (net: NetLayout) => {
+    // `steps` is how many 60 fps frames passed, so motion keeps its speed at the lower paint rate.
+    const spawn = (net: NetLayout, steps: number) => {
       const inboundById = new Map(net.inbounds.map((ib) => [ib.id, ib]));
       for (const c of net.clients) {
         const rate = mbps(c.rate);
         const ib = inboundById.get(c.inboundId);
         if (!ib || rate <= 0) continue;
-        if (Math.random() < Math.min(0.5, 0.02 + rate / 90)) {
+        if (Math.random() < Math.min(0.9, (0.02 + rate / 90) * steps)) {
           packets.push({
             from: ib,
             to: c,
@@ -213,29 +218,33 @@ export default function LiveNetwork({
             packets.push({ from: net.server, to: ib, t: 0, speed: 0.02, size: 3 });
         }
       }
-      packets = packets.filter((p) => (p.t += p.speed) < 1).slice(-240);
+      packets = packets.filter((p) => (p.t += p.speed * steps) < 1).slice(-240);
     };
 
-    const paint = (animate: boolean) => {
+    const paint = (steps: number) => {
       if (width === 0) return;
       const d = dataRef.current;
       const net = layoutNetwork(width, height, d.inbounds, d.clients, MAX_CLIENTS);
-      if (animate) spawn(net);
+      if (steps > 0) spawn(net, steps);
       draw(net);
     };
 
-    const tick = () => {
+    const tick = (now = performance.now()) => {
       frame = 0;
       if (!onScreen || document.hidden) return;
-      paint(!reduce);
-      if (!reduce) frame = requestAnimationFrame(tick);
+      if (reduce) return paint(0);
+      if (now - lastPaint >= PAINT_INTERVAL_MS - 2) {
+        paint(lastPaint ? Math.min(4, (now - lastPaint) / FRAME_60_MS) : 1);
+        lastPaint = now;
+      }
+      frame = requestAnimationFrame(tick);
     };
 
     resize();
     // Resizing clears the bitmap, so repaint at once instead of waiting a frame.
     const ro = new ResizeObserver(() => {
       resize();
-      paint(false);
+      paint(0);
       if (!frame) tick();
     });
     ro.observe(canvas);
@@ -248,8 +257,8 @@ export default function LiveNetwork({
       if (!document.hidden && !frame) tick();
     };
     document.addEventListener('visibilitychange', onVisibility);
-    const redraw = reduce ? window.setInterval(() => paint(false), 2000) : 0;
-    paint(false);
+    const redraw = reduce ? window.setInterval(() => paint(0), 2000) : 0;
+    paint(0);
     tick();
 
     return () => {

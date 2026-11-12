@@ -73,6 +73,8 @@ export default function ClientMap({ view, isDark, focus, serverLabel }: ClientMa
       zoomControl: false,
       worldCopyJump: true,
       minZoom: 2,
+      // An IP only places a client at its provider's network, so street zoom would imply false precision.
+      maxZoom: 11,
       attributionControl: true,
     }).setView([20, 30], 2);
     map.attributionControl.setPrefix('');

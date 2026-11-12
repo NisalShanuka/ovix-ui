@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next';
 
 import { TimeFormatter } from '@/utils';
 import type { Status } from '@/models/status';
-import { useTween } from './useTween';
 
 interface ServerCardProps {
   status: Status;
@@ -26,7 +25,7 @@ function Meter({ label, percent }: { label: string; percent: number }) {
 
 export default function ServerCard({ status, onOpenHistory }: ServerCardProps) {
   const { t } = useTranslation();
-  const cpu = useTween(Math.max(0, Math.min(100, status.cpu.percent)));
+  const cpu = Math.max(0, Math.min(100, status.cpu.percent));
   const running = status.xray.state === 'running';
 
   return (

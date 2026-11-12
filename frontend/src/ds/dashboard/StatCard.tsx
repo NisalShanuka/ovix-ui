@@ -2,7 +2,6 @@ import { useId } from 'react';
 import type { ReactNode } from 'react';
 
 import { sparkPoints } from './sparkPoints';
-import { useTween } from './useTween';
 
 interface StatCardProps {
   icon: ReactNode;
@@ -32,8 +31,7 @@ export default function StatCard({
   accent = true,
   onClick,
 }: StatCardProps) {
-  const shown = useTween(value);
-  const [text, suffix] = format ? format(shown) : [shown.toFixed(decimals), unit];
+  const [text, suffix] = format ? format(value) : [value.toFixed(decimals), unit];
   const gradientId = `ovd-fill-${useId().replace(/[^a-zA-Z0-9]/g, '')}`;
   const points = sparkPoints(series.length ? series : [0], W, H);
   const Tag = onClick ? 'button' : 'div';

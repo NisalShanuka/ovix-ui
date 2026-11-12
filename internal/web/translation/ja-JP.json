@@ -2626,7 +2626,7 @@
       "loadFailed": "Could not load the client map. It will try again in a moment.",
       "locations": "Locations",
       "notReady": "The IP location database is not ready yet. Check that the server can reach download.db-ip.com.",
-      "privacy": "Locations come from an offline database on your server. Client IPs are never sent anywhere.",
+      "privacy": "Pins show where a client's internet provider connects them, not where the device is. Customers of the same provider often share one pin. Locations come from an offline database on your server; client IPs are never sent anywhere.",
       "serverAt": "Your server is in {place}",
       "summary": "{clients} online · {places} places",
       "unlocated": "{count} connections come from private or unknown addresses and are not on the map.",

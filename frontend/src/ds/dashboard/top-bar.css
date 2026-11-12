@@ -41,7 +41,6 @@
   border: 1px solid var(--ov-line);
   border-radius: var(--ov-r);
   background: var(--ov-card);
-  backdrop-filter: blur(20px);
   color: var(--ov-mu);
   font: 400 14px var(--ov-font-body);
   cursor: pointer;
