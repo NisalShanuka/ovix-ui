@@ -4,7 +4,15 @@ import '@/ds/tokens.css';
 import '@/pages/map/map.css';
 import ClientMap from './ClientMap';
 
-const point = (email: string, ip: string, city: string, cc: string, country: string, lat: number, lon: number) => ({
+const point = (
+  email: string,
+  ip: string,
+  city: string,
+  cc: string,
+  country: string,
+  lat: number,
+  lon: number,
+) => ({
   email,
   ip,
   lastSeen: 1794423797,
@@ -44,7 +52,15 @@ const meta = {
       downloading: false,
       updated: 1794423797,
       unlocated: 1,
-      server: { ip: '64.120.95.214', lat: 1.2897, lon: 103.8501, city: 'Singapore', region: '', country: 'Singapore', countryCode: 'SG' },
+      server: {
+        ip: '64.120.95.214',
+        lat: 1.2897,
+        lon: 103.8501,
+        city: 'Singapore',
+        region: '',
+        country: 'Singapore',
+        countryCode: 'SG',
+      },
       points: [
         point('kasun', '175.157.44.10', 'Colombo', 'LK', 'Sri Lanka', 6.9271, 79.8612),
         point('amal', '175.157.9.9', 'Colombo', 'LK', 'Sri Lanka', 6.9271, 79.8612),
