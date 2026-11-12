@@ -7537,6 +7537,55 @@
         }
       }
     },
+    "/panel/api/server/setUpdateToken": {
+      "post": {
+        "tags": [
+          "Server"
+        ],
+        "summary": "Save the read-only GitHub token self-update uses to reach the private Ovix UI release repository. GitHub must accept the token before it is stored; an empty token removes it.",
+        "operationId": "post_panel_api_server_setUpdateToken",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "description": "Fine-grained token with read access to Contents of the release repository, or empty to remove."
+                  }
+                },
+                "required": [
+                  "token"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "msg": {
+                      "type": "string"
+                    },
+                    "obj": {}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/panel/api/server/updateGeofile": {
       "post": {
         "tags": [

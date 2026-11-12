@@ -140,6 +140,14 @@ export default function IndexPage() {
     if (msg?.success && msg.obj) setPanelUpdateInfo(msg.obj);
   }
 
+  async function handleTokenChange(token: string): Promise<boolean> {
+    const res = await HttpUtil.post('/panel/api/server/setUpdateToken', { token });
+    if (!res?.success) return false;
+    const msg = await HttpUtil.get<PanelUpdateInfo>('/panel/api/server/getPanelUpdateInfo');
+    if (msg?.success && msg.obj) setPanelUpdateInfo(msg.obj);
+    return true;
+  }
+
   async function openConfig() {
     setLoading(true);
     try {
@@ -357,6 +365,7 @@ export default function IndexPage() {
             info={panelUpdateInfo}
             devChannelEnable={devChannelEnable}
             onChannelChange={handleChannelChange}
+            onTokenChange={handleTokenChange}
             onClose={() => setPanelUpdateOpen(false)}
             onBusy={setBusy}
           />

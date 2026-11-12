@@ -6,7 +6,6 @@ import (
 	"errors"
 	"fmt"
 	"io"
-	"net/http"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -39,11 +38,13 @@ type PanelUpdateInfo struct {
 	CurrentCommit   string `json:"currentCommit,omitempty"`
 	LatestCommit    string `json:"latestCommit,omitempty"`
 	UpdateAvailable bool   `json:"updateAvailable"`
+	TokenSet        bool   `json:"tokenSet"`
+	NeedsToken      bool   `json:"needsToken,omitempty"`
 }
 
 // ovixReleaseRepo is the GitHub "owner/repo" publishing Ovix UI releases.
 // Empty disables self-update so it can never install upstream 3x-ui over Ovix.
-var ovixReleaseRepo = ""
+var ovixReleaseRepo = "NisalShanuka/ovix-ui"
 
 var errSelfUpdateDisabled = errors.New("panel self-update is disabled: no Ovix UI release source is configured")
 
@@ -55,7 +56,7 @@ func releaseSourceConfigured() error {
 }
 
 func panelUpdaterURL() string {
-	return "https://raw.githubusercontent.com/" + ovixReleaseRepo + "/main/update.sh"
+	return repoAPIURL("/contents/update.sh?ref=main")
 }
 
 const (
@@ -151,9 +152,26 @@ func (s *PanelService) GetUpdateInfo() (*PanelUpdateInfo, error) {
 		current := config.GetBaseVersion()
 		return &PanelUpdateInfo{Channel: "stable", CurrentVersion: current, LatestVersion: current}, nil
 	}
+	var info *PanelUpdateInfo
+	var err error
 	if devChannelActive() {
-		return getDevUpdateInfo()
+		info, err = getDevUpdateInfo()
+	} else {
+		info, err = getStableUpdateInfo()
 	}
+	tokenSet := readReleaseToken() != ""
+	if errors.Is(err, errReleaseAccess) {
+		current := config.GetBaseVersion()
+		return &PanelUpdateInfo{Channel: "stable", CurrentVersion: current, LatestVersion: current, TokenSet: tokenSet, NeedsToken: true}, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	info.TokenSet = tokenSet
+	return info, nil
+}
+
+func getStableUpdateInfo() (*PanelUpdateInfo, error) {
 	latest, err := fetchLatestPanelVersion()
 	if err != nil {
 		return nil, err
@@ -276,6 +294,7 @@ func (s *PanelService) startUpdate(useDev bool) (int64, error) {
 	updateScript := fmt.Sprintf("set -e; trap 'rm -f %s' EXIT; %s %s", shellQuote(scriptPath), shellQuote(bash), shellQuote(scriptPath))
 	runIDEnv := "OVIX_UPDATE_RUN_ID=" + strconv.FormatInt(runID, 10)
 	statusFileEnv := "OVIX_UPDATE_STATUS_FILE=" + statusFile
+	tokenFileEnv := "OVIX_RELEASE_TOKEN_FILE=" + ReleaseTokenPath()
 	proxyEnv := updateProxyEnvVars()
 
 	if systemdRun, err := exec.LookPath("systemd-run"); err == nil {
@@ -287,6 +306,7 @@ func (s *PanelService) startUpdate(useDev bool) (int64, error) {
 			"--setenv", "OVIX_UPDATE_TAG=" + updateTag,
 			"--setenv", runIDEnv,
 			"--setenv", statusFileEnv,
+			"--setenv", tokenFileEnv,
 		}
 		for _, kv := range proxyEnv {
 			args = append(args, "--setenv", kv)
@@ -316,6 +336,7 @@ func (s *PanelService) startUpdate(useDev bool) (int64, error) {
 		"OVIX_UPDATE_TAG="+updateTag,
 		runIDEnv,
 		statusFileEnv,
+		tokenFileEnv,
 	)
 	setDetachedProcess(cmd)
 	if err := cmd.Start(); err != nil {
@@ -401,7 +422,7 @@ func releaseUpdateSlot() {
 
 func downloadPanelUpdater() (string, error) {
 	client := (&service.SettingService{}).NewProxiedHTTPClient(15 * time.Second)
-	req, reqErr := http.NewRequestWithContext(context.Background(), http.MethodGet, panelUpdaterURL(), nil)
+	req, reqErr := newReleaseRequest(context.Background(), panelUpdaterURL(), "application/vnd.github.raw", readReleaseToken())
 	if reqErr != nil {
 		return "", fmt.Errorf("download panel updater: %w", reqErr)
 	}
@@ -410,8 +431,8 @@ func downloadPanelUpdater() (string, error) {
 		return "", fmt.Errorf("download panel updater: %w", err)
 	}
 	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("download panel updater: unexpected HTTP %d", resp.StatusCode)
+	if err := releaseStatusErr(resp.StatusCode); err != nil {
+		return "", fmt.Errorf("download panel updater: %w", err)
 	}
 
 	file, err := os.CreateTemp("", "ovix-ui-update-*.sh")
@@ -458,12 +479,12 @@ func fetchLatestPanelVersion() (string, error) {
 // fetchPanelRelease fetches a release from GitHub. An empty tag resolves the
 // latest stable release; a non-empty tag (e.g. dev-latest) resolves that tag.
 func fetchPanelRelease(tag string) (*service.Release, error) {
-	url := "https://api.github.com/repos/" + ovixReleaseRepo + "/releases/latest"
+	url := repoAPIURL("/releases/latest")
 	if tag != "" {
-		url = "https://api.github.com/repos/" + ovixReleaseRepo + "/releases/tags/" + tag
+		url = repoAPIURL("/releases/tags/" + tag)
 	}
 	client := (&service.SettingService{}).NewProxiedHTTPClient(10 * time.Second)
-	req, reqErr := http.NewRequestWithContext(context.Background(), http.MethodGet, url, nil)
+	req, reqErr := newReleaseRequest(context.Background(), url, "application/vnd.github+json", readReleaseToken())
 	if reqErr != nil {
 		return nil, reqErr
 	}
@@ -472,8 +493,8 @@ func fetchPanelRelease(tag string) (*service.Release, error) {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	if resp.StatusCode != http.StatusOK {
-		return nil, fmt.Errorf("GitHub API returned status %d: %s", resp.StatusCode, resp.Status)
+	if err := releaseStatusErr(resp.StatusCode); err != nil {
+		return nil, err
 	}
 
 	var release service.Release

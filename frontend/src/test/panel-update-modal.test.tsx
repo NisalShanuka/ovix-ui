@@ -60,3 +60,65 @@ describe('panel update modal', () => {
     });
   });
 });
+
+describe('panel update access token', () => {
+  const base = { currentVersion: '3.11.0', latestVersion: '3.11.0', updateAvailable: false };
+
+  it('asks for a token when the private release repo is hidden, and saves it', async () => {
+    const onTokenChange = vi.fn().mockResolvedValue(true);
+    renderWithProviders(
+      <PanelUpdateModal
+        open
+        info={{ ...base, needsToken: true, tokenSet: false }}
+        onTokenChange={onTokenChange}
+        onClose={vi.fn()}
+        onBusy={vi.fn()}
+      />,
+    );
+
+    screen.getByText(/private GitHub repository/);
+    const save = screen.getByRole('button', { name: /Save/ });
+    expect((save as HTMLButtonElement).disabled).toBe(true);
+    fireEvent.change(screen.getByLabelText('GitHub access token'), {
+      target: { value: 'github_pat_abc' },
+    });
+    fireEvent.click(save);
+    expect(onTokenChange).toHaveBeenCalledWith('github_pat_abc');
+    await screen.findByText('Saved');
+    expect(screen.queryByLabelText('GitHub access token')).toBeNull();
+  });
+
+  it('keeps the typed token when the server refuses it', async () => {
+    const onTokenChange = vi.fn().mockResolvedValue(false);
+    renderWithProviders(
+      <PanelUpdateModal
+        open
+        info={{ ...base, needsToken: true, tokenSet: false }}
+        onTokenChange={onTokenChange}
+        onClose={vi.fn()}
+        onBusy={vi.fn()}
+      />,
+    );
+    const input = screen.getByLabelText('GitHub access token');
+    fireEvent.change(input, { target: { value: 'github_pat_bad' } });
+    fireEvent.click(screen.getByRole('button', { name: /Save/ }));
+    await vi.waitFor(() => expect(onTokenChange).toHaveBeenCalledOnce());
+    expect((screen.getByLabelText('GitHub access token') as HTMLInputElement).value).toBe('github_pat_bad');
+  });
+
+  it('removes a saved token', () => {
+    const onTokenChange = vi.fn().mockResolvedValue(true);
+    renderWithProviders(
+      <PanelUpdateModal
+        open
+        info={{ ...base, tokenSet: true }}
+        onTokenChange={onTokenChange}
+        onClose={vi.fn()}
+        onBusy={vi.fn()}
+      />,
+    );
+    expect(screen.queryByLabelText('GitHub access token')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: /Remove/ }));
+    expect(onTokenChange).toHaveBeenCalledWith('');
+  });
+});

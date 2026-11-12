@@ -8,7 +8,52 @@ plain='\033[0m'
 
 # GitHub "owner/repo" publishing Ovix UI releases. Empty disables install and
 # update so these commands can never pull upstream 3x-ui over Ovix UI.
-OVIX_RELEASE_REPO="${OVIX_RELEASE_REPO:-}"
+OVIX_RELEASE_REPO="${OVIX_RELEASE_REPO:-NisalShanuka/ovix-ui}"
+
+# A private release repo needs a read-only GitHub token, kept in a root-only file.
+OVIX_RELEASE_TOKEN_FILE="${OVIX_RELEASE_TOKEN_FILE:-/etc/ovix-ui/release-token}"
+if [[ -z "${OVIX_RELEASE_TOKEN:-}" && -r "${OVIX_RELEASE_TOKEN_FILE}" ]]; then
+    OVIX_RELEASE_TOKEN="$(tr -d '[:space:]' < "${OVIX_RELEASE_TOKEN_FILE}")"
+fi
+gh_auth=()
+if [[ -n "${OVIX_RELEASE_TOKEN:-}" ]]; then
+    gh_auth=(-H "Authorization: Bearer ${OVIX_RELEASE_TOKEN}")
+fi
+
+# Repo files and release assets go through api.github.com, which serves private
+# repos to a token; raw file hosts and release download links do not.
+gh_raw_url() {
+    echo "https://api.github.com/repos/${OVIX_RELEASE_REPO}/contents/$2?ref=$1"
+}
+
+gh_curl() {
+    curl "${gh_auth[@]}" -H "Accept: application/vnd.github.raw" "$@"
+}
+
+gh_api() {
+    curl -fsSL --retry 3 --retry-delay 3 --connect-timeout 15 --max-time 60 "${gh_auth[@]}" \
+        -H "Accept: application/vnd.github+json" "https://api.github.com/repos/${OVIX_RELEASE_REPO}/$1"
+}
+
+gh_latest_tag() {
+    gh_api "releases/latest" 2> /dev/null | grep '"tag_name":' | head -n1 | sed -E 's/.*"([^"]+)".*/\1/'
+}
+
+# gh_asset TAG NAME OUT downloads one release asset and prints the HTTP status;
+# 404 means the release (or that asset in it) does not exist.
+gh_asset() {
+    local id
+    id=$(gh_api "releases/tags/$1" 2> /dev/null | tr -d ' \r\n' | sed 's/[{,]"/\n"/g' | awk -v want="\"name\":\"$2\"" '
+        /^"url":"https:\/\/api\.github\.com\/repos\/.*\/releases\/assets\/[0-9]+"$/ { u = $0 }
+        $0 == want { sub(/.*\/assets\//, "", u); sub(/".*/, "", u); print u; exit }')
+    if [[ -z "${id}" ]]; then
+        echo "404"
+        return 0
+    fi
+    curl -sL --retry 5 --retry-delay 3 --connect-timeout 15 --speed-limit 1 --speed-time 300 "${gh_auth[@]}" \
+        -H "Accept: application/octet-stream" -o "$3" -w '%{http_code}' \
+        "https://api.github.com/repos/${OVIX_RELEASE_REPO}/releases/assets/${id}"
+}
 
 require_release_repo() {
     if [[ -z "${OVIX_RELEASE_REPO}" ]]; then
@@ -1634,7 +1679,7 @@ _install_xui_service_unit() {
 
     rm -f "$temp_file"
     if [[ "$source_is_url" == "true" ]]; then
-        curl -fLRo "$temp_file" "$source" > /dev/null 2>&1
+        gh_curl -fLRo "$temp_file" "$source" > /dev/null 2>&1
     else
         cp -f "$source" "$temp_file" > /dev/null 2>&1
     fi
@@ -1659,28 +1704,18 @@ _install_xui_service_unit() {
     return 0
 }
 
-# resolve_latest_tag prints the latest stable release tag. It prefers the web
-# releases/latest redirect, which is not subject to the unauthenticated API's
-# 60 req/h-per-IP limit that trips shared CI/CGNAT addresses (the install then
-# fails with "Failed to fetch ovix-ui version"), and falls back to the API.
+# resolve_latest_tag prints the latest stable release tag.
 resolve_latest_tag() {
-    local url tag
-    url=$(curl -sSLI -o /dev/null -w '%{url_effective}' --retry 5 --retry-delay 3 --connect-timeout 15 --max-time 60 "https://github.com/${OVIX_RELEASE_REPO}/releases/latest" 2>/dev/null)
-    tag=${url##*/tag/}
-    if [[ "$tag" != "$url" && -n "$tag" && "$tag" != "latest" ]]; then
-        echo "$tag"
-        return 0
-    fi
-    curl -Ls --retry 5 --retry-delay 3 --connect-timeout 15 --max-time 60 "https://api.github.com/repos/${OVIX_RELEASE_REPO}/releases/latest" | grep '"tag_name":' | sed -E 's/.*"([^"]+)".*/\1/'
+    gh_latest_tag
 }
 
 # Releases publish <asset>.sha256 next to each archive. A mismatch or a failed
 # sidecar download aborts the install; only a 404 (releases predating the
 # sidecar) is tolerated with a warning.
 verify_release_checksum() {
-    local url="$1" file="$2" sums="$2.sha256" code expected actual
+    local tag="$1" asset="$2" file="$3" sums="$3.sha256" code expected actual
     rm -f "${sums}"
-    code=$(curl -sL --retry 3 --retry-delay 3 --connect-timeout 15 --max-time 60 -o "${sums}" -w '%{http_code}' "${url}.sha256")
+    code=$(gh_asset "${tag}" "${asset}.sha256" "${sums}")
     if [[ "${code}" == "404" ]]; then
         rm -f "${sums}"
         echo -e "${yellow}No checksum published for this release, skipping verification${plain}"
@@ -1710,7 +1745,7 @@ require_repo_files() {
     shift
     [[ "${ref}" == "main" ]] && return 0
     for name in "$@"; do
-        status=$(curl -sIL --retry 3 --connect-timeout 15 -o /dev/null -w '%{http_code}' "https://raw.githubusercontent.com/${OVIX_RELEASE_REPO}/${ref}/${name}")
+        status=$(gh_curl -sL --retry 3 --connect-timeout 15 -o /dev/null -w '%{http_code}' "$(gh_raw_url "${ref}" "${name}")")
         if [[ "${status}" != "200" ]]; then
             echo -e "${red}${name} is not available for ${ref} (HTTP ${status})${plain}"
             echo -e "${red}Install a release that ships it, or 'dev' for the rolling build. Your existing installation has not been touched.${plain}"
@@ -1730,8 +1765,7 @@ install_ovix-ui() {
             exit 1
         fi
         echo -e "Got ovix-ui latest version: ${tag_version}, beginning the installation..."
-        curl -fLR --retry 5 --retry-delay 3 --connect-timeout 15 --speed-limit 1 --speed-time 300 -o ${xui_folder}-linux-$(arch).tar.gz https://github.com/${OVIX_RELEASE_REPO}/releases/download/${tag_version}/ovix-ui-linux-$(arch).tar.gz
-        if [[ $? -ne 0 ]]; then
+        if [[ "$(gh_asset "${tag_version}" "ovix-ui-linux-$(arch).tar.gz" "${xui_folder}-linux-$(arch).tar.gz")" != "200" ]]; then
             echo -e "${red}Downloading ovix-ui failed, please be sure that your server can access GitHub ${plain}"
             exit 1
         fi
@@ -1740,7 +1774,7 @@ install_ovix-ui() {
             echo -e "${red}Downloaded ovix-ui release archive is empty${plain}"
             exit 1
         fi
-        verify_release_checksum "https://github.com/${OVIX_RELEASE_REPO}/releases/download/${tag_version}/ovix-ui-linux-$(arch).tar.gz" "${xui_folder}-linux-$(arch).tar.gz"
+        verify_release_checksum "${tag_version}" "ovix-ui-linux-$(arch).tar.gz" "${xui_folder}-linux-$(arch).tar.gz"
     else
         tag_version=$1
         # The rolling dev channel ships under a fixed, non-semver tag that is
@@ -1759,10 +1793,8 @@ install_ovix-ui() {
             fi
         fi
 
-        url="https://github.com/${OVIX_RELEASE_REPO}/releases/download/${tag_version}/ovix-ui-linux-$(arch).tar.gz"
         echo -e "Beginning to install ovix-ui ${tag_version}"
-        curl -fLR --retry 5 --retry-delay 3 --connect-timeout 15 --speed-limit 1 --speed-time 300 -o ${xui_folder}-linux-$(arch).tar.gz ${url}
-        if [[ $? -ne 0 ]]; then
+        if [[ "$(gh_asset "${tag_version}" "ovix-ui-linux-$(arch).tar.gz" "${xui_folder}-linux-$(arch).tar.gz")" != "200" ]]; then
             echo -e "${red}Download ovix-ui ${tag_version} failed, please check if the version exists ${plain}"
             exit 1
         fi
@@ -1771,7 +1803,7 @@ install_ovix-ui() {
             echo -e "${red}Downloaded ovix-ui release archive is empty${plain}"
             exit 1
         fi
-        verify_release_checksum "${url}" "${xui_folder}-linux-$(arch).tar.gz"
+        verify_release_checksum "${tag_version}" "ovix-ui-linux-$(arch).tar.gz" "${xui_folder}-linux-$(arch).tar.gz"
     fi
     # ovix-ui.sh, ovix-ui.rc and the unit files must come from the same release as
     # the binary; only the rolling dev build tracks main.
@@ -1786,7 +1818,7 @@ install_ovix-ui() {
     require_repo_files "${script_ref}" "${required_files[@]}"
     local xui_script_temp="/usr/bin/ovix-ui-temp.$$"
     rm -f "${xui_script_temp}"
-    curl -fLRo "${xui_script_temp}" "https://raw.githubusercontent.com/${OVIX_RELEASE_REPO}/${script_ref}/ovix-ui.sh"
+    gh_curl -fLRo "${xui_script_temp}" "$(gh_raw_url "${script_ref}" ovix-ui.sh)"
     if [[ $? -ne 0 ]]; then
         rm -f "${xui_script_temp}"
         echo -e "${red}Failed to download ovix-ui.sh${plain}"
@@ -1941,7 +1973,7 @@ install_ovix-ui() {
     if [[ $release == "alpine" ]]; then
         xui_rc_temp="/etc/init.d/ovix-ui.tmp.$$"
         rm -f "${xui_rc_temp}"
-        curl -fLRo "${xui_rc_temp}" "https://raw.githubusercontent.com/${OVIX_RELEASE_REPO}/${script_ref}/ovix-ui.rc"
+        gh_curl -fLRo "${xui_rc_temp}" "$(gh_raw_url "${script_ref}" ovix-ui.rc)"
         if [[ $? -ne 0 ]]; then
             rm -f "${xui_rc_temp}"
             echo -e "${red}Failed to download ovix-ui.rc${plain}"
@@ -2006,13 +2038,13 @@ install_ovix-ui() {
             echo -e "${yellow}Service files not found in tar.gz, downloading from GitHub...${plain}"
             case "${release}" in
                 ubuntu | debian | armbian)
-                    service_unit_url="https://raw.githubusercontent.com/${OVIX_RELEASE_REPO}/${script_ref}/ovix-ui.service.debian"
+                    service_unit_url="$(gh_raw_url "${script_ref}" ovix-ui.service.debian)"
                     ;;
                 arch | manjaro | parch)
-                    service_unit_url="https://raw.githubusercontent.com/${OVIX_RELEASE_REPO}/${script_ref}/ovix-ui.service.arch"
+                    service_unit_url="$(gh_raw_url "${script_ref}" ovix-ui.service.arch)"
                     ;;
                 *)
-                    service_unit_url="https://raw.githubusercontent.com/${OVIX_RELEASE_REPO}/${script_ref}/ovix-ui.service.rhel"
+                    service_unit_url="$(gh_raw_url "${script_ref}" ovix-ui.service.rhel)"
                     ;;
             esac
 
@@ -2062,6 +2094,13 @@ install_ovix-ui() {
 └───────────────────────────────────────────────────────┘"
 }
 
+save_release_token() {
+    [[ -n "${OVIX_RELEASE_TOKEN:-}" ]] || return 0
+    mkdir -p "$(dirname "${OVIX_RELEASE_TOKEN_FILE}")"
+    (umask 077 && printf '%s\n' "${OVIX_RELEASE_TOKEN}" > "${OVIX_RELEASE_TOKEN_FILE}")
+}
+
 echo -e "${green}Running...${plain}"
 install_base
+save_release_token
 install_ovix-ui $1

@@ -72,6 +72,7 @@ func (a *ServerController) initRouter(g *gin.RouterGroup) {
 	g.POST("/installXray/:version", a.installXray)
 	g.POST("/updatePanel", a.updatePanel)
 	g.POST("/setUpdateChannel", a.setUpdateChannel)
+	g.POST("/setUpdateToken", a.setUpdateToken)
 	g.POST("/updateGeofile", a.updateGeofile)
 	g.POST("/updateGeofile/:fileName", a.updateGeofile)
 	g.POST("/logs/:count", a.getLogs)
@@ -252,6 +253,13 @@ func (a *ServerController) setUpdateChannel(c *gin.Context) {
 	}
 	err = a.settingService.SetDevChannelEnable(dev)
 	jsonMsg(c, I18nWeb(c, "pages.index.updateChannelChanged"), err)
+}
+
+// setUpdateToken saves the GitHub token that lets self-update read the private
+// Ovix UI release repo; an empty token removes it.
+func (a *ServerController) setUpdateToken(c *gin.Context) {
+	err := a.panelService.SetReleaseToken(c.PostForm("token"))
+	jsonMsg(c, I18nWeb(c, "pages.index.updateTokenSaved"), err)
 }
 
 // updateGeofile updates the specified geo file for Xray.

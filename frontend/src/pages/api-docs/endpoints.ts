@@ -685,6 +685,21 @@ export const sections: readonly Section[] = [
       },
       {
         method: 'POST',
+        path: '/panel/api/server/setUpdateToken',
+        summary:
+          'Save the read-only GitHub token self-update uses to reach the private Ovix UI release repository. GitHub must accept the token before it is stored; an empty token removes it.',
+        params: [
+          {
+            name: 'token',
+            in: 'body (form)',
+            type: 'string',
+            desc: 'Fine-grained token with read access to Contents of the release repository, or empty to remove.',
+          },
+        ],
+        body: 'token=github_pat_...',
+      },
+      {
+        method: 'POST',
         path: '/panel/api/server/updateGeofile',
         summary:
           'Refresh the default GeoIP / GeoSite data files. Use the /:fileName variant to update one file.',

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Alert, Button, Modal, Switch, Tag } from 'antd';
+import { Alert, Button, Input, Modal, Switch, Tag } from 'antd';
 import { CloudDownloadOutlined } from '@ant-design/icons';
 
 import { HttpUtil, PromiseUtil } from '@/utils';
@@ -17,6 +17,8 @@ export interface PanelUpdateInfo {
   currentCommit?: string;
   latestCommit?: string;
   updateAvailable: boolean;
+  tokenSet?: boolean;
+  needsToken?: boolean;
 }
 
 interface BusyEvent {
@@ -29,6 +31,7 @@ interface PanelUpdateModalProps {
   info: PanelUpdateInfo;
   devChannelEnable?: boolean;
   onChannelChange?: (dev: boolean) => void | Promise<void>;
+  onTokenChange?: (token: string) => Promise<boolean>;
   onClose: () => void;
   onBusy: (e: BusyEvent) => void;
 }
@@ -38,14 +41,35 @@ export default function PanelUpdateModal({
   info,
   devChannelEnable,
   onChannelChange,
+  onTokenChange,
   onClose,
   onBusy,
 }: PanelUpdateModalProps) {
   const { t } = useTranslation();
   const [modal, contextHolder] = Modal.useModal();
   const [channelBusy, setChannelBusy] = useState(false);
+  const [tokenDraft, setTokenDraft] = useState('');
+  const [tokenBusy, setTokenBusy] = useState(false);
+  const [editingToken, setEditingToken] = useState(false);
+  const [savedToken, setSavedToken] = useState<boolean | null>(null);
 
   const isDev = info.channel === 'dev';
+  const hasToken = savedToken ?? !!info.tokenSet;
+  const showTokenForm = editingToken || (!hasToken && !!info.needsToken);
+
+  async function changeToken(token: string) {
+    if (!onTokenChange) return;
+    setTokenBusy(true);
+    try {
+      if (await onTokenChange(token)) {
+        setSavedToken(token !== '');
+        setEditingToken(false);
+        setTokenDraft('');
+      }
+    } finally {
+      setTokenBusy(false);
+    }
+  }
 
   async function pollUpdateStatus(expectedRunId: string): Promise<UpdateOutcome> {
     await PromiseUtil.sleep(5000);
@@ -184,6 +208,64 @@ export default function PanelUpdateModal({
             </div>
           )}
         </div>
+
+        {info.needsToken && !hasToken && (
+          <Alert
+            type="warning"
+            className="mt-12"
+            title={t('pages.index.updateTokenNeeded')}
+            showIcon
+          />
+        )}
+
+        {(onTokenChange && (hasToken || showTokenForm)) && (
+          <div className="version-list update-token">
+            <div className="version-list-item">
+              <span>{t('pages.index.updateToken')}</span>
+              {hasToken && !showTokenForm ? (
+                <span className="update-token-actions">
+                  <Tag color="green">{t('pages.index.updateTokenSet')}</Tag>
+                  <Button size="small" onClick={() => setEditingToken(true)}>
+                    {t('pages.index.updateTokenReplace')}
+                  </Button>
+                  <Button
+                    size="small"
+                    danger
+                    loading={tokenBusy}
+                    onClick={() => void changeToken('')}
+                  >
+                    {t('remove')}
+                  </Button>
+                </span>
+              ) : null}
+            </div>
+            {showTokenForm && (
+              <form
+                className="update-token-form"
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (tokenDraft.trim()) void changeToken(tokenDraft.trim());
+                }}
+              >
+                <Input.Password
+                  aria-label={t('pages.index.updateToken')}
+                  placeholder="github_pat_…"
+                  autoComplete="off"
+                  value={tokenDraft}
+                  onChange={(e) => setTokenDraft(e.target.value)}
+                />
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={tokenBusy}
+                  disabled={!tokenDraft.trim()}
+                >
+                  {t('save')}
+                </Button>
+              </form>
+            )}
+          </div>
+        )}
 
         <div className="actions-row">
           <Button

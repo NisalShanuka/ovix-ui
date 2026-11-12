@@ -8,7 +8,52 @@ plain='\033[0m'
 
 # GitHub "owner/repo" publishing Ovix UI releases. Empty disables install and
 # update so these commands can never pull upstream 3x-ui over Ovix UI.
-OVIX_RELEASE_REPO="${OVIX_RELEASE_REPO:-}"
+OVIX_RELEASE_REPO="${OVIX_RELEASE_REPO:-NisalShanuka/ovix-ui}"
+
+# A private release repo needs a read-only GitHub token, kept in a root-only file.
+OVIX_RELEASE_TOKEN_FILE="${OVIX_RELEASE_TOKEN_FILE:-/etc/ovix-ui/release-token}"
+if [[ -z "${OVIX_RELEASE_TOKEN:-}" && -r "${OVIX_RELEASE_TOKEN_FILE}" ]]; then
+    OVIX_RELEASE_TOKEN="$(tr -d '[:space:]' < "${OVIX_RELEASE_TOKEN_FILE}")"
+fi
+gh_auth=()
+if [[ -n "${OVIX_RELEASE_TOKEN:-}" ]]; then
+    gh_auth=(-H "Authorization: Bearer ${OVIX_RELEASE_TOKEN}")
+fi
+
+# Repo files and release assets go through api.github.com, which serves private
+# repos to a token; raw file hosts and release download links do not.
+gh_raw_url() {
+    echo "https://api.github.com/repos/${OVIX_RELEASE_REPO}/contents/$2?ref=$1"
+}
+
+gh_curl() {
+    curl "${gh_auth[@]}" -H "Accept: application/vnd.github.raw" "$@"
+}
+
+gh_api() {
+    curl -fsSL --retry 3 --retry-delay 3 --connect-timeout 15 --max-time 60 "${gh_auth[@]}" \
+        -H "Accept: application/vnd.github+json" "https://api.github.com/repos/${OVIX_RELEASE_REPO}/$1"
+}
+
+gh_latest_tag() {
+    gh_api "releases/latest" 2> /dev/null | grep '"tag_name":' | head -n1 | sed -E 's/.*"([^"]+)".*/\1/'
+}
+
+# gh_asset TAG NAME OUT downloads one release asset and prints the HTTP status;
+# 404 means the release (or that asset in it) does not exist.
+gh_asset() {
+    local id
+    id=$(gh_api "releases/tags/$1" 2> /dev/null | tr -d ' \r\n' | sed 's/[{,]"/\n"/g' | awk -v want="\"name\":\"$2\"" '
+        /^"url":"https:\/\/api\.github\.com\/repos\/.*\/releases\/assets\/[0-9]+"$/ { u = $0 }
+        $0 == want { sub(/.*\/assets\//, "", u); sub(/".*/, "", u); print u; exit }')
+    if [[ -z "${id}" ]]; then
+        echo "404"
+        return 0
+    fi
+    curl -sL --retry 5 --retry-delay 3 --connect-timeout 15 --speed-limit 1 --speed-time 300 "${gh_auth[@]}" \
+        -H "Accept: application/octet-stream" -o "$3" -w '%{http_code}' \
+        "https://api.github.com/repos/${OVIX_RELEASE_REPO}/releases/assets/${id}"
+}
 
 require_release_repo() {
     if [[ -z "${OVIX_RELEASE_REPO}" ]]; then
@@ -141,7 +186,7 @@ before_show_menu() {
 
 install() {
     require_release_repo || return 1
-    bash <(curl -Ls https://raw.githubusercontent.com/${OVIX_RELEASE_REPO}/main/install.sh)
+    bash <(gh_curl -fsSL "$(gh_raw_url main install.sh)")
     if [[ $? == 0 ]]; then
         if [[ $# == 0 ]]; then
             start
@@ -161,7 +206,7 @@ update() {
         fi
         return 0
     fi
-    bash <(curl -Ls https://raw.githubusercontent.com/${OVIX_RELEASE_REPO}/main/update.sh)
+    bash <(gh_curl -fsSL "$(gh_raw_url main update.sh)")
     if [[ $? == 0 ]]; then
         LOGI "Update is complete, Panel has automatically restarted "
         before_show_menu
@@ -180,7 +225,7 @@ update_dev() {
     fi
     # OVIX_UPDATE_TAG tells update.sh to install the dev-latest pre-release
     # instead of the latest stable tag.
-    OVIX_UPDATE_TAG="dev-latest" bash <(curl -Ls https://raw.githubusercontent.com/${OVIX_RELEASE_REPO}/main/update.sh)
+    OVIX_UPDATE_TAG="dev-latest" bash <(gh_curl -fsSL "$(gh_raw_url main update.sh)")
     if [[ $? == 0 ]]; then
         LOGI "Dev update is complete, Panel has automatically restarted "
         before_show_menu
@@ -194,9 +239,9 @@ replace_xui_script() {
 
     rm -f "$temp_file"
     if [[ "$use_if_modified_since" == "true" ]]; then
-        curl -fLRo "$temp_file" -z /usr/bin/ovix-ui "$url"
+        gh_curl -fLRo "$temp_file" -z /usr/bin/ovix-ui "$url"
     else
-        curl -fLRo "$temp_file" "$url"
+        gh_curl -fLRo "$temp_file" "$url"
     fi
     if [[ $? != 0 ]]; then
         rm -f "$temp_file"
@@ -227,11 +272,11 @@ replace_xui_script() {
 installed_script_url() {
     local ver
     ver=$("${xui_folder}/ovix-ui" -v 2> /dev/null | tr -d '[:space:]')
-    if [[ "$ver" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && curl -fsIL -o /dev/null "https://raw.githubusercontent.com/${OVIX_RELEASE_REPO}/v${ver}/ovix-ui.sh"; then
-        echo "https://raw.githubusercontent.com/${OVIX_RELEASE_REPO}/v${ver}/ovix-ui.sh"
+    if [[ "$ver" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]] && gh_curl -fsL -o /dev/null "$(gh_raw_url "v${ver}" ovix-ui.sh)"; then
+        gh_raw_url "v${ver}" ovix-ui.sh
     else
         echo -e "${yellow}No ovix-ui.sh published for the installed version (${ver:-unknown}), using main${plain}" >&2
-        echo "https://raw.githubusercontent.com/${OVIX_RELEASE_REPO}/main/ovix-ui.sh"
+        gh_raw_url main ovix-ui.sh
     fi
 }
 
@@ -266,10 +311,8 @@ legacy_version() {
         exit 1
     fi
     # Use the entered panel version in the download link
-    install_command="bash <(curl -Ls "https://raw.githubusercontent.com/mhsanaei/ovix-ui/v$tag_version/install.sh") v$tag_version"
-
     echo "Downloading and installing panel version $tag_version..."
-    eval $install_command
+    bash <(gh_curl -fsSL "$(gh_raw_url "v${tag_version#v}" install.sh)") "v${tag_version#v}"
 }
 
 # Function to handle the deletion of the script file
@@ -337,7 +380,7 @@ uninstall() {
     echo ""
     echo -e "Uninstalled Successfully.\n"
     echo "If you need to install this panel again, you can use below command:"
-    echo -e "${green}bash <(curl -Ls https://raw.githubusercontent.com/mhsanaei/ovix-ui/master/install.sh)${plain}"
+    echo -e "${green}curl -fsSL -H \"Authorization: Bearer <token>\" -H \"Accept: application/vnd.github.raw\" \"$(gh_raw_url main install.sh)\" | OVIX_RELEASE_TOKEN=<token> bash${plain}"
     echo ""
     # Trap the SIGTERM signal
     trap delete_script SIGTERM
