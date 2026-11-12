@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"compress/gzip"
 	"context"
+	"errors"
 	"net"
 	"net/http"
 	"net/http/httptest"
@@ -94,7 +95,7 @@ func TestLookupLeavesPrivateAndUnknownAddressesOff(t *testing.T) {
 }
 
 func TestLookupWithoutDatabaseSaysSo(t *testing.T) {
-	if _, _, err := (&Locator{}).Lookup("175.157.44.10"); err != ErrNoDatabase {
+	if _, _, err := (&Locator{}).Lookup("175.157.44.10"); !errors.Is(err, ErrNoDatabase) {
 		t.Fatalf("err = %v, want ErrNoDatabase", err)
 	}
 }

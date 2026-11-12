@@ -122,7 +122,8 @@ export default function ClientMap({ view, isDark, focus, serverLabel }: ClientMa
         .map((p) => `<li><b>${escapeHtml(p.email)}</b><span>${escapeHtml(p.ip)}</span></li>`)
         .join('');
       const where = [g.city, g.country].filter(Boolean).join(', ');
-      const marker = L.marker(at, { icon: clientIcon(g.points.length) })
+      const label = `${where || g.countryCode}: ${g.points.map((p) => p.email).join(', ')}`;
+      const marker = L.marker(at, { icon: clientIcon(g.points.length), title: label, alt: label })
         .bindPopup(
           `<div class="ovm-pop"><strong>${escapeHtml(where || g.countryCode)}</strong><ul>${rows}</ul></div>`,
           { closeButton: false },
@@ -133,7 +134,12 @@ export default function ClientMap({ view, isDark, focus, serverLabel }: ClientMa
     if (server) {
       const at: L.LatLngExpression = [server.lat, server.lon];
       bounds.push(at);
-      L.marker(at, { icon: serverIcon(serverLabel), zIndexOffset: 1000 }).addTo(layer);
+      L.marker(at, {
+        icon: serverIcon(serverLabel),
+        zIndexOffset: 1000,
+        interactive: false,
+        keyboard: false,
+      }).addTo(layer);
     }
     if (!fittedRef.current && bounds.length > 0) {
       fittedRef.current = true;
