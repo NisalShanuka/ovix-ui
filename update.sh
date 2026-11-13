@@ -36,7 +36,7 @@ gh_api() {
 }
 
 gh_latest_tag() {
-    gh_api "releases/latest" 2> /dev/null | grep '"tag_name":' | head -n1 | sed -E 's/.*"([^"]+)".*/\1/'
+    gh_api "releases/latest" 2> /dev/null | grep -o '"tag_name": *"[^"]*"' | head -n1 | sed -E 's/.*"([^"]*)"$/\1/'
 }
 
 # gh_asset TAG NAME OUT downloads one release asset and prints the HTTP status;
